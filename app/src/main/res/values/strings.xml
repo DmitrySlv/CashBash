@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">CashBash</string>
+    <!-- Content Description -->
+    <string name="drawer_menu">Выдвижное меню</string>
     <!-- Drawer Menu -->
     <string name="ads_cat1">Объявления</string>
     <string name="ad_my_ads">Мои объявления</string>
@@ -10,6 +12,9 @@
 
     <string name="ads_cat2">Аккаунт</string>
     <string name="ac_sign_up">Регистрация</string>
-    <string name="ac_sign_in">Вход в аккаунт</string>
-    <string name="ac_sign_out">Выход из аккаунта</string>
+    <string name="ac_sign_in">Вход</string>
+    <string name="ac_sign_out">Выход</string>
+
+    <string name="open">Открыть</string>
+    <string name="close">Закрыть</string>
 </resources>
