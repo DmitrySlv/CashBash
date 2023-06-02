@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">CashBash</string>
+    <!-- Drawer Menu -->
+    <string name="ads_cat1">Объявления</string>
+    <string name="ad_my_ads">Мои объявления</string>
+    <string name="ad_cars">Машины</string>
+    <string name="ad_pc">Компьютеры</string>
+    <string name="ad_smartphones">Смартфоны</string>
+    <string name="ad_domestics">Бытовая техника</string>
+
+    <string name="ads_cat2">Аккаунт</string>
+    <string name="ac_sign_up">Регистрация</string>
+    <string name="ac_sign_in">Вход в аккаунт</string>
+    <string name="ac_sign_out">Выход из аккаунта</string>
 </resources>
