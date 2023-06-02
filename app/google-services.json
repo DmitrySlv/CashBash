@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "437127310027",
+    "project_id": "cashbash-ded6c",
+    "storage_bucket": "cashbash-ded6c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:437127310027:android:8bf2f1aaff3a6daed8094e",
+        "android_client_info": {
+          "package_name": "com.dscreate_app.cashbash"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "437127310027-2juq5ohoj9qrtp73p4t7ukef67jh3ju6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDm7aeB1DLgzYupcXjbrVHFB0CZePSheo0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "437127310027-2juq5ohoj9qrtp73p4t7ukef67jh3ju6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
