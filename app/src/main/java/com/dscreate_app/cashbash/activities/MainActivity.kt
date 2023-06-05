@@ -1,4 +1,4 @@
-package com.dscreate_app.cashbash
+package com.dscreate_app.cashbash.activities
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -7,11 +7,17 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
+import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.databinding.ActivityMainBinding
+import com.dscreate_app.cashbash.dialogs.DialogHelper
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
+
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    private val dialogHelper = DialogHelper(this)
+    val mAuth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,10 +53,10 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
                 Toast.makeText(this, "Pressed dm", Toast.LENGTH_SHORT).show()
             }
             R.id.sign_up -> {
-                Toast.makeText(this, "Pressed sign_up", Toast.LENGTH_SHORT).show()
+                dialogHelper.createSignDialog(DialogHelper.SIGN_UP_STATE)
             }
             R.id.sign_in -> {
-                Toast.makeText(this, "Pressed sign_in", Toast.LENGTH_SHORT).show()
+                dialogHelper.createSignDialog(DialogHelper.SIGN_IN_STATE)
             }
             R.id.sign_out -> {
                 Toast.makeText(this, "Pressed sign_out", Toast.LENGTH_SHORT).show()

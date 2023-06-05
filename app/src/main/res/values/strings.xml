@@ -17,4 +17,18 @@
 
     <string name="open">Открыть</string>
     <string name="close">Закрыть</string>
+    <!-- Main Activity -->
+    <string name="sign_up_error">Ошибка регистрации</string>
+    <string name="send_verification_email_error">Не удалось отправить ссылку для подтверждения email
+        адреса.Пожалуйста, попробуйте еще раз позже.</string>
+    <string name="send_verification_email">На вашу почту была отправлена ссылка для подтверждения
+        email! Пожалуйста, подтвердите ваш email адрес.
+    </string>
+    <!-- Dialog Helper -->
+    <!-- sign_in_dialog -->
+    <string name="email_hint">Ваш email</string>
+    <string name="password_hint">Пароль</string>
+    <string name="sign_in_action">Войти</string>
+    <string name="sign_up_action">Зарегистрироваться</string>
+    <string name="forget_password">Забыли пароль?</string>
 </resources>
