@@ -31,10 +31,16 @@
     <string name="anonymous">Аноним</string>
     <!-- Dialog Helper -->
     <string name="sign_in_finish">Вы вошли в аккаунт</string>
+    <string name="reset_email_password">Пароль email адреса был сброшен. Пожалуйста,
+    проверьте вашу электронную почту!</string>
+    <string name="reset_email_password_error">Ошибка сброса пароля от email. Пожалуйста,
+    попробуйте еще раз чуть позже!</string>
     <!-- sign_in_dialog -->
     <string name="email_hint">Ваш email</string>
     <string name="password_hint">Пароль</string>
     <string name="sign_in_action">Войти</string>
     <string name="sign_up_action">Зарегистрироваться</string>
     <string name="forget_password">Забыли пароль?</string>
+    <string name="forget_password_title">Укажите email вашего аккаунта для восстановления пароля
+    </string>
 </resources>

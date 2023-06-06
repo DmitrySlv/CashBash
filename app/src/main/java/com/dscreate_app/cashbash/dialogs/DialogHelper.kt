@@ -2,6 +2,7 @@ package com.dscreate_app.cashbash.dialogs
 
 import android.app.AlertDialog
 import android.view.LayoutInflater
+import android.view.View
 import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.activities.MainActivity
 import com.dscreate_app.cashbash.databinding.SignDialogBinding
@@ -15,16 +16,30 @@ class DialogHelper(private val mainAct: MainActivity) {
         val builder = AlertDialog.Builder(mainAct)
         val binding = SignDialogBinding.inflate(LayoutInflater.from(mainAct))
         builder.setView(binding.root)
+        setDialogState(index, binding)
+        val dialog = builder.create()
+        binding.btSignUpIn.setOnClickListener {
+            setOnClickSignUpIn(index, binding, dialog)
+        }
+        binding.btForgetPass.setOnClickListener {
+            setOnClickResetPassword(binding, dialog)
+        }
+        dialog.show()
+    }
+
+    private fun setDialogState(index: Int, binding: SignDialogBinding) {
         if (index == SIGN_UP_STATE) {
             binding.tvSignTitle.text = mainAct.getString(R.string.ac_sign_up)
             binding.btSignUpIn.text = mainAct.getString(R.string.sign_up_action)
         } else {
             binding.tvSignTitle.text = mainAct.getString(R.string.ac_sign_in)
             binding.btSignUpIn.text = mainAct.getString(R.string.sign_in_action)
+            binding.btForgetPass.visibility = View.VISIBLE
         }
-        val dialog = builder.create()
-        binding.btSignUpIn.setOnClickListener {
-            dialog.dismiss()
+    }
+
+    private fun setOnClickSignUpIn(index: Int, binding: SignDialogBinding, dialog: AlertDialog?) {
+            dialog?.dismiss()
             if (index == SIGN_UP_STATE) {
                 accHelper.signUpWithEmail(
                     binding.edSignEmail.text.toString(), binding.edPassword.text.toString()
@@ -34,9 +49,22 @@ class DialogHelper(private val mainAct: MainActivity) {
                     binding.edSignEmail.text.toString(), binding.edPassword.text.toString()
                 )
                 mainAct.showToast(mainAct.getString(R.string.sign_in_finish))
-            }
         }
-        dialog.show()
+    }
+
+    private fun setOnClickResetPassword(binding: SignDialogBinding, dialog: AlertDialog?) {
+        if (binding.edSignEmail.text.isNotEmpty()) {
+            mainAct.mAuth.sendPasswordResetEmail(binding.edSignEmail.text.toString())
+                .addOnCompleteListener {
+                    task ->
+                    if (task.isSuccessful) {
+                        mainAct.showToast(mainAct.getString(R.string.reset_email_password))
+                    }
+                }
+            dialog?.dismiss()
+        } else {
+            binding.tvDialogMessage.visibility = View.VISIBLE
+        }
     }
 
    companion object {
