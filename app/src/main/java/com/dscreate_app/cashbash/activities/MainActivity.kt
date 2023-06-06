@@ -2,6 +2,7 @@ package com.dscreate_app.cashbash.activities
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -12,17 +13,24 @@ import com.dscreate_app.cashbash.databinding.ActivityMainBinding
 import com.dscreate_app.cashbash.dialogs.DialogHelper
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val dialogHelper = DialogHelper(this)
     val mAuth = FirebaseAuth.getInstance()
+    private lateinit var tvAccount: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         init()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        uiUpdate(mAuth.currentUser)
     }
 
     private fun init() = with(binding) {
@@ -33,6 +41,7 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         navView.setNavigationItemSelectedListener(this@MainActivity)
+        tvAccount = navView.getHeaderView(HEADER_INDEX).findViewById(R.id.tvAccEmail)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -59,10 +68,23 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
                 dialogHelper.createSignDialog(DialogHelper.SIGN_IN_STATE)
             }
             R.id.sign_out -> {
-                Toast.makeText(this, "Pressed sign_out", Toast.LENGTH_SHORT).show()
+                uiUpdate(null)
+                mAuth.signOut()
             }
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    fun uiUpdate(user: FirebaseUser?) {
+        tvAccount.text = if (user == null) {
+            getString(R.string.not_reg)
+        } else {
+            user.email
+        }
+    }
+
+    companion object {
+        private const val HEADER_INDEX = 0
     }
 }

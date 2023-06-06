@@ -6,6 +6,7 @@ import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.activities.MainActivity
 import com.dscreate_app.cashbash.databinding.SignDialogBinding
 import com.dscreate_app.cashbash.utils.AccountHelper
+import com.dscreate_app.cashbash.utils.showToast
 
 class DialogHelper(private val mainAct: MainActivity) {
     private val accHelper = AccountHelper(mainAct)
@@ -13,6 +14,7 @@ class DialogHelper(private val mainAct: MainActivity) {
     fun createSignDialog(index: Int) {
         val builder = AlertDialog.Builder(mainAct)
         val binding = SignDialogBinding.inflate(LayoutInflater.from(mainAct))
+        builder.setView(binding.root)
         if (index == SIGN_UP_STATE) {
             binding.tvSignTitle.text = mainAct.getString(R.string.ac_sign_up)
             binding.btSignUpIn.text = mainAct.getString(R.string.sign_up_action)
@@ -20,19 +22,21 @@ class DialogHelper(private val mainAct: MainActivity) {
             binding.tvSignTitle.text = mainAct.getString(R.string.ac_sign_in)
             binding.btSignUpIn.text = mainAct.getString(R.string.sign_in_action)
         }
+        val dialog = builder.create()
         binding.btSignUpIn.setOnClickListener {
+            dialog.dismiss()
             if (index == SIGN_UP_STATE) {
                 accHelper.signUpWithEmail(
                     binding.edSignEmail.text.toString(), binding.edPassword.text.toString()
                 )
             } else {
-
+                accHelper.signInWithEmail(
+                    binding.edSignEmail.text.toString(), binding.edPassword.text.toString()
+                )
+                mainAct.showToast(mainAct.getString(R.string.sign_in_finish))
             }
         }
-        builder.setView(binding.root)
-        builder.show()
-
-
+        dialog.show()
     }
 
    companion object {

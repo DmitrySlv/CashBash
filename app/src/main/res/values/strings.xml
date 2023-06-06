@@ -2,6 +2,7 @@
     <string name="app_name">CashBash</string>
     <!-- Content Description -->
     <string name="drawer_menu">Выдвижное меню</string>
+    <string name="im_acc_image">Ваш аватар</string>
     <!-- Drawer Menu -->
     <string name="ads_cat1">Объявления</string>
     <string name="ad_my_ads">Мои объявления</string>
@@ -17,14 +18,19 @@
 
     <string name="open">Открыть</string>
     <string name="close">Закрыть</string>
+    <string name="not_reg">Вход или регистрация</string>
     <!-- Main Activity -->
     <string name="sign_up_error">Ошибка регистрации</string>
+    <string name="sign_in_error">Ошибка входа в аккаунт</string>
     <string name="send_verification_email_error">Не удалось отправить ссылку для подтверждения email
         адреса.Пожалуйста, попробуйте еще раз позже.</string>
     <string name="send_verification_email">На вашу почту была отправлена ссылка для подтверждения
         email! Пожалуйста, подтвердите ваш email адрес.
     </string>
+    <!-- nav_header_main -->
+    <string name="anonymous">Аноним</string>
     <!-- Dialog Helper -->
+    <string name="sign_in_finish">Вы вошли в аккаунт</string>
     <!-- sign_in_dialog -->
     <string name="email_hint">Ваш email</string>
     <string name="password_hint">Пароль</string>
