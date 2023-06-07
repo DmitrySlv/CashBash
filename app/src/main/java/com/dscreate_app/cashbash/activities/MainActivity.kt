@@ -1,6 +1,8 @@
 package com.dscreate_app.cashbash.activities
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
@@ -11,6 +13,9 @@ import androidx.core.view.GravityCompat
 import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.databinding.ActivityMainBinding
 import com.dscreate_app.cashbash.dialogs.DialogHelper
+import com.dscreate_app.cashbash.utils.GoogleAccountConst.GOOGLE_SIGN_IN_REQUEST_CODE
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.common.api.ApiException
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -31,6 +36,23 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     override fun onStart() {
         super.onStart()
         uiUpdate(mAuth.currentUser)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == GOOGLE_SIGN_IN_REQUEST_CODE) {
+            //Log.d("MyLog", "SignInResult")
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                account?.let {
+                    Log.d("MyLog", "Api 0")
+                    dialogHelper.accHelper.signInFirebaseWithGoogle(account.idToken!!)
+                }
+            } catch (e: ApiException) {
+                Log.d("MyLog", "Api error: ${e.message}")
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun init() = with(binding) {

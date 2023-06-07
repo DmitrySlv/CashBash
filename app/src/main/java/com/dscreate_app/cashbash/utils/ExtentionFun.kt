@@ -11,3 +11,11 @@ fun AppCompatActivity.showToast(string: String) {
 fun Fragment.showToast(string: String) {
     Toast.makeText(activity, string, Toast.LENGTH_LONG).show()
 }
+
+fun AppCompatActivity.LogD(tag: String, msg: String) {
+   android.util.Log.d(tag, msg)
+}
+
+fun Fragment.LogD(tag: String, msg: String) {
+    android.util.Log.d(tag, msg)
+}

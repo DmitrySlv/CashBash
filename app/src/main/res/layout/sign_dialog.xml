@@ -28,6 +28,7 @@
         android:ems="10"
         android:hint="@string/email_hint"
         android:inputType="text|textEmailAddress"
+        android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvSignTitle" />
@@ -40,6 +41,7 @@
         android:ems="10"
         android:hint="@string/password_hint"
         android:inputType="text|textPassword"
+        android:padding="10dp"
         app:layout_constraintEnd_toEndOf="@+id/edSignEmail"
         app:layout_constraintStart_toStartOf="@+id/edSignEmail"
         app:layout_constraintTop_toBottomOf="@+id/edSignEmail" />
@@ -48,7 +50,7 @@
         android:id="@+id/btSignUpIn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp"
         android:backgroundTint="@color/cian"
         android:text="@string/sign_up_action"
@@ -56,7 +58,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/edSignEmail"
         app:layout_constraintStart_toStartOf="@+id/edSignEmail"
-        app:layout_constraintTop_toBottomOf="@+id/edPassword"
+        app:layout_constraintTop_toBottomOf="@+id/btGoogleSignIn"
         app:layout_constraintVertical_bias="0.50" />
 
     <Button
@@ -85,4 +87,14 @@
         app:layout_constraintEnd_toEndOf="@+id/edSignEmail"
         app:layout_constraintStart_toStartOf="@+id/edSignEmail"
         app:layout_constraintTop_toBottomOf="@+id/tvSignTitle" />
+
+    <Button
+        android:id="@+id/btGoogleSignIn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/g_white"
+        android:text="@string/google_sign_in_btn"
+        app:layout_constraintEnd_toEndOf="@+id/btSignUpIn"
+        app:layout_constraintStart_toStartOf="@+id/btSignUpIn"
+        app:layout_constraintTop_toBottomOf="@+id/edPassword" />
 </androidx.constraintlayout.widget.ConstraintLayout>

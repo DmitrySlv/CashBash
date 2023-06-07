@@ -10,7 +10,7 @@ import com.dscreate_app.cashbash.utils.AccountHelper
 import com.dscreate_app.cashbash.utils.showToast
 
 class DialogHelper(private val mainAct: MainActivity) {
-    private val accHelper = AccountHelper(mainAct)
+    val accHelper = AccountHelper(mainAct)
 
     fun createSignDialog(index: Int) {
         val builder = AlertDialog.Builder(mainAct)
@@ -18,12 +18,7 @@ class DialogHelper(private val mainAct: MainActivity) {
         builder.setView(binding.root)
         setDialogState(index, binding)
         val dialog = builder.create()
-        binding.btSignUpIn.setOnClickListener {
-            setOnClickSignUpIn(index, binding, dialog)
-        }
-        binding.btForgetPass.setOnClickListener {
-            setOnClickResetPassword(binding, dialog)
-        }
+        onClicks(binding, index, dialog)
         dialog.show()
     }
 
@@ -64,6 +59,18 @@ class DialogHelper(private val mainAct: MainActivity) {
             dialog?.dismiss()
         } else {
             binding.tvDialogMessage.visibility = View.VISIBLE
+        }
+    }
+
+    private fun onClicks(binding: SignDialogBinding, index: Int, dialog: AlertDialog?) {
+        binding.btSignUpIn.setOnClickListener {
+            setOnClickSignUpIn(index, binding, dialog)
+        }
+        binding.btForgetPass.setOnClickListener {
+            setOnClickResetPassword(binding, dialog)
+        }
+        binding.btGoogleSignIn.setOnClickListener {
+            accHelper.signInWithGoogle()
         }
     }
 

@@ -28,7 +28,7 @@
         email! Пожалуйста, подтвердите ваш email адрес.
     </string>
     <!-- nav_header_main -->
-    <string name="anonymous">Аноним</string>
+    <string name="anonymous">Гость</string>
     <!-- Dialog Helper -->
     <string name="sign_in_finish">Вы вошли в аккаунт</string>
     <string name="reset_email_password">Пароль email адреса был сброшен. Пожалуйста,
@@ -43,4 +43,7 @@
     <string name="forget_password">Забыли пароль?</string>
     <string name="forget_password_title">Укажите email вашего аккаунта для восстановления пароля
     </string>
+    <string name="google_sign_in_btn">Войти c Google</string>
+    <!-- Account Helper -->
+    <string name="sign_in_successful">Поздравляем! Регистрация прошла успешно</string>
 </resources>
