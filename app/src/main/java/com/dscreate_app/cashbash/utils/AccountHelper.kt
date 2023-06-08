@@ -6,6 +6,7 @@ import com.dscreate_app.cashbash.utils.GoogleAccountConst.GOOGLE_SIGN_IN_REQUEST
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthSettings
@@ -32,7 +33,7 @@ class AccountHelper(private val mainAct: MainActivity) {
                             val exception = task.exception as FirebaseAuthUserCollisionException
                             //  mainAct.logD("MyLog", "Exception: ${exception.errorCode}")
                             if (exception.errorCode == ERROR_EMAIL_ALREADY_IN_USE) {
-                                mainAct.showToast(ERROR_EMAIL_ALREADY_IN_USE)
+                                linkEmailToGoogle(email, password)
                             }
                         }
                         if (task.exception is FirebaseAuthInvalidCredentialsException) {
@@ -74,15 +75,13 @@ class AccountHelper(private val mainAct: MainActivity) {
     fun signInFirebaseWithGoogle(token: String) {
         val credential = GoogleAuthProvider.getCredential(token, null)
         mainAct.mAuth.signInWithCredential(credential).addOnCompleteListener {
-            task ->
-                try {
-                    if (task.isSuccessful) {
-                        mainAct.showToast(mainAct.getString(R.string.sign_in_successful))
-                        mainAct.uiUpdate(task.result?.user)
-                    }
-                } catch (e: Exception) {
-                    mainAct.showToast(mainAct.getString(R.string.sign_in_firebase_error))
-                }
+                task ->
+            if (task.isSuccessful) {
+                mainAct.showToast(mainAct.getString(R.string.sign_in_successful))
+                mainAct.uiUpdate(task.result?.user)
+            } else {
+                mainAct.showToast(mainAct.getString(R.string.sign_in_firebase_error))
+            }
         }
     }
 
@@ -108,6 +107,20 @@ class AccountHelper(private val mainAct: MainActivity) {
             .requestIdToken(mainAct.getString(R.string.default_web_client_id))
             .requestEmail().build()
         return GoogleSignIn.getClient(mainAct, gso)
+    }
+
+    private fun linkEmailToGoogle(email: String, password: String) {
+        val credential = EmailAuthProvider.getCredential(email, password)
+        if (mainAct.mAuth.currentUser != null) {
+            mainAct.mAuth.currentUser?.linkWithCredential(credential)
+                ?.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        mainAct.showToast(mainAct.getString(R.string.link_done))
+                    }
+                }
+        } else {
+            mainAct.showToast(mainAct.getString(R.string.enter_to_google_acc))
+        }
     }
 
     companion object {

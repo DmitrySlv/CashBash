@@ -48,4 +48,7 @@
     <string name="sign_in_successful">Вы успешно вошли под своим Google аккаунтом!</string>
     <string name="sign_in_firebase_error">Ошибка входа в аккаунт, пожалуйста попробуйте еще раз
         позже!</string>
+    <string name="link_done">Ваш email успешно связан с вашим аккаунтом</string>
+    <string name="enter_to_google_acc">У вас уже есть аккаунт с этим email. Пожалуйста, войдите
+    под этим email или зарегистрируйтесь под новым email.</string>
 </resources>
