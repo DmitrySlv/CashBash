@@ -45,5 +45,7 @@
     </string>
     <string name="google_sign_in_btn">Войти c Google</string>
     <!-- Account Helper -->
-    <string name="sign_in_successful">Поздравляем! Регистрация прошла успешно</string>
+    <string name="sign_in_successful">Вы успешно вошли под своим Google аккаунтом!</string>
+    <string name="sign_in_firebase_error">Ошибка входа в аккаунт, пожалуйста попробуйте еще раз
+        позже!</string>
 </resources>

@@ -43,7 +43,6 @@ class DialogHelper(private val mainAct: MainActivity) {
                 accHelper.signInWithEmail(
                     binding.edSignEmail.text.toString(), binding.edPassword.text.toString()
                 )
-                mainAct.showToast(mainAct.getString(R.string.sign_in_finish))
         }
     }
 
@@ -71,6 +70,7 @@ class DialogHelper(private val mainAct: MainActivity) {
         }
         binding.btGoogleSignIn.setOnClickListener {
             accHelper.signInWithGoogle()
+            dialog?.dismiss()
         }
     }
 
