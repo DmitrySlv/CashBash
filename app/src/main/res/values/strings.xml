@@ -51,4 +51,6 @@
     <string name="link_done">Ваш email успешно связан с вашим аккаунтом</string>
     <string name="enter_to_google_acc">У вас уже есть аккаунт с этим email. Пожалуйста, войдите
     под этим email или зарегистрируйтесь под новым email.</string>
+    <!-- main_menu -->
+    <string name="new_ad">Создать объявление</string>
 </resources>

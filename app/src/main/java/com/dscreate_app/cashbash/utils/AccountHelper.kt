@@ -9,6 +9,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthSettings
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
@@ -60,12 +61,20 @@ class AccountHelper(private val mainAct: MainActivity) {
                 if (task.isSuccessful) {
                     mainAct.uiUpdate(task.result.user)
                 } else {
+                  //  mainAct.logD(TAG, "Exception 2: ${task.exception} ")
                     if (task.exception is FirebaseAuthInvalidCredentialsException) {
                         val exception =
                             task.exception as FirebaseAuthInvalidCredentialsException
+                      //  mainAct.logD(TAG, "Exception 2: ${exception.errorCode} ")
                         if (exception.errorCode == ERROR_WRONG_PASSWORD) {
                             mainAct.showToast(ERROR_WRONG_PASSWORD)
                         }
+                    }
+                    if (task.exception is FirebaseAuthInvalidUserException) {
+                        val exception = task.exception as FirebaseAuthInvalidUserException
+                       if (exception.errorCode == ERROR_USER_NOT_FOUND) {
+                           mainAct.showToast(ERROR_USER_NOT_FOUND)
+                       }
                     }
                 }
             }
@@ -102,6 +111,10 @@ class AccountHelper(private val mainAct: MainActivity) {
         mainAct.startActivityForResult(intent, GOOGLE_SIGN_IN_REQUEST_CODE)
     }
 
+    fun signOutGoogle() {
+        getSignInClient().signOut()
+    }
+
     private fun getSignInClient(): GoogleSignInClient {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(mainAct.getString(R.string.default_web_client_id))
@@ -128,5 +141,7 @@ class AccountHelper(private val mainAct: MainActivity) {
       private const val ERROR_INVALID_EMAIL = "ERROR_INVALID_EMAIL"
       private const val ERROR_WRONG_PASSWORD = "ERROR_WRONG_PASSWORD"
       private const val ERROR_WEAK_PASSWORD = "ERROR_WEAK_PASSWORD"
+      private const val ERROR_USER_NOT_FOUND = "ERROR_USER_NOT_FOUND"
+      private const val TAG = "MyLog"
     }
 }

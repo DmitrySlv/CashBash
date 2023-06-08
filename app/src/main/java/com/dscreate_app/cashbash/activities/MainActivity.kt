@@ -3,6 +3,7 @@ package com.dscreate_app.cashbash.activities
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
@@ -55,11 +56,28 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.new_ad) {
+            val intent = Intent(this, EditAdsActivity::class.java)
+            startActivity(intent)
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     private fun init() = with(binding) {
+        setSupportActionBar(mainContent.toolbar)
+        mainContent.toolbar.setTitleTextColor(ContextCompat.getColor(
+            this@MainActivity, R.color.white))
         val toggle = ActionBarDrawerToggle(
             this@MainActivity, drawerLayout, mainContent.toolbar, R.string.open, R.string.close
         )
-        toggle.drawerArrowDrawable.color = ContextCompat.getColor(this@MainActivity, R.color.white)
+        toggle.drawerArrowDrawable.color = ContextCompat.getColor(
+            this@MainActivity, R.color.white)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         navView.setNavigationItemSelectedListener(this@MainActivity)
@@ -92,6 +110,7 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
             R.id.sign_out -> {
                 uiUpdate(null)
                 mAuth.signOut()
+                dialogHelper.accHelper.signOutGoogle()
             }
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
