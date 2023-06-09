@@ -1,4 +1,4 @@
-package com.dscreate_app.cashbash.dialogs
+package com.dscreate_app.cashbash.utils.dialogs
 
 import android.app.AlertDialog
 import android.view.LayoutInflater

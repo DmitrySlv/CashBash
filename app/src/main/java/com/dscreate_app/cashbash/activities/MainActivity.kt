@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.databinding.ActivityMainBinding
-import com.dscreate_app.cashbash.dialogs.DialogHelper
+import com.dscreate_app.cashbash.utils.dialogs.DialogHelper
 import com.dscreate_app.cashbash.utils.GoogleAccountConst.GOOGLE_SIGN_IN_REQUEST_CODE
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
