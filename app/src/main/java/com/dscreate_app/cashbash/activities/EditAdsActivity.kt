@@ -1,10 +1,10 @@
 package com.dscreate_app.cashbash.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ArrayAdapter
+import androidx.appcompat.app.AppCompatActivity
 import com.dscreate_app.cashbash.databinding.ActivityEditAdsBinding
 import com.dscreate_app.cashbash.utils.CityHelper
+import com.dscreate_app.cashbash.utils.dialogs.DialogSpinnerHelper
 
 class EditAdsActivity : AppCompatActivity() {
 
@@ -17,12 +17,8 @@ class EditAdsActivity : AppCompatActivity() {
     }
 
     private fun init() = with(binding) {
-        val arrayAdapter = ArrayAdapter(
-            this@EditAdsActivity,
-            android.R.layout.simple_spinner_item,
-            CityHelper.getAllCountries(this@EditAdsActivity)
-        )
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spCountry.adapter = arrayAdapter
+        val listCountry = CityHelper.getAllCountries(this@EditAdsActivity)
+        val dialog = DialogSpinnerHelper()
+        dialog.showSpinnerDialog(this@EditAdsActivity, listCountry)
     }
 }

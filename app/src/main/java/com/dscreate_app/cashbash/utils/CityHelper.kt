@@ -1,13 +1,15 @@
 package com.dscreate_app.cashbash.utils
 
 import android.content.Context
+import com.dscreate_app.cashbash.R
 import org.json.JSONObject
 import java.io.IOException
+import java.util.Locale
 
 object CityHelper {
 
-    fun getAllCountries(context: Context): List<String> {
-        val tempArray = mutableListOf<String>()
+    fun getAllCountries(context: Context): ArrayList<String> {
+        val tempArray = ArrayList<String>()
 
         try {
             val inputStream = context.assets.open(FILE_NAME)
@@ -27,6 +29,27 @@ object CityHelper {
 
         }
         return tempArray
+    }
+
+    fun filterListData(
+        list: ArrayList<String>, searchText: String?, context: Context
+    ): ArrayList<String> {
+
+        val tempList = ArrayList<String>()
+        tempList.clear()
+        if (searchText == null) {
+            tempList.add(context.getString(R.string.no_result))
+            return tempList
+        }
+        for (selection: String in list) {
+            if (selection.lowercase().startsWith(searchText.lowercase())) {
+                tempList.add(selection)
+            }
+        }
+        if (tempList.size == 0){
+            tempList.add(context.getString(R.string.no_result))
+        }
+        return tempList
     }
 
     private const val FILE_NAME = "countriesToCities.json"
