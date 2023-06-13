@@ -3,18 +3,21 @@ package com.dscreate_app.cashbash.activities
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.databinding.ActivityEditAdsBinding
+import com.dscreate_app.cashbash.fragments.ImageListFragment
 import com.dscreate_app.cashbash.utils.CityHelper
-import com.dscreate_app.cashbash.utils.ImagePicker
 import com.dscreate_app.cashbash.utils.dialogs.DialogSpinnerHelper
+import com.dscreate_app.cashbash.utils.image_picker.ImagePicker
+import com.dscreate_app.cashbash.utils.image_picker.ImagePickerConst
 import com.dscreate_app.cashbash.utils.logD
 import com.dscreate_app.cashbash.utils.showToast
 import com.fxn.pix.Pix
 import com.fxn.utility.PermUtil
 
-class EditAdsActivity : AppCompatActivity() {
+class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
 
     private val binding by lazy { ActivityEditAdsBinding.inflate(layoutInflater) }
     private val dialog = DialogSpinnerHelper()
@@ -23,13 +26,15 @@ class EditAdsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         init()
-        onClicks()
+        onClickSelectCountry()
+        onClickSelectCity()
+        openPixImagePicker()
     }
 
     private fun init() = with(binding) {
     }
 
-    private fun onClicks() = with(binding) {
+    private fun onClickSelectCountry() = with(binding) {
         tvSelectCountry.setOnClickListener {
             val listCountry = CityHelper.getAllCountries(this@EditAdsActivity)
             dialog.showSpinnerDialog(this@EditAdsActivity, listCountry, tvSelectCountry)
@@ -37,7 +42,9 @@ class EditAdsActivity : AppCompatActivity() {
                 tvSelectCity.text = getString(R.string.select_city)
             }
         }
+    }
 
+    private fun onClickSelectCity() = with(binding) {
         tvSelectCity.setOnClickListener {
             val selectedCountry = tvSelectCountry.text.toString()
             if (selectedCountry != getString(R.string.select_country)) {
@@ -49,11 +56,19 @@ class EditAdsActivity : AppCompatActivity() {
                 showToast(getString(R.string.no_selected_country))
             }
         }
+    }
 
-        ibEditImage.setOnClickListener {
-            ImagePicker.getImages(this@EditAdsActivity)
+    private fun openPixImagePicker() {
+       binding.ibEditImage.setOnClickListener {
+            getImages()
         }
+    }
 
+    private fun getImages() {
+        binding.svMain.visibility = View.GONE
+        supportFragmentManager.beginTransaction()
+        .replace(R.id.container, ImageListFragment.newInstance(this))
+        .commit()
     }
 
     override fun onRequestPermissionsResult(
@@ -66,7 +81,7 @@ class EditAdsActivity : AppCompatActivity() {
             PermUtil.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS -> {
 
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    ImagePicker.getImages(this)
+                    ImagePicker.getImages(this, ImagePickerConst.COUNT_IMAGES)
                 } else {
                    showToast(getString(R.string.approve_permission_for_your_photo))
                 }
@@ -77,8 +92,7 @@ class EditAdsActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        //заменить RequestCode на свою константу
-        if (resultCode == RESULT_OK && requestCode == ImagePicker.REQUEST_CODE_GET_IMAGES) {
+        if (resultCode == RESULT_OK && requestCode == ImagePickerConst.REQUEST_CODE_GET_IMAGES) {
             data?.let {
                 val returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS)
                 logD(TAG, "Image :${returnValue?.get(0)}")
@@ -86,6 +100,10 @@ class EditAdsActivity : AppCompatActivity() {
                 logD(TAG, "Image :${returnValue?.get(2)}")
             }
         }
+    }
+
+    override fun onClose() {
+        binding.svMain.visibility = View.VISIBLE
     }
 
     companion object {
