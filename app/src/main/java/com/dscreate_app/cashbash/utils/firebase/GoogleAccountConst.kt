@@ -1,4 +1,4 @@
-package com.dscreate_app.cashbash.utils
+package com.dscreate_app.cashbash.utils.firebase
 
 object GoogleAccountConst {
 

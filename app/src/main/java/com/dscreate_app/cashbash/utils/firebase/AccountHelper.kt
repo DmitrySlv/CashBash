@@ -1,16 +1,15 @@
-package com.dscreate_app.cashbash.utils
+package com.dscreate_app.cashbash.utils.firebase
 
 import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.activities.MainActivity
-import com.dscreate_app.cashbash.utils.GoogleAccountConst.GOOGLE_SIGN_IN_REQUEST_CODE
+import com.dscreate_app.cashbash.utils.firebase.GoogleAccountConst.GOOGLE_SIGN_IN_REQUEST_CODE
+import com.dscreate_app.cashbash.utils.showToast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.EmailAuthProvider
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
-import com.google.firebase.auth.FirebaseAuthSettings
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.auth.FirebaseUser

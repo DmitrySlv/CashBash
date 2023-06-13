@@ -6,7 +6,7 @@ import android.view.View
 import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.activities.MainActivity
 import com.dscreate_app.cashbash.databinding.SignDialogBinding
-import com.dscreate_app.cashbash.utils.AccountHelper
+import com.dscreate_app.cashbash.utils.firebase.AccountHelper
 import com.dscreate_app.cashbash.utils.showToast
 
 class DialogHelper(private val mainAct: MainActivity) {

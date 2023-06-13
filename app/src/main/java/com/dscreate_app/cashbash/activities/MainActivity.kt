@@ -14,7 +14,7 @@ import androidx.core.view.GravityCompat
 import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.databinding.ActivityMainBinding
 import com.dscreate_app.cashbash.utils.dialogs.DialogHelper
-import com.dscreate_app.cashbash.utils.GoogleAccountConst.GOOGLE_SIGN_IN_REQUEST_CODE
+import com.dscreate_app.cashbash.utils.firebase.GoogleAccountConst.GOOGLE_SIGN_IN_REQUEST_CODE
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener

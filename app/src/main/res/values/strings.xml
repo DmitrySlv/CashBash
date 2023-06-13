@@ -3,6 +3,7 @@
     <!-- Content Description -->
     <string name="drawer_menu">Выдвижное меню</string>
     <string name="im_acc_image">Ваш аватар</string>
+    <string name="ib_edit_image">Кнопка редактирования изображения</string>
     <!-- Drawer Menu -->
     <string name="ads_cat1">Объявления</string>
     <string name="ad_my_ads">Мои объявления</string>
@@ -31,6 +32,8 @@
     <string name="select_country">*Выберите страну</string>
     <string name="select_city">*Выберите город</string>
     <string name="no_selected_country">Пожалуйста, выберите страну</string>
+    <string name="approve_permission_for_your_photo">Пожалуйста, для корректной работы приложения
+        предоставьте разрешение для доступа к файловому хранилищу вашего устройства!</string>
     <!-- nav_header_main -->
     <string name="anonymous">Гость</string>
     <!-- Dialog Helper -->
