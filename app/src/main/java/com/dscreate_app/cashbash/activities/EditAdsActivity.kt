@@ -12,7 +12,6 @@ import com.dscreate_app.cashbash.utils.CityHelper
 import com.dscreate_app.cashbash.utils.dialogs.DialogSpinnerHelper
 import com.dscreate_app.cashbash.utils.image_picker.ImagePicker
 import com.dscreate_app.cashbash.utils.image_picker.ImagePickerConst
-import com.dscreate_app.cashbash.utils.logD
 import com.dscreate_app.cashbash.utils.showToast
 import com.fxn.pix.Pix
 import com.fxn.utility.PermUtil
@@ -60,15 +59,8 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
 
     private fun openPixImagePicker() {
        binding.ibEditImage.setOnClickListener {
-            getImages()
+            ImagePicker.getImages(this, ImagePickerConst.COUNT_IMAGES)
         }
-    }
-
-    private fun getImages() {
-        binding.svMain.visibility = View.GONE
-        supportFragmentManager.beginTransaction()
-        .replace(R.id.container, ImageListFragment.newInstance(this))
-        .commit()
     }
 
     override fun onRequestPermissionsResult(
@@ -95,9 +87,12 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
         if (resultCode == RESULT_OK && requestCode == ImagePickerConst.REQUEST_CODE_GET_IMAGES) {
             data?.let {
                 val returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS)
-                logD(TAG, "Image :${returnValue?.get(0)}")
-                logD(TAG, "Image :${returnValue?.get(1)}")
-                logD(TAG, "Image :${returnValue?.get(2)}")
+                if (returnValue?.size!! > 1) {
+                    binding.svMain.visibility = View.GONE
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, ImageListFragment.newInstance(this, returnValue))
+                        .commit()
+                }
             }
         }
     }

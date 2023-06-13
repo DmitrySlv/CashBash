@@ -4,6 +4,7 @@
     <string name="drawer_menu">Выдвижное меню</string>
     <string name="im_acc_image">Ваш аватар</string>
     <string name="ib_edit_image">Кнопка редактирования изображения</string>
+    <string name="im_content_desc">Изображение</string>
     <!-- Drawer Menu -->
     <string name="ads_cat1">Объявления</string>
     <string name="ad_my_ads">Мои объявления</string>
