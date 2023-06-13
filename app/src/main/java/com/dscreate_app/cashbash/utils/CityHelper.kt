@@ -26,7 +26,26 @@ object CityHelper {
             }
 
         } catch (e: IOException) {
+        }
+        return tempArray
+    }
 
+    fun getAllCities(context: Context, country: String): ArrayList<String> {
+        val tempArray = ArrayList<String>()
+
+        try {
+            val inputStream = context.assets.open(FILE_NAME)
+            val size = inputStream.available()
+            val bytesArray = ByteArray(size)
+            inputStream.read(bytesArray)
+            val jsonFile = String(bytesArray)
+            val jsonObject = JSONObject(jsonFile)
+            val cityNames = jsonObject.getJSONArray(country)
+                for (i in 0 until cityNames.length()) {
+                    tempArray.add(cityNames.getString(i))
+            }
+
+        } catch (e: IOException) {
         }
         return tempArray
     }

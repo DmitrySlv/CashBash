@@ -30,6 +30,7 @@
     <!-- Edit Activity -->
     <string name="select_country">*Выберите страну</string>
     <string name="select_city">*Выберите город</string>
+    <string name="no_selected_country">Пожалуйста, выберите страну</string>
     <!-- nav_header_main -->
     <string name="anonymous">Гость</string>
     <!-- Dialog Helper -->
