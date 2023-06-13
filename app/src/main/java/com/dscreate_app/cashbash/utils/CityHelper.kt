@@ -52,5 +52,6 @@ object CityHelper {
         return tempList
     }
 
+
     private const val FILE_NAME = "countriesToCities.json"
 }

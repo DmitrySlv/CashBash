@@ -2,4 +2,5 @@
 <resources>
     <color name="red">#E72516</color>
     <color name="g_white">#DDDDDD</color>
+    <color name="grey">#B6B6B6</color>
 </resources>

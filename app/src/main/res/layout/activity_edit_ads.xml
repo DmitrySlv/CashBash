@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".activities.EditAdsActivity">
 
     <ScrollView
@@ -13,7 +14,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/vpImages"
@@ -25,21 +26,18 @@
 
             </androidx.viewpager2.widget.ViewPager2>
 
-            <SearchView
-                android:id="@+id/countrySearch"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="5dp" />
-
-            <Spinner
-                android:id="@+id/spCountry"
+            <TextView
+                android:id="@+id/tvSelectCountry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="5dp" />
+                android:layout_margin="8dp"
+                android:background="@color/cian"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="@string/select_country"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
         </LinearLayout>
     </ScrollView>
 

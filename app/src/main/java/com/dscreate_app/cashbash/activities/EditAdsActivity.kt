@@ -8,17 +8,23 @@ import com.dscreate_app.cashbash.utils.dialogs.DialogSpinnerHelper
 
 class EditAdsActivity : AppCompatActivity() {
 
-    private val binding by lazy { ActivityEditAdsBinding.inflate(layoutInflater) }
+    val binding by lazy { ActivityEditAdsBinding.inflate(layoutInflater) }
+    private val dialog = DialogSpinnerHelper()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         init()
+        onClickSelectCountry()
     }
 
     private fun init() = with(binding) {
-        val listCountry = CityHelper.getAllCountries(this@EditAdsActivity)
-        val dialog = DialogSpinnerHelper()
-        dialog.showSpinnerDialog(this@EditAdsActivity, listCountry)
+    }
+
+    private fun onClickSelectCountry() = with(binding) {
+        tvSelectCountry.setOnClickListener {
+            val listCountry = CityHelper.getAllCountries(this@EditAdsActivity)
+            dialog.showSpinnerDialog(this@EditAdsActivity, listCountry)
+        }
     }
 }

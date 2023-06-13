@@ -14,16 +14,17 @@ class DialogSpinnerHelper {
 
     fun showSpinnerDialog(context: Context, list: ArrayList<String>) {
         val builder = AlertDialog.Builder(context)
+        val dialog = builder.create()
         val binding = SpinnerLayoutBinding.inflate(LayoutInflater.from(context))
-        val spAdapter = DialogSpinnerAdapter()
+        val spAdapter = DialogSpinnerAdapter(context, dialog)
         val rcView = binding.rcSpView
         val searchView = binding.svSpinner
         rcView.layoutManager = LinearLayoutManager(context)
         rcView.adapter = spAdapter
-        builder.setView(binding.root)
+        dialog.setView(binding.root)
         spAdapter.updateAdapter(list)
         setSearchView(spAdapter, list, searchView, context)
-        builder.show()
+        dialog.show()
     }
 
     private fun setSearchView(
