@@ -1,10 +1,9 @@
-package com.dscreate_app.cashbash.utils
+package com.dscreate_app.cashbash.utils.dialogs
 
 import android.content.Context
 import com.dscreate_app.cashbash.R
 import org.json.JSONObject
 import java.io.IOException
-import java.util.Locale
 
 object CityHelper {
 

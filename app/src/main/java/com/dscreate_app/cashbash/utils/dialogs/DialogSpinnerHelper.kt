@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dscreate_app.cashbash.adapters.DialogSpinnerAdapter
 import com.dscreate_app.cashbash.databinding.SpinnerLayoutBinding
-import com.dscreate_app.cashbash.utils.CityHelper
 
 class DialogSpinnerHelper {
 
