@@ -56,8 +56,8 @@ class SelectImageAdapter: RecyclerView.Adapter<SelectImageAdapter.ImageHolder>()
         }
     }
 
-    fun updateAdapter(newList: MutableList<SelectImageItem>) {
-        mainList.clear()
+    fun updateAdapter(newList: MutableList<SelectImageItem>, needClear: Boolean) {
+        if (needClear) mainList.clear()
         mainList.addAll(newList)
         notifyDataSetChanged()
     }

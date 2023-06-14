@@ -4,14 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.adapters.SelectImageAdapter
 import com.dscreate_app.cashbash.databinding.FragmentImageListBinding
 import com.dscreate_app.cashbash.models.SelectImageItem
 import com.dscreate_app.cashbash.utils.callbacks.ItemTouchMoveCallback
-import com.dscreate_app.cashbash.utils.logD
+import com.dscreate_app.cashbash.utils.image_picker.ImagePicker
+import com.dscreate_app.cashbash.utils.image_picker.ImagePickerConst
 
 class ImageListFragment(
     private val fragClose: FragmentClose,
@@ -38,8 +41,9 @@ class ImageListFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupToolbar()
         init()
-        clickBackEdAdsActivity()
+        updateList()
     }
 
     override fun onDestroy() {
@@ -50,32 +54,54 @@ class ImageListFragment(
     override fun onDetach() {
         super.onDetach()
         fragClose.onClose(adapter.mainList)
-        logD(TAG, "Title 0 : ${adapter.mainList[0].title}")
-        logD(TAG, "Title 1 : ${adapter.mainList[1].title}")
-        logD(TAG, "Title 2 : ${adapter.mainList[2].title}")
     }
 
     private fun init() = with(binding) {
         rcViewSelectImage.layoutManager = LinearLayoutManager(requireContext())
         touchHelper.attachToRecyclerView(rcViewSelectImage)
         rcViewSelectImage.adapter = adapter
-        updateList()
+    }
+
+    private fun setupToolbar() = with(binding) {
+        toolbar.inflateMenu(R.menu.choose_image__menu)
+        val deleteImageItem = toolbar.menu.findItem(R.id.delete_image)
+        val addImageItem = toolbar.menu.findItem(R.id.add_image)
+
+        toolbar.setNavigationOnClickListener {
+            clickBackEdAdsActivity()
+        }
+
+        deleteImageItem.setOnMenuItemClickListener {
+            adapter.updateAdapter(mutableListOf(), true)
+            true
+        }
+        addImageItem.setOnMenuItemClickListener {
+            val imageCount = ImagePickerConst.MAX_COUNT_IMAGES - adapter.mainList.size
+            ImagePicker.getImages(activity as AppCompatActivity, imageCount)
+            true
+        }
     }
 
     private fun clickBackEdAdsActivity() {
-        binding.bBack.setOnClickListener {
             requireActivity().supportFragmentManager.beginTransaction()
                 .remove(this)
                 .commit()
-        }
     }
 
     private fun updateList() {
-        val list = mutableListOf<SelectImageItem>()
+        val updateList = mutableListOf<SelectImageItem>()
         for (i in 0 until newList.size) {
-            list.add(SelectImageItem(i.toString(), newList[i]))
+            updateList.add(SelectImageItem(i.toString(), newList[i]))
         }
-        adapter.updateAdapter(list)
+        adapter.updateAdapter(updateList, true)
+    }
+
+    fun updateAdapter(newList: MutableList<String>) {
+        val updateList = mutableListOf<SelectImageItem>()
+        for (i in adapter.mainList.size until newList.size + adapter.mainList.size) {
+            updateList.add(SelectImageItem(i.toString(), newList[i - adapter.mainList.size]))
+        }
+        adapter.updateAdapter(updateList, false)
     }
 
     interface FragmentClose {

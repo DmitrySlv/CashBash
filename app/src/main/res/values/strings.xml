@@ -64,6 +64,9 @@
     <string name="no_result">Нет результата</string>
     <!-- main_menu -->
     <string name="new_ad">Создать объявление</string>
+    <!-- choose_image_menu -->
+    <string name="delete_image">Удалить</string>
+    <string name="add_image">Добавить</string>
     <!-- sp_list_item -->
     <string name="item">Item</string>
 </resources>

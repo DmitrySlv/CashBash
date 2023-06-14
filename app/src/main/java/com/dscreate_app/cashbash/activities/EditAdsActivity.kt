@@ -23,6 +23,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
     private val binding by lazy { ActivityEditAdsBinding.inflate(layoutInflater) }
     private val dialog = DialogSpinnerHelper()
     private lateinit var imageAdapter: ImageAdapter
+    private var chooseImageFrag: ImageListFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +65,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
 
     private fun openPixImagePicker() {
        binding.ibEditImage.setOnClickListener {
-            ImagePicker.getImages(this, ImagePickerConst.COUNT_IMAGES)
+            ImagePicker.getImages(this, ImagePickerConst.MAX_COUNT_IMAGES)
         }
     }
 
@@ -78,7 +79,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
             PermUtil.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS -> {
 
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    ImagePicker.getImages(this, ImagePickerConst.COUNT_IMAGES)
+                    ImagePicker.getImages(this, ImagePickerConst.MAX_COUNT_IMAGES)
                 } else {
                    showToast(getString(R.string.approve_permission_for_your_photo))
                 }
@@ -90,13 +91,20 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == ImagePickerConst.REQUEST_CODE_GET_IMAGES) {
+
             data?.let {
                 val returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS)
-                if (returnValue?.size!! > 1) {
+                if (returnValue?.size!! > 1 && chooseImageFrag == null) {
+
+                    chooseImageFrag = ImageListFragment.newInstance(this, returnValue)
                     binding.svMain.visibility = View.GONE
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, ImageListFragment.newInstance(this, returnValue))
+                        .replace(R.id.container, chooseImageFrag!!)
                         .commit()
+                }
+                if (chooseImageFrag != null) {
+
+                    chooseImageFrag?.updateAdapter(returnValue)
                 }
             }
         }
@@ -105,6 +113,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
     override fun onClose(list: MutableList<SelectImageItem>) {
         binding.svMain.visibility = View.VISIBLE
         imageAdapter.updateAdapter(list)
+        chooseImageFrag = null
     }
 
     companion object {

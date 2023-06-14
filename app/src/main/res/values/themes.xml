@@ -10,7 +10,7 @@
         <item name="colorOnSecondary">@color/cian</item>
     </style>
 
-    <!-- Toolbar -->
+    <!-- ActionBar -->
     <style name="Base.Theme.ActionBar" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="colorPrimary">@color/purple_main</item>
         <item name="colorPrimaryVariant">@color/black</item>
@@ -20,5 +20,10 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
+    <!-- Toolbar для fragment_image_list-->
+    <style name="ToolbarTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorControlNormal">@color/white</item>
+    </style>
+    
     <style name="Theme.CashBash" parent="Base.Theme.CashBash" />
 </resources>
