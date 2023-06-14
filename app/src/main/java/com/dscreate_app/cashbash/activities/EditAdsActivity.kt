@@ -6,8 +6,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.dscreate_app.cashbash.R
+import com.dscreate_app.cashbash.adapters.ImageAdapter
 import com.dscreate_app.cashbash.databinding.ActivityEditAdsBinding
 import com.dscreate_app.cashbash.fragments.ImageListFragment
+import com.dscreate_app.cashbash.models.SelectImageItem
 import com.dscreate_app.cashbash.utils.dialogs.CityHelper
 import com.dscreate_app.cashbash.utils.dialogs.DialogSpinnerHelper
 import com.dscreate_app.cashbash.utils.image_picker.ImagePicker
@@ -20,6 +22,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
 
     private val binding by lazy { ActivityEditAdsBinding.inflate(layoutInflater) }
     private val dialog = DialogSpinnerHelper()
+    private lateinit var imageAdapter: ImageAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +34,8 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
     }
 
     private fun init() = with(binding) {
+        imageAdapter = ImageAdapter()
+        vpImages.adapter = imageAdapter
     }
 
     private fun onClickSelectCountry() = with(binding) {
@@ -97,8 +102,9 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
         }
     }
 
-    override fun onClose() {
+    override fun onClose(list: MutableList<SelectImageItem>) {
         binding.svMain.visibility = View.VISIBLE
+        imageAdapter.updateAdapter(list)
     }
 
     companion object {

@@ -11,7 +11,7 @@ import com.dscreate_app.cashbash.models.SelectImageItem
 import com.dscreate_app.cashbash.utils.callbacks.ItemTouchMoveCallback
 
 class SelectImageAdapter: RecyclerView.Adapter<SelectImageAdapter.ImageHolder>(),
-    ItemTouchMoveCallback.ItemTouchAdapter {
+    ItemTouchMoveCallback.ItemTouchListener {
 
     val mainList = mutableListOf<SelectImageItem>()
 
@@ -35,8 +35,16 @@ class SelectImageAdapter: RecyclerView.Adapter<SelectImageAdapter.ImageHolder>()
     override fun onMove(startPos: Int, targetPos: Int) {
         val targetItem = mainList[targetPos]
         mainList[targetPos] = mainList[startPos]
+        val titleStart = mainList[targetPos].title
+        mainList[targetPos].title = targetItem.title
         mainList[startPos] = targetItem
+        mainList[startPos].title = titleStart
+
         notifyItemMoved(startPos, targetPos)
+    }
+
+    override fun onClear() {
+       notifyDataSetChanged()
     }
 
     class ImageHolder(view: View): RecyclerView.ViewHolder(view) {

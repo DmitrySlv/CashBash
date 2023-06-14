@@ -3,7 +3,9 @@ package com.dscreate_app.cashbash.utils.callbacks
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
-class ItemTouchMoveCallback(private val adapter: ItemTouchAdapter): ItemTouchHelper.Callback() {
+class ItemTouchMoveCallback(
+    private val adapterListener: ItemTouchListener
+    ): ItemTouchHelper.Callback() {
 
     //задается движение перемещения item
     override fun getMovementFlags(
@@ -20,7 +22,7 @@ class ItemTouchMoveCallback(private val adapter: ItemTouchAdapter): ItemTouchHel
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-        adapter.onMove(viewHolder.adapterPosition, target.adapterPosition)
+        adapterListener.onMove(viewHolder.adapterPosition, target.adapterPosition)
         return true
     }
 
@@ -41,10 +43,12 @@ class ItemTouchMoveCallback(private val adapter: ItemTouchAdapter): ItemTouchHel
     //на первоначальное. В данномслучае возвращает полупрозрачность на дефолтное до перетаскивания.
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
         viewHolder.itemView.alpha = 1.0f
+        adapterListener.onClear()
         super.clearView(recyclerView, viewHolder)
     }
 
-    interface ItemTouchAdapter {
+    interface ItemTouchListener {
         fun onMove(startPos: Int, targetPos: Int)
+        fun onClear()
     }
 }

@@ -49,7 +49,7 @@ class ImageListFragment(
 
     override fun onDetach() {
         super.onDetach()
-        fragClose.onClose()
+        fragClose.onClose(adapter.mainList)
         logD(TAG, "Title 0 : ${adapter.mainList[0].title}")
         logD(TAG, "Title 1 : ${adapter.mainList[1].title}")
         logD(TAG, "Title 2 : ${adapter.mainList[2].title}")
@@ -79,7 +79,7 @@ class ImageListFragment(
     }
 
     interface FragmentClose {
-        fun onClose()
+        fun onClose(list: MutableList<SelectImageItem>)
     }
 
     companion object {
