@@ -7,11 +7,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.databinding.ImageAdapterItemBinding
-import com.dscreate_app.cashbash.models.SelectImageItem
 
 class ImageAdapter: RecyclerView.Adapter<ImageAdapter.ImageHolder>() {
 
-    private val imageList = mutableListOf<SelectImageItem>()
+    val imageList = mutableListOf<String>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageHolder {
         val view = LayoutInflater.from(parent.context)
@@ -20,7 +19,7 @@ class ImageAdapter: RecyclerView.Adapter<ImageAdapter.ImageHolder>() {
     }
 
     override fun onBindViewHolder(holder: ImageHolder, position: Int) {
-        holder.setData(imageList[position].imageUri)
+        holder.setData(imageList[position])
     }
 
     override fun getItemCount(): Int {
@@ -35,7 +34,7 @@ class ImageAdapter: RecyclerView.Adapter<ImageAdapter.ImageHolder>() {
         }
     }
 
-    fun updateAdapter(newList: MutableList<SelectImageItem>) {
+    fun updateAdapter(newList: MutableList<String>) {
         imageList.clear()
         imageList.addAll(newList)
         notifyDataSetChanged()

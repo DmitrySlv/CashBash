@@ -9,7 +9,6 @@ import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.adapters.ImageAdapter
 import com.dscreate_app.cashbash.databinding.ActivityEditAdsBinding
 import com.dscreate_app.cashbash.fragments.ImageListFragment
-import com.dscreate_app.cashbash.models.SelectImageItem
 import com.dscreate_app.cashbash.utils.dialogs.CityHelper
 import com.dscreate_app.cashbash.utils.dialogs.DialogSpinnerHelper
 import com.dscreate_app.cashbash.utils.image_picker.ImagePicker
@@ -64,8 +63,12 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
     }
 
     private fun openPixImagePicker() {
-       binding.ibEditImage.setOnClickListener {
-            ImagePicker.getImages(this, ImagePickerConst.MAX_COUNT_IMAGES)
+        binding.ibEditImage.setOnClickListener {
+            if (imageAdapter.imageList.size == 0) {
+                ImagePicker.getImages(this, ImagePickerConst.MAX_COUNT_IMAGES)
+            } else {
+                openListImageFrag(imageAdapter.imageList)
+            }
         }
     }
 
@@ -95,12 +98,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
             data?.let {
                 val returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS)
                 if (returnValue?.size!! > 1 && chooseImageFrag == null) {
-
-                    chooseImageFrag = ImageListFragment.newInstance(this, returnValue)
-                    binding.svMain.visibility = View.GONE
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, chooseImageFrag!!)
-                        .commit()
+                    openListImageFrag(returnValue)
                 }
                 if (chooseImageFrag != null) {
 
@@ -110,7 +108,15 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
         }
     }
 
-    override fun onClose(list: MutableList<SelectImageItem>) {
+    private fun openListImageFrag(newList: MutableList<String>) {
+        chooseImageFrag = ImageListFragment.newInstance(this, newList)
+        binding.svMain.visibility = View.GONE
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container, chooseImageFrag!!)
+            .commit()
+    }
+
+    override fun onClose(list: MutableList<String>) {
         binding.svMain.visibility = View.VISIBLE
         imageAdapter.updateAdapter(list)
         chooseImageFrag = null

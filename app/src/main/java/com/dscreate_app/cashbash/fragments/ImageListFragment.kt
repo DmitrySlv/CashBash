@@ -9,9 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dscreate_app.cashbash.R
+import com.dscreate_app.cashbash.adapters.ImageAdapter
 import com.dscreate_app.cashbash.adapters.SelectImageAdapter
 import com.dscreate_app.cashbash.databinding.FragmentImageListBinding
-import com.dscreate_app.cashbash.models.SelectImageItem
 import com.dscreate_app.cashbash.utils.callbacks.ItemTouchMoveCallback
 import com.dscreate_app.cashbash.utils.image_picker.ImagePicker
 import com.dscreate_app.cashbash.utils.image_picker.ImagePickerConst
@@ -68,7 +68,7 @@ class ImageListFragment(
         val addImageItem = toolbar.menu.findItem(R.id.add_image)
 
         toolbar.setNavigationOnClickListener {
-            clickBackEdAdsActivity()
+            closeThisFragment()
         }
 
         deleteImageItem.setOnMenuItemClickListener {
@@ -82,30 +82,22 @@ class ImageListFragment(
         }
     }
 
-    private fun clickBackEdAdsActivity() {
+    private fun closeThisFragment() {
             requireActivity().supportFragmentManager.beginTransaction()
                 .remove(this)
                 .commit()
     }
 
     private fun updateList() {
-        val updateList = mutableListOf<SelectImageItem>()
-        for (i in 0 until newList.size) {
-            updateList.add(SelectImageItem(i.toString(), newList[i]))
-        }
-        adapter.updateAdapter(updateList, true)
+        adapter.updateAdapter(newList, true)
     }
 
     fun updateAdapter(newList: MutableList<String>) {
-        val updateList = mutableListOf<SelectImageItem>()
-        for (i in adapter.mainList.size until newList.size + adapter.mainList.size) {
-            updateList.add(SelectImageItem(i.toString(), newList[i - adapter.mainList.size]))
-        }
-        adapter.updateAdapter(updateList, false)
+        adapter.updateAdapter(newList, false)
     }
 
     interface FragmentClose {
-        fun onClose(list: MutableList<SelectImageItem>)
+        fun onClose(list: MutableList<String>)
     }
 
     companion object {
@@ -113,8 +105,7 @@ class ImageListFragment(
         private const val TAG = "MyLog"
 
         @JvmStatic
-        fun newInstance(
-            fragClose: FragmentClose, newList: MutableList<String>
-        ) = ImageListFragment(fragClose, newList)
+        fun newInstance(fragClose: FragmentClose, newList: MutableList<String>) =
+            ImageListFragment(fragClose, newList)
     }
 }

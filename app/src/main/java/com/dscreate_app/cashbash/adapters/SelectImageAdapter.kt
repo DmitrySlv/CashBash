@@ -7,13 +7,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.databinding.SelectImageItemBinding
-import com.dscreate_app.cashbash.models.SelectImageItem
 import com.dscreate_app.cashbash.utils.callbacks.ItemTouchMoveCallback
 
 class SelectImageAdapter: RecyclerView.Adapter<SelectImageAdapter.ImageHolder>(),
     ItemTouchMoveCallback.ItemTouchListener {
 
-    val mainList = mutableListOf<SelectImageItem>()
+    val mainList = mutableListOf<String>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -33,13 +32,10 @@ class SelectImageAdapter: RecyclerView.Adapter<SelectImageAdapter.ImageHolder>()
     }
 
     override fun onMove(startPos: Int, targetPos: Int) {
+
         val targetItem = mainList[targetPos]
         mainList[targetPos] = mainList[startPos]
-        val titleStart = mainList[targetPos].title
-        mainList[targetPos].title = targetItem.title
         mainList[startPos] = targetItem
-        mainList[startPos].title = titleStart
-
         notifyItemMoved(startPos, targetPos)
     }
 
@@ -50,13 +46,14 @@ class SelectImageAdapter: RecyclerView.Adapter<SelectImageAdapter.ImageHolder>()
     class ImageHolder(view: View): RecyclerView.ViewHolder(view) {
         private val binding = SelectImageItemBinding.bind(view)
 
-        fun setData(item: SelectImageItem) = with(binding) {
-            tvTitle.text = item.title
-            imContent.setImageURI(Uri.parse(item.imageUri))
+        fun setData(item: String) = with(binding) {
+            tvTitle.text =
+                root.context.resources.getStringArray(R.array.title_array)[adapterPosition]
+            imContent.setImageURI(Uri.parse(item))
         }
     }
 
-    fun updateAdapter(newList: MutableList<SelectImageItem>, needClear: Boolean) {
+    fun updateAdapter(newList: MutableList<String>, needClear: Boolean) {
         if (needClear) mainList.clear()
         mainList.addAll(newList)
         notifyDataSetChanged()
