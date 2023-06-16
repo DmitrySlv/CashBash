@@ -86,6 +86,10 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
                 if (returnValue?.size!! > 1 && imageListFrag == null) {
                     openListImageFrag(returnValue)
                 }
+                if (returnValue.size == 1 && imageListFrag == null) {
+
+                    imageAdapter.updateAdapter(returnValue)
+                }
                 if (imageListFrag != null) {
 
                     imageListFrag?.updateAdapter(returnValue)

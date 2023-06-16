@@ -23,7 +23,7 @@ class SelectImageAdapter: RecyclerView.Adapter<SelectImageAdapter.ImageHolder>()
     ): ImageHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.select_image_item, parent, false)
-        return ImageHolder(view)
+        return ImageHolder(view, this)
     }
 
     override fun onBindViewHolder(holder: ImageHolder, position: Int) {
@@ -46,13 +46,17 @@ class SelectImageAdapter: RecyclerView.Adapter<SelectImageAdapter.ImageHolder>()
        notifyDataSetChanged()
     }
 
-    class ImageHolder(view: View): RecyclerView.ViewHolder(view) {
+    class ImageHolder(
+        view: View,
+        private val adapter: SelectImageAdapter
+        ): RecyclerView.ViewHolder(view) {
         private val binding = SelectImageItemBinding.bind(view)
 
         fun setData(item: String) = with(binding) {
             tvTitle.text =
                 root.context.resources.getStringArray(R.array.title_array)[adapterPosition]
             imContent.setImageURI(Uri.parse(item))
+
             imEdImage.setOnClickListener {
                 ImagePicker.getImages(
                     root.context as EditAdsActivity,
@@ -60,6 +64,13 @@ class SelectImageAdapter: RecyclerView.Adapter<SelectImageAdapter.ImageHolder>()
                     ImagePickerConst.REQUEST_CODE_GET_SINGLE_IMAGE
                 )
                 (root.context as EditAdsActivity).editImagePos = adapterPosition
+            }
+            imDelImage.setOnClickListener {
+                adapter.mainList.removeAt(adapterPosition)
+                adapter.notifyItemRemoved(adapterPosition)
+                for (n in 0 until adapter.mainList.size) {
+                    adapter.notifyItemChanged(n)
+                }
             }
         }
     }
