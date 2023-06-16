@@ -6,8 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.dscreate_app.cashbash.R
+import com.dscreate_app.cashbash.activities.EditAdsActivity
 import com.dscreate_app.cashbash.databinding.SelectImageItemBinding
 import com.dscreate_app.cashbash.utils.callbacks.ItemTouchMoveCallback
+import com.dscreate_app.cashbash.utils.image_picker.ImagePicker
+import com.dscreate_app.cashbash.utils.image_picker.ImagePickerConst
 
 class SelectImageAdapter: RecyclerView.Adapter<SelectImageAdapter.ImageHolder>(),
     ItemTouchMoveCallback.ItemTouchListener {
@@ -50,6 +53,14 @@ class SelectImageAdapter: RecyclerView.Adapter<SelectImageAdapter.ImageHolder>()
             tvTitle.text =
                 root.context.resources.getStringArray(R.array.title_array)[adapterPosition]
             imContent.setImageURI(Uri.parse(item))
+            imEdImage.setOnClickListener {
+                ImagePicker.getImages(
+                    root.context as EditAdsActivity,
+                    ImagePickerConst.SINGLE_IMAGE,
+                    ImagePickerConst.REQUEST_CODE_GET_SINGLE_IMAGE
+                )
+                (root.context as EditAdsActivity).editImagePos = adapterPosition
+            }
         }
     }
 

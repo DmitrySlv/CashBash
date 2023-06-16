@@ -46,6 +46,18 @@
             app:layout_constraintTop_toTopOf="parent"
             android:contentDescription="@string/im_drag_desc"
             app:srcCompat="@drawable/baseline_drag" />
+
+        <ImageButton
+            android:id="@+id/imEdImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/ib_edit_image"
+            app:srcCompat="@android:drawable/ic_menu_edit" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

@@ -6,9 +6,9 @@ import com.fxn.pix.Pix
 
 object ImagePicker {
 
-    fun getImages(context: AppCompatActivity, imageCounter: Int) {
+    fun getImages(context: AppCompatActivity, imageCounter: Int, rCode: Int) {
         val options = Options.init()
-            .setRequestCode(ImagePickerConst.REQUEST_CODE_GET_IMAGES)
+            .setRequestCode(rCode)
             .setCount(imageCounter)
             .setFrontfacing(false)
             .setMode(Options.Mode.Picture)

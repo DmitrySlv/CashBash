@@ -77,7 +77,10 @@ class ImageListFragment(
         }
         addImageItem.setOnMenuItemClickListener {
             val imageCount = ImagePickerConst.MAX_COUNT_IMAGES - adapter.mainList.size
-            ImagePicker.getImages(activity as AppCompatActivity, imageCount)
+            ImagePicker.getImages(
+                activity as AppCompatActivity,
+                imageCount,
+                ImagePickerConst.REQUEST_CODE_GET_IMAGES)
             true
         }
     }
@@ -94,6 +97,11 @@ class ImageListFragment(
 
     fun updateAdapter(newList: MutableList<String>) {
         adapter.updateAdapter(newList, false)
+    }
+
+    fun setSingeImage(uri: String, position: Int) {
+        adapter.mainList[position] = uri
+        adapter.notifyItemChanged(position)
     }
 
     interface FragmentClose {
