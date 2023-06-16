@@ -11,8 +11,10 @@ import com.dscreate_app.cashbash.databinding.ActivityEditAdsBinding
 import com.dscreate_app.cashbash.fragments.ImageListFragment
 import com.dscreate_app.cashbash.utils.dialogs.CityHelper
 import com.dscreate_app.cashbash.utils.dialogs.DialogSpinnerHelper
-import com.dscreate_app.cashbash.utils.image_picker.ImagePicker
-import com.dscreate_app.cashbash.utils.image_picker.ImagePickerConst
+import com.dscreate_app.cashbash.utils.image_picker.ImageManager
+import com.dscreate_app.cashbash.utils.image_picker.PixImagePicker
+import com.dscreate_app.cashbash.utils.image_picker.ImageConst
+import com.dscreate_app.cashbash.utils.logD
 import com.dscreate_app.cashbash.utils.showToast
 import com.fxn.pix.Pix
 import com.fxn.utility.PermUtil
@@ -66,10 +68,10 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
     private fun openPixImagePicker() {
         binding.ibEditImage.setOnClickListener {
             if (imageAdapter.imageList.size == 0) {
-                ImagePicker.getImages(
+                PixImagePicker.getImages(
                     this,
-                    ImagePickerConst.MAX_COUNT_IMAGES,
-                    ImagePickerConst.REQUEST_CODE_GET_IMAGES
+                    ImageConst.MAX_COUNT_IMAGES,
+                    ImageConst.REQUEST_CODE_GET_IMAGES
                 )
             } else {
                 openListImageFrag(imageAdapter.imageList)
@@ -79,7 +81,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK && requestCode == ImagePickerConst.REQUEST_CODE_GET_IMAGES) {
+        if (resultCode == RESULT_OK && requestCode == ImageConst.REQUEST_CODE_GET_IMAGES) {
 
             data?.let {
                 val returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS)
@@ -88,7 +90,9 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
                 }
                 if (returnValue.size == 1 && imageListFrag == null) {
 
-                    imageAdapter.updateAdapter(returnValue)
+                  //  imageAdapter.updateAdapter(returnValue)
+                    val tempList = ImageManager.getImageSize(returnValue[0])
+                    logD(TAG, "Картинка ширина: ${tempList[0]} высота: ${tempList[1]}")
                 }
                 if (imageListFrag != null) {
 
@@ -96,7 +100,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
                 }
             }
         }
-        if (resultCode == RESULT_OK && requestCode == ImagePickerConst.REQUEST_CODE_GET_SINGLE_IMAGE) {
+        if (resultCode == RESULT_OK && requestCode == ImageConst.REQUEST_CODE_GET_SINGLE_IMAGE) {
 
             data?.let {
                 val uris = data.getStringArrayListExtra(Pix.IMAGE_RESULTS)
@@ -118,10 +122,10 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
             PermUtil.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS -> {
 
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    ImagePicker.getImages(
+                    PixImagePicker.getImages(
                         this,
-                        ImagePickerConst.MAX_COUNT_IMAGES,
-                        ImagePickerConst.REQUEST_CODE_GET_IMAGES)
+                        ImageConst.MAX_COUNT_IMAGES,
+                        ImageConst.REQUEST_CODE_GET_IMAGES)
                 } else {
                     showToast(getString(R.string.approve_permission_for_your_photo))
                 }

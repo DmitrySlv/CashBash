@@ -9,8 +9,8 @@ import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.activities.EditAdsActivity
 import com.dscreate_app.cashbash.databinding.SelectImageItemBinding
 import com.dscreate_app.cashbash.utils.callbacks.ItemTouchMoveCallback
-import com.dscreate_app.cashbash.utils.image_picker.ImagePicker
-import com.dscreate_app.cashbash.utils.image_picker.ImagePickerConst
+import com.dscreate_app.cashbash.utils.image_picker.PixImagePicker
+import com.dscreate_app.cashbash.utils.image_picker.ImageConst
 
 class SelectImageAdapter: RecyclerView.Adapter<SelectImageAdapter.ImageHolder>(),
     ItemTouchMoveCallback.ItemTouchListener {
@@ -58,10 +58,10 @@ class SelectImageAdapter: RecyclerView.Adapter<SelectImageAdapter.ImageHolder>()
             imContent.setImageURI(Uri.parse(item))
 
             imEdImage.setOnClickListener {
-                ImagePicker.getImages(
+                PixImagePicker.getImages(
                     root.context as EditAdsActivity,
-                    ImagePickerConst.SINGLE_IMAGE,
-                    ImagePickerConst.REQUEST_CODE_GET_SINGLE_IMAGE
+                    ImageConst.SINGLE_IMAGE,
+                    ImageConst.REQUEST_CODE_GET_SINGLE_IMAGE
                 )
                 (root.context as EditAdsActivity).editImagePos = adapterPosition
             }

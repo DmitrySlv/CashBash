@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.fxn.pix.Options
 import com.fxn.pix.Pix
 
-object ImagePicker {
+object PixImagePicker {
 
     fun getImages(context: AppCompatActivity, imageCounter: Int, rCode: Int) {
         val options = Options.init()
@@ -13,7 +13,7 @@ object ImagePicker {
             .setFrontfacing(false)
             .setMode(Options.Mode.Picture)
             .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)
-            .setPath(ImagePickerConst.PATH_IMAGES)
+            .setPath(ImageConst.PATH_IMAGES)
 
         Pix.start(context, options)
     }

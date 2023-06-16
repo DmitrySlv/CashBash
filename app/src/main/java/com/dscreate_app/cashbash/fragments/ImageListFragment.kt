@@ -9,12 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dscreate_app.cashbash.R
-import com.dscreate_app.cashbash.adapters.ImageAdapter
 import com.dscreate_app.cashbash.adapters.SelectImageAdapter
 import com.dscreate_app.cashbash.databinding.FragmentImageListBinding
 import com.dscreate_app.cashbash.utils.callbacks.ItemTouchMoveCallback
-import com.dscreate_app.cashbash.utils.image_picker.ImagePicker
-import com.dscreate_app.cashbash.utils.image_picker.ImagePickerConst
+import com.dscreate_app.cashbash.utils.image_picker.PixImagePicker
+import com.dscreate_app.cashbash.utils.image_picker.ImageConst
 
 class ImageListFragment(
     private val fragClose: FragmentClose,
@@ -76,11 +75,11 @@ class ImageListFragment(
             true
         }
         addImageItem.setOnMenuItemClickListener {
-            val imageCount = ImagePickerConst.MAX_COUNT_IMAGES - adapter.mainList.size
-            ImagePicker.getImages(
+            val imageCount = ImageConst.MAX_COUNT_IMAGES - adapter.mainList.size
+            PixImagePicker.getImages(
                 activity as AppCompatActivity,
                 imageCount,
-                ImagePickerConst.REQUEST_CODE_GET_IMAGES)
+                ImageConst.REQUEST_CODE_GET_IMAGES)
             true
         }
     }
