@@ -14,6 +14,7 @@ import com.dscreate_app.cashbash.databinding.FragmentImageListBinding
 import com.dscreate_app.cashbash.utils.callbacks.ItemTouchMoveCallback
 import com.dscreate_app.cashbash.utils.image_picker.PixImagePicker
 import com.dscreate_app.cashbash.utils.image_picker.ImageConst
+import com.dscreate_app.cashbash.utils.image_picker.ImageManager
 
 class ImageListFragment(
     private val fragClose: FragmentClose,
@@ -42,7 +43,8 @@ class ImageListFragment(
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         init()
-        updateList()
+        ImageManager.imageResize(newList)
+     //   updateList()
     }
 
     override fun onDestroy() {
@@ -90,9 +92,9 @@ class ImageListFragment(
                 .commit()
     }
 
-    private fun updateList() {
-        adapter.updateAdapter(newList, true)
-    }
+//    private fun updateList() {
+//        adapter.updateAdapter(newList, true)
+//    }
 
     fun updateAdapter(newList: MutableList<String>) {
         adapter.updateAdapter(newList, false)
