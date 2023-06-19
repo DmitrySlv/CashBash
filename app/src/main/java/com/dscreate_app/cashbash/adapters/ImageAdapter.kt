@@ -1,5 +1,6 @@
 package com.dscreate_app.cashbash.adapters
 
+import android.graphics.Bitmap
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,7 @@ import com.dscreate_app.cashbash.databinding.ImageAdapterItemBinding
 
 class ImageAdapter: RecyclerView.Adapter<ImageAdapter.ImageHolder>() {
 
-    val imageList = mutableListOf<String>()
+    val imageList = mutableListOf<Bitmap>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageHolder {
         val view = LayoutInflater.from(parent.context)
@@ -29,12 +30,12 @@ class ImageAdapter: RecyclerView.Adapter<ImageAdapter.ImageHolder>() {
     class ImageHolder(view: View): RecyclerView.ViewHolder(view) {
         private val binding =  ImageAdapterItemBinding.bind(view)
 
-        fun setData(uri: String) = with(binding) {
-            imView.setImageURI(Uri.parse(uri))
+        fun setData(bitmap: Bitmap) = with(binding) {
+            imView.setImageBitmap(bitmap)
         }
     }
 
-    fun updateAdapter(newList: MutableList<String>) {
+    fun updateAdapter(newList: MutableList<Bitmap>) {
         imageList.clear()
         imageList.addAll(newList)
         notifyDataSetChanged()

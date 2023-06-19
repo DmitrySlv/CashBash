@@ -1,16 +1,19 @@
 package com.dscreate_app.cashbash.utils.image_picker
 
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.exifinterface.media.ExifInterface
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.IOException
 
 object ImageManager {
 
-    fun getImageSize(uri: String): List<Int> {
+   private fun getImageSize(uri: String): List<Int> {
         val options = BitmapFactory.Options().apply {
             inJustDecodeBounds = true
         }
@@ -38,8 +41,9 @@ object ImageManager {
         return rotation
     }
 
-    suspend fun imageResize(uris: List<String>): String = withContext(Dispatchers.IO) {
+    suspend fun imageResize(uris: List<String>): MutableList<Bitmap> = withContext(Dispatchers.IO) {
         val tempList = mutableListOf<List<Int>>()
+        val bitmapList = mutableListOf<Bitmap>()
         for (n in uris.indices) {
             val size = getImageSize(uris[n])
             val imageRatio =
@@ -68,8 +72,18 @@ object ImageManager {
                 }
             }
         }
-        delay(1000)
-        return@withContext "Done"
+            for (i in uris.indices) {
+                val e = kotlin.runCatching {
+                    bitmapList.add(
+                        Picasso.get().load(File(uris[i]))
+                            .resize(tempList[i][ImageConst.WIDTH], tempList[i][ImageConst.HEIGHT])
+                            .get()
+                    )
+                }
+                Log.d(TAG, "Bitmap load done: ${e.isSuccess}")
+        }
+
+        return@withContext bitmapList
     }
 
     private const val TAG = "MyLog"

@@ -1,5 +1,6 @@
 package com.dscreate_app.cashbash.adapters
 
+import android.graphics.Bitmap
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +16,7 @@ import com.dscreate_app.cashbash.utils.image_picker.ImageConst
 class SelectImageAdapter: RecyclerView.Adapter<SelectImageAdapter.ImageHolder>(),
     ItemTouchMoveCallback.ItemTouchListener {
 
-    val mainList = mutableListOf<String>()
+    val mainList = mutableListOf<Bitmap>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -52,10 +53,10 @@ class SelectImageAdapter: RecyclerView.Adapter<SelectImageAdapter.ImageHolder>()
         ): RecyclerView.ViewHolder(view) {
         private val binding = SelectImageItemBinding.bind(view)
 
-        fun setData(item: String) = with(binding) {
+        fun setData(bitmap: Bitmap) = with(binding) {
             tvTitle.text =
                 root.context.resources.getStringArray(R.array.title_array)[adapterPosition]
-            imContent.setImageURI(Uri.parse(item))
+            imContent.setImageBitmap(bitmap)
 
             imEdImage.setOnClickListener {
                 PixImagePicker.getImages(
@@ -75,7 +76,7 @@ class SelectImageAdapter: RecyclerView.Adapter<SelectImageAdapter.ImageHolder>()
         }
     }
 
-    fun updateAdapter(newList: MutableList<String>, needClear: Boolean) {
+    fun updateAdapter(newList: MutableList<Bitmap>, needClear: Boolean) {
         if (needClear) mainList.clear()
         mainList.addAll(newList)
         notifyDataSetChanged()

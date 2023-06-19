@@ -2,6 +2,7 @@ package com.dscreate_app.cashbash.activities
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -74,7 +75,8 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
                     ImageConst.REQUEST_CODE_GET_IMAGES
                 )
             } else {
-                openListImageFrag(imageAdapter.imageList)
+                openListImageFrag(null)
+                imageListFrag?.updateAdapterFromEdit(imageAdapter.imageList)
             }
         }
     }
@@ -88,12 +90,12 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
                 if (returnValue?.size!! > 1 && imageListFrag == null) {
                     openListImageFrag(returnValue)
                 }
-                if (returnValue.size == 1 && imageListFrag == null) {
-
-                  //  imageAdapter.updateAdapter(returnValue)
-                    val tempList = ImageManager.getImageSize(returnValue[0])
-                    logD(TAG, "Картинка ширина: ${tempList[0]} высота: ${tempList[1]}")
-                }
+//                if (returnValue.size == 1 && imageListFrag == null) {
+//
+//                  //  imageAdapter.updateAdapter(returnValue)
+//                    val tempList = ImageManager.getImageSize(returnValue[0])
+//                    logD(TAG, "Картинка ширина: ${tempList[0]} высота: ${tempList[1]}")
+//                }
                 if (imageListFrag != null) {
 
                     imageListFrag?.updateAdapter(returnValue)
@@ -134,15 +136,17 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
         }
     }
 
-    private fun openListImageFrag(newList: MutableList<String>) {
+    private fun openListImageFrag(newList: MutableList<String>?) {
         imageListFrag = ImageListFragment.newInstance(this, newList)
         binding.svMain.visibility = View.GONE
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.container, imageListFrag!!)
-            .commit()
+        imageListFrag?.let {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.container, it)
+                .commit()
+        }
     }
 
-    override fun onClose(list: MutableList<String>) {
+    override fun onClose(list: MutableList<Bitmap>) {
         binding.svMain.visibility = View.VISIBLE
         imageAdapter.updateAdapter(list)
         imageListFrag = null

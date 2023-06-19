@@ -1,5 +1,6 @@
 package com.dscreate_app.cashbash.fragments
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,7 +25,7 @@ import kotlinx.coroutines.withContext
 
 class ImageListFragment(
     private val fragClose: FragmentClose,
-    private val newList: MutableList<String>
+    private val newList: MutableList<String>?
     ): Fragment() {
 
     private var _binding: FragmentImageListBinding? = null
@@ -34,7 +35,7 @@ class ImageListFragment(
     private val adapter = SelectImageAdapter()
     private val dragCallback = ItemTouchMoveCallback(adapter)
     private val touchHelper = ItemTouchHelper(dragCallback)
-    private lateinit var job: Job
+    private var job: Job? = null
 
 
     override fun onCreateView(
@@ -50,8 +51,16 @@ class ImageListFragment(
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         init()
-        launchImageResize()
-     //   updateList()
+        if (newList != null) {
+            job = CoroutineScope(Dispatchers.Main).launch {
+                val bitmapList = ImageManager.imageResize(newList)
+                adapter.updateAdapter(bitmapList, true)
+            }
+        }
+    }
+
+    fun updateAdapterFromEdit(bitmapList: MutableList<Bitmap>) {
+        adapter.updateAdapter(bitmapList, true)
     }
 
     override fun onDestroy() {
@@ -62,7 +71,7 @@ class ImageListFragment(
     override fun onDetach() {
         super.onDetach()
         fragClose.onClose(adapter.mainList)
-        job.cancel()
+        job?.cancel()
     }
 
     private fun init() = with(binding) {
@@ -100,28 +109,24 @@ class ImageListFragment(
                 .commit()
     }
 
-    private fun launchImageResize() {
-       job = CoroutineScope(Dispatchers.Main).launch {
-           val text =  ImageManager.imageResize(newList)
-           logD(TAG, "Result: $text")
+    fun updateAdapter(newList: MutableList<String>) {
+        job = CoroutineScope(Dispatchers.Main).launch {
+            val bitmapList =  ImageManager.imageResize(newList)
+            adapter.updateAdapter(bitmapList, false)
         }
     }
 
-//    private fun updateList() {
-//        adapter.updateAdapter(newList, true)
-//    }
-
-    fun updateAdapter(newList: MutableList<String>) {
-        adapter.updateAdapter(newList, false)
-    }
-
     fun setSingeImage(uri: String, position: Int) {
-        adapter.mainList[position] = uri
-        adapter.notifyItemChanged(position)
+        job = CoroutineScope(Dispatchers.Main).launch {
+            val bitmapList =  ImageManager.imageResize(listOf(uri))
+            adapter.mainList[position] = bitmapList[0]
+            adapter.notifyDataSetChanged()
+        }
+
     }
 
     interface FragmentClose {
-        fun onClose(list: MutableList<String>)
+        fun onClose(list: MutableList<Bitmap>)
     }
 
     companion object {
@@ -129,7 +134,7 @@ class ImageListFragment(
         private const val TAG = "MyLog"
 
         @JvmStatic
-        fun newInstance(fragClose: FragmentClose, newList: MutableList<String>) =
+        fun newInstance(fragClose: FragmentClose, newList: MutableList<String>?) =
             ImageListFragment(fragClose, newList)
     }
 }
