@@ -3,6 +3,9 @@ package com.dscreate_app.cashbash.utils.image_picker
 import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.exifinterface.media.ExifInterface
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import java.io.File
 
 object ImageManager {
@@ -35,11 +38,10 @@ object ImageManager {
         return rotation
     }
 
-    fun imageResize(uris: List<String>) {
+    suspend fun imageResize(uris: List<String>): String = withContext(Dispatchers.IO) {
         val tempList = mutableListOf<List<Int>>()
         for (n in uris.indices) {
             val size = getImageSize(uris[n])
-            Log.d(TAG, "ширина: ${size[ImageConst.WIDTH]} высота: ${size[ImageConst.HEIGHT]}")
             val imageRatio =
                 size[ImageConst.WIDTH].toFloat() / size[ImageConst.HEIGHT].toFloat()
 
@@ -65,8 +67,9 @@ object ImageManager {
                     )
                 }
             }
-            Log.d(TAG, "ширина: ${tempList[n][ImageConst.WIDTH]} высота: ${tempList[n][ImageConst.HEIGHT]}")
         }
+        delay(1000)
+        return@withContext "Done"
     }
 
     private const val TAG = "MyLog"

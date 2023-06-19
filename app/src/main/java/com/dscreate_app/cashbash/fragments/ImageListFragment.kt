@@ -15,6 +15,12 @@ import com.dscreate_app.cashbash.utils.callbacks.ItemTouchMoveCallback
 import com.dscreate_app.cashbash.utils.image_picker.PixImagePicker
 import com.dscreate_app.cashbash.utils.image_picker.ImageConst
 import com.dscreate_app.cashbash.utils.image_picker.ImageManager
+import com.dscreate_app.cashbash.utils.logD
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ImageListFragment(
     private val fragClose: FragmentClose,
@@ -28,6 +34,7 @@ class ImageListFragment(
     private val adapter = SelectImageAdapter()
     private val dragCallback = ItemTouchMoveCallback(adapter)
     private val touchHelper = ItemTouchHelper(dragCallback)
+    private lateinit var job: Job
 
 
     override fun onCreateView(
@@ -43,7 +50,7 @@ class ImageListFragment(
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         init()
-        ImageManager.imageResize(newList)
+        launchImageResize()
      //   updateList()
     }
 
@@ -55,6 +62,7 @@ class ImageListFragment(
     override fun onDetach() {
         super.onDetach()
         fragClose.onClose(adapter.mainList)
+        job.cancel()
     }
 
     private fun init() = with(binding) {
@@ -90,6 +98,13 @@ class ImageListFragment(
             requireActivity().supportFragmentManager.beginTransaction()
                 .remove(this)
                 .commit()
+    }
+
+    private fun launchImageResize() {
+       job = CoroutineScope(Dispatchers.Main).launch {
+           val text =  ImageManager.imageResize(newList)
+           logD(TAG, "Result: $text")
+        }
     }
 
 //    private fun updateList() {
