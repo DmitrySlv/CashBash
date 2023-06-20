@@ -8,6 +8,7 @@
         android:id="@+id/rcViewSelectImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@color/grey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -15,14 +16,15 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        app:navigationIcon="?attr/homeAsUpIndicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/purple"
         android:minHeight="?attr/actionBarSize"
-        app:theme="@style/ToolbarTheme"
+        android:theme="@style/ToolbarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:theme="@style/ToolbarTheme" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

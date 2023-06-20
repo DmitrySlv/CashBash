@@ -22,10 +22,10 @@ import com.fxn.utility.PermUtil
 
 class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
 
-    private val binding by lazy { ActivityEditAdsBinding.inflate(layoutInflater) }
+    val binding by lazy { ActivityEditAdsBinding.inflate(layoutInflater) }
     private val dialog = DialogSpinnerHelper()
-    private lateinit var imageAdapter: ImageAdapter
-    private var imageListFrag: ImageListFragment? = null
+    lateinit var imageAdapter: ImageAdapter
+    var imageListFrag: ImageListFragment? = null
     var editImagePos = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,35 +83,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK && requestCode == ImageConst.REQUEST_CODE_GET_IMAGES) {
-
-            data?.let {
-                val returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS)
-                if (returnValue?.size!! > 1 && imageListFrag == null) {
-                    openListImageFrag(returnValue)
-                }
-//                if (returnValue.size == 1 && imageListFrag == null) {
-//
-//                  //  imageAdapter.updateAdapter(returnValue)
-//                    val tempList = ImageManager.getImageSize(returnValue[0])
-//                    logD(TAG, "Картинка ширина: ${tempList[0]} высота: ${tempList[1]}")
-//                }
-                if (imageListFrag != null) {
-
-                    imageListFrag?.updateAdapter(returnValue)
-                }
-            }
-        }
-        if (resultCode == RESULT_OK && requestCode == ImageConst.REQUEST_CODE_GET_SINGLE_IMAGE) {
-
-            data?.let {
-                val uris = data.getStringArrayListExtra(Pix.IMAGE_RESULTS)
-                uris?.let {
-                    imageListFrag?.setSingeImage(uris[0], editImagePos)
-                }
-            }
-
-        }
+        PixImagePicker.showSelectedImages(resultCode, requestCode, data, this)
     }
 
     override fun onRequestPermissionsResult(
@@ -136,7 +108,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
         }
     }
 
-    private fun openListImageFrag(newList: MutableList<String>?) {
+    fun openListImageFrag(newList: MutableList<String>?) {
         imageListFrag = ImageListFragment.newInstance(this, newList)
         binding.svMain.visibility = View.GONE
         imageListFrag?.let {

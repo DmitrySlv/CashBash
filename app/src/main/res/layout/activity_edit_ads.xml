@@ -26,7 +26,7 @@
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/vpImages"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="300dp"
                     android:background="@color/grey"
                     android:padding="10dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -38,15 +38,26 @@
 
                 <ImageButton
                     android:id="@+id/ibEditImage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:backgroundTint="@color/white"
                     android:contentDescription="@string/ib_edit_image"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/vpImages"
-                    app:srcCompat="@android:drawable/ic_menu_edit" />
+                    app:srcCompat="@drawable/baseline_edit" />
+
+                <ProgressBar
+                    android:id="@+id/pBarLoad"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/vpImages"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/vpImages" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
