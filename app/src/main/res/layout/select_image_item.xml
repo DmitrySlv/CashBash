@@ -35,18 +35,16 @@
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="@+id/tvTitle"
                 app:layout_constraintStart_toStartOf="@+id/tvTitle"
-                app:layout_constraintTop_toBottomOf="@+id/tvTitle">
-            </LinearLayout>
+                app:layout_constraintTop_toBottomOf="@+id/tvTitle"></LinearLayout>
 
             <ImageView
                 android:id="@+id/imContent"
                 android:layout_width="0dp"
-                android:layout_height="300dp"
+                android:layout_height="200dp"
                 android:layout_margin="8dp"
                 android:layout_marginTop="8dp"
                 android:background="@color/grey"
                 android:contentDescription="@string/im_content_desc"
-                android:scaleType="centerCrop"
                 app:layout_constraintBottom_toTopOf="@+id/linearContainer"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

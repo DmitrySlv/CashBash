@@ -3,6 +3,7 @@ package com.dscreate_app.cashbash.fragments
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.adapters.SelectImageAdapter
 import com.dscreate_app.cashbash.databinding.FragmentImageListBinding
+import com.dscreate_app.cashbash.utils.callbacks.AdapterCallback
 import com.dscreate_app.cashbash.utils.callbacks.ItemTouchMoveCallback
 import com.dscreate_app.cashbash.utils.dialogs.ProgressDialog
 import com.dscreate_app.cashbash.utils.image_picker.PixImagePicker
@@ -27,16 +29,17 @@ import kotlinx.coroutines.launch
 class ImageListFragment(
     private val fragClose: FragmentClose,
     private val newList: MutableList<String>?
-    ): Fragment() {
+    ): Fragment(), AdapterCallback {
 
     private var _binding: FragmentImageListBinding? = null
     private val binding: FragmentImageListBinding
         get() = _binding ?: throw RuntimeException("FragmentImageListBinding is null")
 
-    private val adapter = SelectImageAdapter()
+    private val adapter = SelectImageAdapter(this)
     private val dragCallback = ItemTouchMoveCallback(adapter)
     private val touchHelper = ItemTouchHelper(dragCallback)
     private var job: Job? = null
+    private var addImageItem: MenuItem? = null
 
 
     override fun onCreateView(
@@ -75,7 +78,7 @@ class ImageListFragment(
     private fun setupToolbar() = with(binding) {
         toolbar.inflateMenu(R.menu.choose_image__menu)
         val deleteImageItem = toolbar.menu.findItem(R.id.delete_image)
-        val addImageItem = toolbar.menu.findItem(R.id.add_image)
+        addImageItem = toolbar.menu.findItem(R.id.add_image)
 
         toolbar.setNavigationOnClickListener {
             closeThisFragment()
@@ -83,9 +86,10 @@ class ImageListFragment(
 
         deleteImageItem.setOnMenuItemClickListener {
             adapter.updateAdapter(mutableListOf(), true)
+            addImageItem?.isVisible = true
             true
         }
-        addImageItem.setOnMenuItemClickListener {
+        addImageItem?.setOnMenuItemClickListener {
             val imageCount = ImageConst.MAX_COUNT_IMAGES - adapter.mainList.size
             PixImagePicker.getImages(
                 activity as AppCompatActivity,
@@ -129,11 +133,18 @@ class ImageListFragment(
             val bitmapList = ImageManager.imageResize(newList)
             dialog.dismiss()
             adapter.updateAdapter(bitmapList, needClear)
+            if (adapter.mainList.size > 2) {
+                addImageItem?.isVisible = false
+            }
         }
     }
 
     interface FragmentClose {
         fun onClose(list: MutableList<Bitmap>)
+    }
+
+    override fun onItemDelete() {
+        addImageItem?.isVisible = true
     }
 
     companion object {
@@ -144,4 +155,6 @@ class ImageListFragment(
         fun newInstance(fragClose: FragmentClose, newList: MutableList<String>?) =
             ImageListFragment(fragClose, newList)
     }
+
+
 }

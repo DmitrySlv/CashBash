@@ -9,11 +9,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.activities.EditAdsActivity
 import com.dscreate_app.cashbash.databinding.SelectImageItemBinding
+import com.dscreate_app.cashbash.utils.callbacks.AdapterCallback
 import com.dscreate_app.cashbash.utils.callbacks.ItemTouchMoveCallback
 import com.dscreate_app.cashbash.utils.image_picker.PixImagePicker
 import com.dscreate_app.cashbash.utils.image_picker.ImageConst
+import com.dscreate_app.cashbash.utils.image_picker.ImageManager
 
-class SelectImageAdapter: RecyclerView.Adapter<SelectImageAdapter.ImageHolder>(),
+class SelectImageAdapter(
+    private val callback: AdapterCallback
+): RecyclerView.Adapter<SelectImageAdapter.ImageHolder>(),
     ItemTouchMoveCallback.ItemTouchListener {
 
     val mainList = mutableListOf<Bitmap>()
@@ -54,8 +58,11 @@ class SelectImageAdapter: RecyclerView.Adapter<SelectImageAdapter.ImageHolder>()
         private val binding = SelectImageItemBinding.bind(view)
 
         fun setData(bitmap: Bitmap) = with(binding) {
-            tvTitle.text =
-                root.context.resources.getStringArray(R.array.title_array)[adapterPosition]
+            if (adapterPosition < 3) {
+                tvTitle.text =
+                    root.context.resources.getStringArray(R.array.title_array)[adapterPosition]
+            }
+            ImageManager.chooseScaleType(imContent, bitmap)
             imContent.setImageBitmap(bitmap)
 
             imEdImage.setOnClickListener {
@@ -72,6 +79,7 @@ class SelectImageAdapter: RecyclerView.Adapter<SelectImageAdapter.ImageHolder>()
                 for (n in 0 until adapter.mainList.size) {
                     adapter.notifyItemChanged(n)
                 }
+                adapter.callback.onItemDelete()
             }
         }
     }
