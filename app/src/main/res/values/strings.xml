@@ -69,4 +69,6 @@
     <string name="add_image">Добавить</string>
     <!-- sp_list_item -->
     <string name="item">Item</string>
+    <!-- progress_dialog_layout -->
+    <string name="loading">Загрузка… подождите</string>
 </resources>

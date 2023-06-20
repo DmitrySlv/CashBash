@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,15 +15,14 @@ import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.adapters.SelectImageAdapter
 import com.dscreate_app.cashbash.databinding.FragmentImageListBinding
 import com.dscreate_app.cashbash.utils.callbacks.ItemTouchMoveCallback
+import com.dscreate_app.cashbash.utils.dialogs.ProgressDialog
 import com.dscreate_app.cashbash.utils.image_picker.PixImagePicker
 import com.dscreate_app.cashbash.utils.image_picker.ImageConst
 import com.dscreate_app.cashbash.utils.image_picker.ImageManager
-import com.dscreate_app.cashbash.utils.logD
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class ImageListFragment(
     private val fragClose: FragmentClose,
@@ -51,16 +52,7 @@ class ImageListFragment(
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         init()
-        if (newList != null) {
-            job = CoroutineScope(Dispatchers.Main).launch {
-                val bitmapList = ImageManager.imageResize(newList)
-                adapter.updateAdapter(bitmapList, true)
-            }
-        }
-    }
-
-    fun updateAdapterFromEdit(bitmapList: MutableList<Bitmap>) {
-        adapter.updateAdapter(bitmapList, true)
+        newList?.let { resizeSelectedImages(newList, true) }
     }
 
     override fun onDestroy() {
@@ -110,19 +102,34 @@ class ImageListFragment(
     }
 
     fun updateAdapter(newList: MutableList<String>) {
-        job = CoroutineScope(Dispatchers.Main).launch {
-            val bitmapList =  ImageManager.imageResize(newList)
-            adapter.updateAdapter(bitmapList, false)
-        }
+        resizeSelectedImages(newList, false)
+    }
+
+    fun updateAdapterFromEdit(bitmapList: MutableList<Bitmap>) {
+        adapter.updateAdapter(bitmapList, true)
     }
 
     fun setSingeImage(uri: String, position: Int) {
+        val pBar = binding.rcViewSelectImage[position]
+            .findViewById<ProgressBar>(R.id.pBar)
+
         job = CoroutineScope(Dispatchers.Main).launch {
+            pBar.visibility = View.VISIBLE
             val bitmapList =  ImageManager.imageResize(listOf(uri))
+            pBar.visibility = View.GONE
             adapter.mainList[position] = bitmapList[0]
-            adapter.notifyDataSetChanged()
+            adapter.notifyItemChanged(position)
         }
 
+    }
+
+    private fun resizeSelectedImages(newList: MutableList<String>, needClear: Boolean) {
+        job = CoroutineScope(Dispatchers.Main).launch {
+            val dialog = ProgressDialog.createProgressDialog(requireContext())
+            val bitmapList = ImageManager.imageResize(newList)
+            dialog.dismiss()
+            adapter.updateAdapter(bitmapList, needClear)
+        }
     }
 
     interface FragmentClose {
