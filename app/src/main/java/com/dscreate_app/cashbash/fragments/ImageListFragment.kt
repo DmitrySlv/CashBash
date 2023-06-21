@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dscreate_app.cashbash.R
@@ -29,11 +28,7 @@ import kotlinx.coroutines.launch
 class ImageListFragment(
     private val fragClose: FragmentClose,
     private val newList: MutableList<String>?
-    ): Fragment(), AdapterCallback {
-
-    private var _binding: FragmentImageListBinding? = null
-    private val binding: FragmentImageListBinding
-        get() = _binding ?: throw RuntimeException("FragmentImageListBinding is null")
+    ): BaseAdsFragment(), AdapterCallback {
 
     private val adapter = SelectImageAdapter(this)
     private val dragCallback = ItemTouchMoveCallback(adapter)
@@ -41,6 +36,9 @@ class ImageListFragment(
     private var job: Job? = null
     private var addImageItem: MenuItem? = null
 
+    private var _binding: FragmentImageListBinding? = null
+    private val binding: FragmentImageListBinding
+        get() = _binding ?: throw RuntimeException("FragmentImageListBinding is null")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,6 +46,7 @@ class ImageListFragment(
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentImageListBinding.inflate(inflater, container, false)
+        adView = binding.adView
         return binding.root
     }
 
@@ -69,6 +68,11 @@ class ImageListFragment(
         job?.cancel()
     }
 
+    override fun onCloseInterAd() {
+        super.onCloseInterAd()
+        closeThisFragment()
+    }
+
     private fun init() = with(binding) {
         rcViewSelectImage.layoutManager = LinearLayoutManager(requireContext())
         touchHelper.attachToRecyclerView(rcViewSelectImage)
@@ -81,7 +85,7 @@ class ImageListFragment(
         addImageItem = toolbar.menu.findItem(R.id.add_image)
 
         toolbar.setNavigationOnClickListener {
-            closeThisFragment()
+            showInterAd()
         }
 
         deleteImageItem.setOnMenuItemClickListener {
@@ -124,7 +128,6 @@ class ImageListFragment(
             adapter.mainList[position] = bitmapList[0]
             adapter.notifyItemChanged(position)
         }
-
     }
 
     private fun resizeSelectedImages(newList: MutableList<String>, needClear: Boolean) {

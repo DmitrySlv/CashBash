@@ -71,4 +71,6 @@
     <string name="item">Item</string>
     <!-- progress_dialog_layout -->
     <string name="loading">Загрузка… подождите</string>
+    <!-- fragment_image_list -->
+    <string name="ad_id">ca-app-pub-3940256099942544/6300978111</string>
 </resources>
