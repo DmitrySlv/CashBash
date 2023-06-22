@@ -10,6 +10,8 @@
         android:id="@+id/imView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/grey"
         android:contentDescription="@string/im_content_desc"
+        android:scaleType="centerCrop"
         tools:srcCompat="@tools:sample/avatars" />
 </LinearLayout>

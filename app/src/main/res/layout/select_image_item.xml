@@ -42,9 +42,9 @@
                 android:layout_width="0dp"
                 android:layout_height="200dp"
                 android:layout_margin="8dp"
-                android:layout_marginTop="8dp"
                 android:background="@color/grey"
                 android:contentDescription="@string/im_content_desc"
+                android:scaleType="centerCrop"
                 app:layout_constraintBottom_toTopOf="@+id/linearContainer"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -85,7 +85,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="8dp"
-                    android:background="@color/white"
+                    android:background="@drawable/edit_image_button"
                     android:contentDescription="@string/ib_edit_image"
                     app:srcCompat="@drawable/baseline_edit" />
 
@@ -97,7 +97,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
-                    android:background="@color/white"
+                    android:background="@drawable/edit_image_button"
                     android:contentDescription="@string/delete_image"
                     app:srcCompat="@drawable/baseline_delete" />
             </LinearLayout>
