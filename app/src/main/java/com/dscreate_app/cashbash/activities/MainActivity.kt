@@ -89,6 +89,9 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
             R.id.my_ads -> {
                 Toast.makeText(this, "Pressed my_ads", Toast.LENGTH_SHORT).show()
             }
+            R.id.favourite -> {
+                Toast.makeText(this, "Pressed favourite", Toast.LENGTH_SHORT).show()
+            }
             R.id.cars -> {
                 Toast.makeText(this, "Pressed cars", Toast.LENGTH_SHORT).show()
             }

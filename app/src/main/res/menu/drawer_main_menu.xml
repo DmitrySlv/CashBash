@@ -9,6 +9,9 @@
                 android:id="@+id/my_ads"
                 android:title="@string/ad_my_ads" />
             <item
+                android:id="@+id/favourite"
+                android:title="@string/ad_favourite" />
+            <item
                 android:id="@+id/cars"
                 android:title="@string/ad_cars" />
             <item

@@ -34,6 +34,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
         init()
         onClickSelectCountry()
         onClickSelectCity()
+        onClickSelectCat()
         openPixImagePicker()
     }
 
@@ -61,8 +62,16 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
                 )
                 dialog.showSpinnerDialog(this@EditAdsActivity, listCity, tvSelectCity)
             } else {
-                showToast(getString(R.string.no_selected_country))
+                showToast(getString(R.string.no_select_country))
             }
+        }
+    }
+
+    private fun onClickSelectCat() = with(binding) {
+        tvSelectCat.setOnClickListener {
+            val listOfCat = resources.getStringArray(R.array.category)
+                .toMutableList() as ArrayList
+                dialog.showSpinnerDialog(this@EditAdsActivity, listOfCat, tvSelectCat)
         }
     }
 

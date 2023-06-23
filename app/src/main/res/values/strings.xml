@@ -9,6 +9,7 @@
     <!-- Drawer Menu -->
     <string name="ads_cat1">Объявления</string>
     <string name="ad_my_ads">Мои объявления</string>
+    <string name="ad_favourite">Избранное</string>
     <string name="ad_cars">Машины</string>
     <string name="ad_pc">Компьютеры</string>
     <string name="ad_smartphones">Смартфоны</string>
@@ -31,14 +32,24 @@
         email! Пожалуйста, подтвердите ваш email адрес.
     </string>
     <!-- Edit Activity -->
-    <string name="select_country">*Выберите страну</string>
-    <string name="select_city">*Выберите город</string>
-    <string name="country">Страна</string>
-    <string name="city">Город</string>
-    <string name="index">Индекс</string>
-    <string name="phone">Телефон</string>
+    <string name="select_country">Выберите страну</string>
+    <string name="select_city">Выберите город</string>
+    <string name="country">*Страна</string>
+    <string name="city">*Город</string>
+    <string name="index">*Индекс</string>
+    <string name="phone">*Телефон</string>
     <string name="phone_hint">Номер телефона</string>
-    <string name="no_selected_country">Пожалуйста, выберите страну</string>
+    <string name="category">*Категория</string>
+    <string name="select_category">Выберите категорию</string>
+    <string name="price">*Цена</string>
+    <string name="select_price_hint">Укажите цену</string>
+    <string name="description">*Описание</string>
+    <string name="description_hint">Укажите описание</string>
+    <string name="with_send">С отправкой?</string>
+    <string name="with_send_title">Отправка</string>
+    <string name="btn_publish">Опубликовать</string>
+
+    <string name="no_select_country">Пожалуйста, выберите страну!</string>
     <string name="approve_permission_for_your_photo">Пожалуйста, для корректной работы приложения
         предоставьте разрешение для доступа к файловому хранилищу вашего устройства!</string>
     <!-- nav_header_main -->
