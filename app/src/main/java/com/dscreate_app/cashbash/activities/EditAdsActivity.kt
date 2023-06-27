@@ -8,6 +8,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.adapters.ImageAdapter
+import com.dscreate_app.cashbash.data.DbManager
 import com.dscreate_app.cashbash.databinding.ActivityEditAdsBinding
 import com.dscreate_app.cashbash.fragments.ImageListFragment
 import com.dscreate_app.cashbash.utils.dialogs.CityHelper
@@ -36,6 +37,34 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
         onClickSelectCity()
         onClickSelectCat()
         openPixImagePicker()
+        onClickPublish()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        PixImagePicker.showSelectedImages(resultCode, requestCode, data, this)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            PermUtil.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS -> {
+
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    PixImagePicker.getImages(
+                        this,
+                        ImageConst.MAX_COUNT_IMAGES,
+                        ImageConst.REQUEST_CODE_GET_IMAGES)
+                } else {
+                    showToast(getString(R.string.approve_permission_for_your_photo))
+                }
+                return
+            }
+        }
     }
 
     private fun init() = with(binding) {
@@ -69,9 +98,15 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
 
     private fun onClickSelectCat() = with(binding) {
         tvSelectCat.setOnClickListener {
-            val listOfCat = resources.getStringArray(R.array.category)
-                .toMutableList() as ArrayList
-                dialog.showSpinnerDialog(this@EditAdsActivity, listOfCat, tvSelectCat)
+            val listOfCat = resources.getStringArray(R.array.category).toMutableList() as ArrayList
+            dialog.showSpinnerDialog(this@EditAdsActivity, listOfCat, tvSelectCat)
+        }
+    }
+
+    private fun onClickPublish() {
+        binding.btPublish.setOnClickListener {
+            val dbManager = DbManager()
+            dbManager.publishAd()
         }
     }
 
@@ -86,33 +121,6 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
             } else {
                 openListImageFrag(null)
                 imageListFrag?.updateAdapterFromEdit(imageAdapter.imageList)
-            }
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        PixImagePicker.showSelectedImages(resultCode, requestCode, data, this)
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            PermUtil.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS -> {
-
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    PixImagePicker.getImages(
-                        this,
-                        ImageConst.MAX_COUNT_IMAGES,
-                        ImageConst.REQUEST_CODE_GET_IMAGES)
-                } else {
-                    showToast(getString(R.string.approve_permission_for_your_photo))
-                }
-                return
             }
         }
     }
