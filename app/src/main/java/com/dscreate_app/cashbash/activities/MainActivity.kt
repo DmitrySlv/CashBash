@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import com.dscreate_app.cashbash.R
+import com.dscreate_app.cashbash.data.DbManager
 import com.dscreate_app.cashbash.databinding.ActivityMainBinding
 import com.dscreate_app.cashbash.utils.dialogs.DialogHelper
 import com.dscreate_app.cashbash.utils.firebase.GoogleAccountConst.GOOGLE_SIGN_IN_REQUEST_CODE
@@ -27,11 +28,13 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     private val dialogHelper = DialogHelper(this)
     val mAuth = FirebaseAuth.getInstance()
     private lateinit var tvAccount: TextView
+    private val dbManager = DbManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         init()
+        dbManager.readDataFromDb()
     }
 
     override fun onStart() {

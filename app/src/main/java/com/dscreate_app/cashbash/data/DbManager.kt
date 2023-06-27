@@ -1,7 +1,11 @@
 package com.dscreate_app.cashbash.data
 
+import android.util.Log
 import com.dscreate_app.cashbash.data.models.AdModelDto
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
@@ -15,9 +19,29 @@ class DbManager {
         }
     }
 
+    fun readDataFromDb() {
+        //Данные обновляются с этим listener порционально постранично.
+        db.addListenerForSingleValueEvent(object: ValueEventListener {
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (item in snapshot.children) {
+                    val ad = item.children
+                        .iterator()
+                        .next()
+                        .child(AD_PATH)
+                        .getValue(AdModelDto::class.java)
+                    Log.d(TAG, "Data: ${ad?.phone}")
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
+    }
+
     companion object {
         private const val MAIN_PATH = "main"
         private const val AD_PATH = "ad"
         private const val EMPTY = "empty"
+        private const val TAG = "MyLog"
     }
 }
