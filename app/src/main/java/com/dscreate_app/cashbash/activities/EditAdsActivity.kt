@@ -9,16 +9,14 @@ import androidx.appcompat.app.AppCompatActivity
 import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.adapters.ImageAdapter
 import com.dscreate_app.cashbash.data.DbManager
+import com.dscreate_app.cashbash.data.models.AdModelDto
 import com.dscreate_app.cashbash.databinding.ActivityEditAdsBinding
 import com.dscreate_app.cashbash.fragments.ImageListFragment
 import com.dscreate_app.cashbash.utils.dialogs.CityHelper
 import com.dscreate_app.cashbash.utils.dialogs.DialogSpinnerHelper
-import com.dscreate_app.cashbash.utils.image_picker.ImageManager
 import com.dscreate_app.cashbash.utils.image_picker.PixImagePicker
 import com.dscreate_app.cashbash.utils.image_picker.ImageConst
-import com.dscreate_app.cashbash.utils.logD
 import com.dscreate_app.cashbash.utils.showToast
-import com.fxn.pix.Pix
 import com.fxn.utility.PermUtil
 
 class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
@@ -28,6 +26,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
     lateinit var imageAdapter: ImageAdapter
     var imageListFrag: ImageListFragment? = null
     var editImagePos = 0
+    private val dbManager = DbManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,9 +104,26 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
 
     private fun onClickPublish() {
         binding.btPublish.setOnClickListener {
-            val dbManager = DbManager()
-            dbManager.publishAd()
+            dbManager.publishAd(fillAdForFirebase())
         }
+    }
+
+    private fun fillAdForFirebase(): AdModelDto {
+        val ad: AdModelDto
+        binding.apply {
+             ad = AdModelDto(
+                dbManager.db.push().key,
+                tvSelectCountry.text.toString(),
+                tvSelectCity.text.toString(),
+                edPhone.text.toString(),
+                edIndex.text.toString(),
+                cbWithSend.isChecked.toString(),
+                tvSelectCat.text.toString(),
+                edPrice.text.toString(),
+                edDescription.text.toString()
+            )
+        }
+        return ad
     }
 
     private fun openPixImagePicker() {

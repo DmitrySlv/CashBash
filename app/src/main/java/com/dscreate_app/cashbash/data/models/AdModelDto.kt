@@ -1,6 +1,7 @@
-package com.dscreate_app.cashbash.models
+package com.dscreate_app.cashbash.data.models
 
 data class AdModelDto(
+    val key: String? = null,
     val country: String? = null,
     val city: String? = null,
     val phone: String? = null,
