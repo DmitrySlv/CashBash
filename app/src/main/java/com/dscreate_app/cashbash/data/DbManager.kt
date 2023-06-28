@@ -1,6 +1,5 @@
 package com.dscreate_app.cashbash.data
 
-import android.util.Log
 import com.dscreate_app.cashbash.data.models.AdModelDto
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -24,13 +23,16 @@ class DbManager {
         db.addListenerForSingleValueEvent(object: ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
+                val adList = mutableListOf<AdModelDto>()
                 for (item in snapshot.children) {
                     val ad = item.children
                         .iterator()
                         .next()
                         .child(AD_PATH)
                         .getValue(AdModelDto::class.java)
-                    Log.d(TAG, "Data: ${ad?.phone}")
+                    ad?.let {
+                        adList.add(ad)
+                    }
                 }
             }
 
