@@ -237,7 +237,7 @@
                     <CheckBox
                         android:id="@+id/cbWithSend"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="48dp"
                         android:layout_marginStart="5dp"
                         android:layout_marginTop="8dp"
                         android:buttonTint="@color/purple"
@@ -308,6 +308,29 @@
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/tvTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/category_title"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/edTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="8dp"
+                        android:autofillHints="+7"
+                        android:background="@null"
+                        android:ems="10"
+                        android:hint="@string/tv_title_hint"
+                        android:inputType="text|textPersonName"
+                        android:padding="10dp"
+                        android:textColorHint="@color/grey" />
+
+                    <TextView
                         android:id="@+id/tvTitlePrice"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -354,12 +377,13 @@
                     <EditText
                         android:id="@+id/edDescription"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="48dp"
                         android:layout_marginStart="8dp"
                         android:autofillHints=""
                         android:background="@null"
                         android:ems="10"
                         android:hint="@string/description_hint"
+                        android:inputType="text|textLongMessage"
                         android:padding="10dp"
                         android:textColorHint="@color/grey" />
 

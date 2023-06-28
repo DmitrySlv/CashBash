@@ -35,11 +35,12 @@ class AdsAdapter: RecyclerView.Adapter<AdsAdapter.AdHolder>() {
             adModel.apply {
                 tvDescription.text = description
                 tvPrice.text = price
+                tvTitle.text = title
             }
         }
     }
 
-    private fun updateAdapter(newList: MutableList<AdModelDto>) {
+    fun updateAdapter(newList: MutableList<AdModelDto>) {
         adList.clear()
         adList.addAll(newList)
         notifyDataSetChanged()

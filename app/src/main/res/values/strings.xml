@@ -44,6 +44,8 @@
     <string name="phone">*Телефон</string>
     <string name="phone_hint">Номер телефона</string>
     <string name="category">*Категория</string>
+    <string name="category_title">*Заголовок</string>
+    <string name="tv_title_hint">Укажите заголовок </string>
     <string name="select_category">Выберите категорию</string>
     <string name="price">*Цена</string>
     <string name="select_price_hint">Укажите цену</string>

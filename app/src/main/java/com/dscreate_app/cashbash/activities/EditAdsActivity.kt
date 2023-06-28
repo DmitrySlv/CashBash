@@ -26,7 +26,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
     lateinit var imageAdapter: ImageAdapter
     var imageListFrag: ImageListFragment? = null
     var editImagePos = 0
-    private val dbManager = DbManager()
+    private val dbManager = DbManager(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,6 +119,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
                 edIndex.text.toString(),
                 cbWithSend.isChecked.toString(),
                 tvSelectCat.text.toString(),
+                 edTitle.text.toString(),
                 edPrice.text.toString(),
                 edDescription.text.toString()
             )

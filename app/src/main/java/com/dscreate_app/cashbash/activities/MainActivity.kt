@@ -11,8 +11,11 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.dscreate_app.cashbash.R
+import com.dscreate_app.cashbash.adapters.AdsAdapter
 import com.dscreate_app.cashbash.data.DbManager
+import com.dscreate_app.cashbash.data.models.AdModelDto
 import com.dscreate_app.cashbash.databinding.ActivityMainBinding
 import com.dscreate_app.cashbash.utils.dialogs.DialogHelper
 import com.dscreate_app.cashbash.utils.firebase.GoogleAccountConst.GOOGLE_SIGN_IN_REQUEST_CODE
@@ -22,18 +25,22 @@ import com.google.android.material.navigation.NavigationView.OnNavigationItemSel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
-class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(),
+    OnNavigationItemSelectedListener,
+    DbManager.ReadDataCallback {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val dialogHelper = DialogHelper(this)
     val mAuth = FirebaseAuth.getInstance()
     private lateinit var tvAccount: TextView
-    private val dbManager = DbManager()
+    private val dbManager = DbManager(this)
+    private val adsAdapter = AdsAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        init()
+        initMenus()
+        initRcView()
         dbManager.readDataFromDb()
     }
 
@@ -72,7 +79,7 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun init() = with(binding) {
+    private fun initMenus() = with(binding) {
         setSupportActionBar(mainContent.toolbar)
         mainContent.toolbar.setTitleTextColor(ContextCompat.getColor(
             this@MainActivity, R.color.white))
@@ -85,6 +92,12 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
         toggle.syncState()
         navView.setNavigationItemSelectedListener(this@MainActivity)
         tvAccount = navView.getHeaderView(HEADER_INDEX).findViewById(R.id.tvAccEmail)
+    }
+
+    private fun initRcView() = with(binding) {
+        mainContent.rcView.layoutManager = LinearLayoutManager(this@MainActivity)
+        mainContent.rcView.adapter = adsAdapter
+
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -129,6 +142,10 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
         } else {
             user.email
         }
+    }
+
+    override fun readData(list: MutableList<AdModelDto>) {
+        adsAdapter.updateAdapter(list)
     }
 
     companion object {

@@ -8,7 +8,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
-class DbManager {
+class DbManager(private val readCallback: ReadDataCallback?) {
     val db = Firebase.database.getReference(MAIN_PATH)
     private val auth = Firebase.auth
 
@@ -33,11 +33,16 @@ class DbManager {
                     ad?.let {
                         adList.add(ad)
                     }
+                    readCallback?.readData(adList)
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {}
         })
+    }
+
+    interface ReadDataCallback {
+        fun readData(list: MutableList<AdModelDto>)
     }
 
     companion object {
