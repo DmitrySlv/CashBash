@@ -95,4 +95,7 @@
     <string name="loading">Загрузка… подождите</string>
     <!-- fragment_image_list -->
     <string name="ad_id">ca-app-pub-3940256099942544/6300978111</string>
+    <!-- ad_list_item -->
+    <string name="price_desc">Цена:</string>
+    <string name="currency">руб</string>
 </resources>
