@@ -1,7 +1,6 @@
 package com.dscreate_app.cashbash.adapters
 
 import android.graphics.Bitmap
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,8 +51,7 @@ class SelectImageAdapter(
     }
 
     class ImageHolder(
-        view: View,
-        private val adapter: SelectImageAdapter
+        view: View, private val adapter: SelectImageAdapter
         ): RecyclerView.ViewHolder(view) {
         private val binding = SelectImageItemBinding.bind(view)
 
@@ -66,10 +64,10 @@ class SelectImageAdapter(
             imContent.setImageBitmap(bitmap)
 
             imEdImage.setOnClickListener {
-                PixImagePicker.getImages(
+                PixImagePicker.launcher(
                     root.context as EditAdsActivity,
-                    ImageConst.SINGLE_IMAGE,
-                    ImageConst.REQUEST_CODE_GET_SINGLE_IMAGE
+                    (root.context as EditAdsActivity).launcherSingleSelectImage,
+                    ImageConst.SINGLE_IMAGE
                 )
                 (root.context as EditAdsActivity).editImagePos = adapterPosition
             }

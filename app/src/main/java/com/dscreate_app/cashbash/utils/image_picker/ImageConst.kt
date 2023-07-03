@@ -8,6 +8,7 @@ object ImageConst {
     const val MAX_COUNT_IMAGES = 3
     const val SINGLE_IMAGE = 1
     const val PATH_IMAGES = "/pix/images"
+    const val OPTIONS = "options"
 
     //Для Image Manager
     const val IMAGE_ROTATE_90 = 90

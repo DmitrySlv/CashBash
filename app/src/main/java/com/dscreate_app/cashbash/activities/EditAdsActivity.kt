@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.adapters.ImageAdapter
@@ -27,6 +28,8 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
     var imageListFrag: ImageListFragment? = null
     var editImagePos = 0
     private val dbManager = DbManager(null)
+    var launcherMultiSelectImages: ActivityResultLauncher<Intent>? = null
+    var launcherSingleSelectImage: ActivityResultLauncher<Intent>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,36 +42,37 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
         onClickPublish()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        PixImagePicker.showSelectedImages(resultCode, requestCode, data, this)
-    }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             PermUtil.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS -> {
 
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    PixImagePicker.getImages(
-                        this,
-                        ImageConst.MAX_COUNT_IMAGES,
-                        ImageConst.REQUEST_CODE_GET_IMAGES)
+//                    PixImagePicker.getOptions(
+//                        this,
+//                        ImageConst.MAX_COUNT_IMAGES,
+//                        ImageConst.REQUEST_CODE_GET_IMAGES)
                 } else {
                     showToast(getString(R.string.approve_permission_for_your_photo))
                 }
                 return
             }
         }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun init() = with(binding) {
         imageAdapter = ImageAdapter()
         vpImages.adapter = imageAdapter
+        launcherMultiSelectImages = PixImagePicker.getLauncherForMultiSelectImages(
+            this@EditAdsActivity)
+        launcherSingleSelectImage = PixImagePicker.getLauncherForSingleImage(
+            this@EditAdsActivity)
     }
 
     private fun onClickSelectCountry() = with(binding) {
@@ -130,10 +134,10 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
     private fun openPixImagePicker() {
         binding.ibEditImage.setOnClickListener {
             if (imageAdapter.imageList.size == 0) {
-                PixImagePicker.getImages(
-                    this,
-                    ImageConst.MAX_COUNT_IMAGES,
-                    ImageConst.REQUEST_CODE_GET_IMAGES
+                PixImagePicker.launcher(
+                    this@EditAdsActivity,
+                    launcherMultiSelectImages,
+                    ImageConst.MAX_COUNT_IMAGES
                 )
             } else {
                 openListImageFrag(null)
