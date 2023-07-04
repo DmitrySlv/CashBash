@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "437127310027-3278ri78gohadtrqnn48ed8ngdhkcpf1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dscreate_app.cashbash",
+            "certificate_hash": "27645ae1f550aefb334c306079c8b2bf61215c91"
+          }
+        },
+        {
           "client_id": "437127310027-j1m82kup7kdg05as4mphhqe1978igklo.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

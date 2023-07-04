@@ -5,6 +5,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('E:\\Android_keys_apps\\CashBash\\key_jks')
+            storePassword 'z35D1297'
+            keyAlias 'key_cashbash'
+            keyPassword 'z35D1297'
+        }
+    }
     namespace 'com.dscreate_app.cashbash'
     compileSdk 33
 
@@ -22,6 +30,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {
