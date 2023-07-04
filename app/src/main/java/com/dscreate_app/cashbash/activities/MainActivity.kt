@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -14,11 +15,10 @@ import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.adapters.AdsAdapter
-import com.dscreate_app.cashbash.data.DbManager
-import com.dscreate_app.cashbash.data.models.AdModelDto
 import com.dscreate_app.cashbash.databinding.ActivityMainBinding
 import com.dscreate_app.cashbash.utils.dialogs.DialogHelper
 import com.dscreate_app.cashbash.utils.firebase.GoogleAccountConst.GOOGLE_SIGN_IN_REQUEST_CODE
+import com.dscreate_app.cashbash.view_model.FirebaseViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
@@ -27,22 +27,22 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity(),
-    OnNavigationItemSelectedListener,
-    DbManager.ReadDataCallback {
+    OnNavigationItemSelectedListener {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val dialogHelper = DialogHelper(this)
     val mAuth = Firebase.auth
     private lateinit var tvAccount: TextView
-    private val dbManager = DbManager(this)
     private val adsAdapter = AdsAdapter(mAuth)
+    private val firebaseViewModel: FirebaseViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         initMenus()
         initRcView()
-        dbManager.readDataFromDb()
+        initViewModel()
+        firebaseViewModel.loadAllAds()
     }
 
     override fun onStart() {
@@ -101,6 +101,12 @@ class MainActivity : AppCompatActivity(),
 
     }
 
+    private fun initViewModel() {
+        firebaseViewModel.liveAdsData.observe(this) {
+            adsAdapter.updateAdapter(it)
+        }
+    }
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.my_ads -> {
@@ -143,10 +149,6 @@ class MainActivity : AppCompatActivity(),
         } else {
             user.email
         }
-    }
-
-    override fun readData(list: MutableList<AdModelDto>) {
-        adsAdapter.updateAdapter(list)
     }
 
     companion object {

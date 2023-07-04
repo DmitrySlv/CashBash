@@ -8,7 +8,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
-class DbManager(private val readCallback: ReadDataCallback?) {
+class DbManager {
     val db = Firebase.database.getReference(MAIN_PATH)
     val auth = Firebase.auth
 
@@ -18,7 +18,7 @@ class DbManager(private val readCallback: ReadDataCallback?) {
         }
     }
 
-    fun readDataFromDb() {
+    fun readDataFromDb(readCallback: ReadDataCallback?) {
         //Данные обновляются с этим listener порционально постранично.
         db.addListenerForSingleValueEvent(object: ValueEventListener {
 

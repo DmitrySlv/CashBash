@@ -15,8 +15,8 @@ import com.dscreate_app.cashbash.databinding.ActivityEditAdsBinding
 import com.dscreate_app.cashbash.fragments.ImageListFragment
 import com.dscreate_app.cashbash.utils.dialogs.CityHelper
 import com.dscreate_app.cashbash.utils.dialogs.DialogSpinnerHelper
-import com.dscreate_app.cashbash.utils.image_picker.PixImagePicker
 import com.dscreate_app.cashbash.utils.image_picker.ImageConst
+import com.dscreate_app.cashbash.utils.image_picker.PixImagePicker
 import com.dscreate_app.cashbash.utils.showToast
 import com.fxn.utility.PermUtil
 
@@ -27,7 +27,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
     lateinit var imageAdapter: ImageAdapter
     var imageListFrag: ImageListFragment? = null
     var editImagePos = 0
-    private val dbManager = DbManager(null)
+    private val dbManager = DbManager()
     var launcherMultiSelectImages: ActivityResultLauncher<Intent>? = null
     var launcherSingleSelectImage: ActivityResultLauncher<Intent>? = null
 
