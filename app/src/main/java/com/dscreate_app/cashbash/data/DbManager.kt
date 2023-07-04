@@ -10,7 +10,7 @@ import com.google.firebase.ktx.Firebase
 
 class DbManager(private val readCallback: ReadDataCallback?) {
     val db = Firebase.database.getReference(MAIN_PATH)
-    private val auth = Firebase.auth
+    val auth = Firebase.auth
 
     fun publishAd(adModel: AdModelDto) {
         auth.uid?.let { uid ->
