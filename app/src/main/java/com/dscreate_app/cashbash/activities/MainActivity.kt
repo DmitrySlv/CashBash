@@ -97,12 +97,15 @@ class MainActivity : AppCompatActivity(),
                     startActivity(intent)
                 }
                 R.id.my_ads -> {
-                    showToast("Мои объявления")
+                    firebaseViewModel.loadMyAds()
+                    mainContent.toolbar.title = getString(R.string.ad_my_ads)
                 }
                 R.id.favourite -> {
-                    showToast("Избранное")
+                    mainContent.toolbar.title = getString(R.string.ad_favourite)
                 }
                 R.id.main -> {
+                    firebaseViewModel.loadAllAds()
+                    mainContent.toolbar.title = getString(R.string.b_nav_main)
                 }
             }
             true

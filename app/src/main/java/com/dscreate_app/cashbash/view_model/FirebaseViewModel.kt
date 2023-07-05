@@ -14,7 +14,16 @@ class FirebaseViewModel: ViewModel() {
         get() = _liveAdsData
 
     fun loadAllAds() {
-        dbManager.readDataFromDb(object : DbManager.ReadDataCallback {
+        dbManager.getAllAds(object : DbManager.ReadDataCallback {
+
+            override fun readData(list: MutableList<AdModelDto>) {
+                _liveAdsData.value = list
+            }
+        })
+    }
+
+    fun loadMyAds() {
+        dbManager.getMyAds(object : DbManager.ReadDataCallback {
 
             override fun readData(list: MutableList<AdModelDto>) {
                 _liveAdsData.value = list
