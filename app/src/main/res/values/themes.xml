@@ -25,6 +25,11 @@
         <item name="colorControlNormal">@color/white</item>
         <item name="android:fontFamily">sans-serif-condensed</item>
     </style>
+
+    <!-- Bottom navigation View -->
+    <style name="BottomNavigationViewTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:background">@color/purple</item>
+    </style>
     
     <style name="Theme.CashBash" parent="Base.Theme.CashBash" />
 </resources>

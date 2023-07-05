@@ -3,7 +3,6 @@ package com.dscreate_app.cashbash.activities
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
@@ -18,6 +17,7 @@ import com.dscreate_app.cashbash.adapters.AdsAdapter
 import com.dscreate_app.cashbash.databinding.ActivityMainBinding
 import com.dscreate_app.cashbash.utils.dialogs.DialogHelper
 import com.dscreate_app.cashbash.utils.firebase.GoogleAccountConst.GOOGLE_SIGN_IN_REQUEST_CODE
+import com.dscreate_app.cashbash.utils.showToast
 import com.dscreate_app.cashbash.view_model.FirebaseViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
@@ -39,7 +39,8 @@ class MainActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        initMenus()
+        initNavViewAndToolbar()
+        bottomMenuClick()
         initRcView()
         initViewModel()
         firebaseViewModel.loadAllAds()
@@ -48,6 +49,11 @@ class MainActivity : AppCompatActivity(),
     override fun onStart() {
         super.onStart()
         uiUpdate(mAuth.currentUser)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.mainContent.bNavView.selectedItemId = R.id.main
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -67,23 +73,11 @@ class MainActivity : AppCompatActivity(),
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.new_ad) {
-            val intent = Intent(this, EditAdsActivity::class.java)
-            startActivity(intent)
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    private fun initMenus() = with(binding) {
+    private fun initNavViewAndToolbar() = with(binding) {
         setSupportActionBar(mainContent.toolbar)
         mainContent.toolbar.setTitleTextColor(ContextCompat.getColor(
             this@MainActivity, R.color.white))
+
         val toggle = ActionBarDrawerToggle(
             this@MainActivity, drawerLayout, mainContent.toolbar, R.string.open, R.string.close
         )
@@ -93,6 +87,26 @@ class MainActivity : AppCompatActivity(),
         toggle.syncState()
         navView.setNavigationItemSelectedListener(this@MainActivity)
         tvAccount = navView.getHeaderView(HEADER_INDEX).findViewById(R.id.tvAccEmail)
+    }
+
+    private fun bottomMenuClick() = with(binding) {
+        mainContent.bNavView.setOnItemSelectedListener { item ->
+            when(item.itemId) {
+                R.id.new_ad -> {
+                    val intent = Intent(this@MainActivity, EditAdsActivity::class.java)
+                    startActivity(intent)
+                }
+                R.id.my_ads -> {
+                    showToast("Мои объявления")
+                }
+                R.id.favourite -> {
+                    showToast("Избранное")
+                }
+                R.id.main -> {
+                }
+            }
+            true
+        }
     }
 
     private fun initRcView() = with(binding) {

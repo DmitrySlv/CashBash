@@ -98,4 +98,9 @@
     <!-- ad_list_item -->
     <string name="price_desc">Цена:</string>
     <string name="currency">руб</string>
+    <!-- bottom_main_menu -->
+    <string name="b_nav_new_ad">Новое объявление</string>
+    <string name="b_nav_my_ads">Мои объявления</string>
+    <string name="b_nav_favs">Избранное</string>
+    <string name="b_nav_main">Главная</string>
 </resources>
