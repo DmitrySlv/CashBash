@@ -1,5 +1,8 @@
 package com.dscreate_app.cashbash.data
 
+import android.content.Context
+import android.widget.Toast
+import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.data.models.AdModelDto
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -13,9 +16,20 @@ class DbManager {
     val db = Firebase.database.getReference(MAIN_PATH)
     val auth = Firebase.auth
 
-    fun publishAd(adModel: AdModelDto) {
+    fun publishAd(adModel: AdModelDto, finishWorkListener: FinishWorkListener, context: Context) {
         auth.uid?.let { uid ->
             db.child(adModel.key ?: EMPTY).child(uid).child(AD_PATH).setValue(adModel)
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        finishWorkListener.onFinnish()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.error_load_ad_to_firebase_toast),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
         }
     }
 
@@ -54,6 +68,10 @@ class DbManager {
 
     interface ReadDataCallback {
         fun readData(list: MutableList<AdModelDto>)
+    }
+
+    interface FinishWorkListener {
+        fun onFinnish()
     }
 
     companion object {

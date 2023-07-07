@@ -28,10 +28,12 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
     private val dialog = DialogSpinnerHelper()
     lateinit var imageAdapter: ImageAdapter
     var imageListFrag: ImageListFragment? = null
-    var editImagePos = 0
     private val dbManager = DbManager()
     var launcherMultiSelectImages: ActivityResultLauncher<Intent>? = null
     var launcherSingleSelectImage: ActivityResultLauncher<Intent>? = null
+    var editImagePos = 0
+    private var isEditState = false
+    private var ad: AdModelDto? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,7 +111,20 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
 
     private fun onClickPublish() {
         binding.btPublish.setOnClickListener {
-            dbManager.publishAd(fillAdForFirebase())
+            val adTemp = fillAdForFirebase()
+            if (isEditState) {
+                dbManager.publishAd(adTemp.copy(key = ad?.key), onPublishFinnish(), this)
+            } else {
+                dbManager.publishAd(adTemp, onPublishFinnish(), this)
+            }
+        }
+    }
+
+    private fun onPublishFinnish(): DbManager.FinishWorkListener {
+        return object : DbManager.FinishWorkListener {
+            override fun onFinnish() {
+                finish()
+            }
         }
     }
 
@@ -127,13 +142,15 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
         }
     }
 
-    private fun isEditState(): Boolean {
+    private fun editState(): Boolean {
         return intent.getBooleanExtra(MainActivity.EDIT_STATE, false)
     }
 
     private fun checkEditState() {
-        if (isEditState()) {
-            intent.parcelable<AdModelDto>(MainActivity.AD_MODEL_DATA)?.let { fillViews(it) }
+        isEditState = editState()
+        if (isEditState) {
+            ad =  intent.parcelable(MainActivity.AD_MODEL_DATA)
+            ad?.let { fillViews(it) }
         }
     }
 
@@ -145,16 +162,16 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
     private fun fillAdForFirebase(): AdModelDto {
         val ad: AdModelDto
         binding.apply {
-             ad = AdModelDto(
+            ad = AdModelDto(
                 dbManager.db.push().key,
-                 dbManager.auth.uid,
+                dbManager.auth.uid,
                 tvSelectCountry.text.toString(),
                 tvSelectCity.text.toString(),
                 edPhone.text.toString(),
                 edIndex.text.toString(),
                 cbWithSend.isChecked.toString(),
                 tvSelectCat.text.toString(),
-                 edTitle.text.toString(),
+                edTitle.text.toString(),
                 edPrice.text.toString(),
                 edDescription.text.toString()
             )

@@ -60,6 +60,9 @@
         предоставьте разрешение для доступа к файловому хранилищу вашего устройства!</string>
     <!-- nav_header_main -->
     <string name="anonymous">Гость</string>
+    <!-- DbManager -->
+    <string name="error_load_ad_to_firebase_toast">Ошибка загрузки данных на сервер. Пожалуйста,
+        попробуйте еще раз позже</string>
     <!-- Dialog Helper -->
     <string name="sign_in_finish">Вы вошли в аккаунт</string>
     <string name="reset_email_password">Пароль email адреса был сброшен. Пожалуйста,
