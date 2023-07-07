@@ -17,7 +17,6 @@ import com.dscreate_app.cashbash.adapters.AdsAdapter
 import com.dscreate_app.cashbash.databinding.ActivityMainBinding
 import com.dscreate_app.cashbash.utils.dialogs.DialogHelper
 import com.dscreate_app.cashbash.utils.firebase.GoogleAccountConst.GOOGLE_SIGN_IN_REQUEST_CODE
-import com.dscreate_app.cashbash.utils.showToast
 import com.dscreate_app.cashbash.view_model.FirebaseViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
@@ -33,7 +32,7 @@ class MainActivity : AppCompatActivity(),
     private val dialogHelper = DialogHelper(this)
     val mAuth = Firebase.auth
     private lateinit var tvAccount: TextView
-    private val adsAdapter = AdsAdapter(mAuth)
+    private val adsAdapter = AdsAdapter(this)
     private val firebaseViewModel: FirebaseViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -170,5 +169,7 @@ class MainActivity : AppCompatActivity(),
 
     companion object {
         private const val HEADER_INDEX = 0
+        const val EDIT_STATE = "edit_state"
+        const val AD_MODEL_DATA = "ad_model_data"
     }
 }

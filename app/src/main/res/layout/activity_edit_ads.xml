@@ -107,7 +107,7 @@
                         android:gravity="center"
                         android:padding="10dp"
                         android:text="@string/select_country"
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
                         android:textSize="18sp" />
 
                     <LinearLayout
@@ -144,7 +144,7 @@
                         android:gravity="center"
                         android:padding="10dp"
                         android:text="@string/select_city"
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
                         android:textSize="18sp" />
 
                     <LinearLayout
@@ -293,7 +293,7 @@
                         android:gravity="center"
                         android:padding="10dp"
                         android:text="@string/select_category"
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
                         android:textSize="18sp" />
 
                     <LinearLayout

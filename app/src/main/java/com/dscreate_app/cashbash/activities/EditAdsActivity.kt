@@ -3,7 +3,9 @@ package com.dscreate_app.cashbash.activities
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
@@ -40,9 +42,8 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
         onClickSelectCat()
         openPixImagePicker()
         onClickPublish()
+        checkEditState()
     }
-
-
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -110,6 +111,35 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
         binding.btPublish.setOnClickListener {
             dbManager.publishAd(fillAdForFirebase())
         }
+    }
+
+    private fun fillViews(adModelDto: AdModelDto) = with(binding) {
+        adModelDto.apply {
+            tvSelectCountry.text = country
+            tvSelectCity.text = city
+            edPhone.setText(phone)
+            edIndex.setText(index)
+            cbWithSend.isChecked = withSend.toBoolean()
+            tvSelectCat.text = category
+            edTitle.setText(title)
+            edPrice.setText(price)
+            edDescription.setText(description)
+        }
+    }
+
+    private fun isEditState(): Boolean {
+        return intent.getBooleanExtra(MainActivity.EDIT_STATE, false)
+    }
+
+    private fun checkEditState() {
+        if (isEditState()) {
+            intent.parcelable<AdModelDto>(MainActivity.AD_MODEL_DATA)?.let { fillViews(it) }
+        }
+    }
+
+    private inline fun <reified T : Parcelable> Intent.parcelable(key: String): T? = when {
+        SDK_INT >= 33 -> getParcelableExtra(key, T::class.java)
+        else -> @Suppress("DEPRECATION") getParcelableExtra(key) as? T
     }
 
     private fun fillAdForFirebase(): AdModelDto {

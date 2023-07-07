@@ -1,5 +1,9 @@
 package com.dscreate_app.cashbash.data.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class AdModelDto(
     val key: String? = null,
     val uid: String? = null,
@@ -12,4 +16,4 @@ data class AdModelDto(
     val title: String? = null,
     val price: String? = null,
     val description: String? = null
-)
+) :Parcelable
