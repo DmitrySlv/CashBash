@@ -66,6 +66,19 @@ class DbManager {
         readDataFromDb(query, readCallback)
     }
 
+    fun deleteAd(adModel: AdModelDto, context: Context, listener: FinishWorkListener) {
+        if (adModel.key == null || adModel.uid == null) return
+        db.child(adModel.key).child(adModel.uid).removeValue().addOnCompleteListener {
+            if (it.isSuccessful) {
+                listener.onFinnish()
+            } else {
+                Toast.makeText(context,
+                    context.getString(R.string.error_delete_from_firebase),
+                    Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     interface ReadDataCallback {
         fun readData(list: MutableList<AdModelDto>)
     }

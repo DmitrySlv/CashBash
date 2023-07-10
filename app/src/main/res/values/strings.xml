@@ -63,6 +63,8 @@
     <!-- DbManager -->
     <string name="error_load_ad_to_firebase_toast">Ошибка загрузки данных на сервер. Пожалуйста,
         попробуйте еще раз позже</string>
+    <string name="error_delete_from_firebase">Произошла ошибка.
+        Пожалуйста, попробуйте удалить позже еще раз</string>
     <!-- Dialog Helper -->
     <string name="sign_in_finish">Вы вошли в аккаунт</string>
     <string name="reset_email_password">Пароль email адреса был сброшен. Пожалуйста,

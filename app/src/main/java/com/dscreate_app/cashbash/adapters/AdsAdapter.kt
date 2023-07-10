@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.dscreate_app.cashbash.R
@@ -44,6 +45,9 @@ class AdsAdapter(private val mainAct: MainActivity): RecyclerView.Adapter<AdsAda
             showEditPanel(isOwner(adModel))
 
             ibEditAd.setOnClickListener(onClickEditAd(adModel))
+            ibDeleteAd.setOnClickListener {
+                mainAct.deleteItem(adModel)
+            }
         }
 
         private fun isOwner(adModel: AdModelDto): Boolean {
@@ -70,8 +74,13 @@ class AdsAdapter(private val mainAct: MainActivity): RecyclerView.Adapter<AdsAda
     }
 
     fun updateAdapter(newList: MutableList<AdModelDto>) {
+        val diffResult = DiffUtil.calculateDiff(DiffUtilHelper(adList, newList))
+        diffResult.dispatchUpdatesTo(this)
         adList.clear()
         adList.addAll(newList)
-        notifyDataSetChanged()
+    }
+
+    interface DeleteItemListener {
+        fun deleteItem(adModel: AdModelDto)
     }
 }

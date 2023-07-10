@@ -14,6 +14,7 @@ import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.adapters.AdsAdapter
+import com.dscreate_app.cashbash.data.models.AdModelDto
 import com.dscreate_app.cashbash.databinding.ActivityMainBinding
 import com.dscreate_app.cashbash.utils.dialogs.DialogHelper
 import com.dscreate_app.cashbash.utils.firebase.GoogleAccountConst.GOOGLE_SIGN_IN_REQUEST_CODE
@@ -26,7 +27,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity(),
-    OnNavigationItemSelectedListener {
+    OnNavigationItemSelectedListener, AdsAdapter.DeleteItemListener {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val dialogHelper = DialogHelper(this)
@@ -165,6 +166,10 @@ class MainActivity : AppCompatActivity(),
         } else {
             user.email
         }
+    }
+
+    override fun deleteItem(adModel: AdModelDto) {
+        firebaseViewModel.deleteItem(adModel, this)
     }
 
     companion object {

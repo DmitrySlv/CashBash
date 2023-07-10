@@ -1,5 +1,6 @@
 package com.dscreate_app.cashbash.view_model
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -27,6 +28,16 @@ class FirebaseViewModel: ViewModel() {
 
             override fun readData(list: MutableList<AdModelDto>) {
                 _liveAdsData.value = list
+            }
+        })
+    }
+
+    fun deleteItem(adModel: AdModelDto, context: Context) {
+        dbManager.deleteAd(adModel, context, object:  DbManager.FinishWorkListener {
+            override fun onFinnish() {
+                val updatedList = _liveAdsData.value
+                updatedList?.remove(adModel)
+                _liveAdsData.postValue(updatedList)
             }
         })
     }
