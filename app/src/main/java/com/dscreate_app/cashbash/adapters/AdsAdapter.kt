@@ -41,12 +41,16 @@ class AdsAdapter(private val mainAct: MainActivity): RecyclerView.Adapter<AdsAda
                 tvDescription.text = description
                 tvPrice.text = price
                 tvTitle.text = title
+                tvViewsCounter.text = viewsCounter
             }
             showEditPanel(isOwner(adModel))
 
             ibEditAd.setOnClickListener(onClickEditAd(adModel))
             ibDeleteAd.setOnClickListener {
                 mainAct.deleteItem(adModel)
+            }
+            itemView.setOnClickListener {
+                mainAct.adViewed(adModel)
             }
         }
 
@@ -74,7 +78,7 @@ class AdsAdapter(private val mainAct: MainActivity): RecyclerView.Adapter<AdsAda
     }
 
     fun updateAdapter(newList: MutableList<AdModelDto>) {
-        val diffResult = DiffUtil.calculateDiff(DiffUtilHelper(adList, newList))
+        val diffResult = DiffUtil.calculateDiff(DiffAdsAdapter(adList, newList))
         diffResult.dispatchUpdatesTo(this)
         adList.clear()
         adList.addAll(newList)
@@ -82,5 +86,9 @@ class AdsAdapter(private val mainAct: MainActivity): RecyclerView.Adapter<AdsAda
 
     interface DeleteItemListener {
         fun deleteItem(adModel: AdModelDto)
+    }
+
+    interface AdViewedListener {
+        fun adViewed(adModel: AdModelDto)
     }
 }

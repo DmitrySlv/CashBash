@@ -15,5 +15,10 @@ data class AdModelDto(
     val category: String? = null,
     val title: String? = null,
     val price: String? = null,
-    val description: String? = null
-) :Parcelable
+    val description: String? = null,
+
+    // Нужны для передачи данных из класса в класс. Не для записи
+    var viewsCounter: String = "0",
+    var emailsCounter: String = "0",
+    var callsCounter: String = "0"
+): Parcelable

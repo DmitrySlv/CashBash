@@ -3,7 +3,7 @@ package com.dscreate_app.cashbash.adapters
 import androidx.recyclerview.widget.DiffUtil
 import com.dscreate_app.cashbash.data.models.AdModelDto
 
-class DiffUtilHelper(
+class DiffAdsAdapter(
     private val oldList: List<AdModelDto>,
     private val newList: List<AdModelDto>
 ): DiffUtil.Callback() {

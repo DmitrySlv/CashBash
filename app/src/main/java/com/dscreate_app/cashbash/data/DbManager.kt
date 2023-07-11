@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.data.models.AdModelDto
+import com.dscreate_app.cashbash.data.models.InfoItem
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -34,35 +35,41 @@ class DbManager {
     }
 
    private fun readDataFromDb(query: Query, readCallback: ReadDataCallback?) {
-        //Данные обновляются с этим listener порционально постранично.
+        //Данные обновляются с этим listener порционально постранично один раз за считывание с БД.
         query.addListenerForSingleValueEvent(object: ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
                 val adList = mutableListOf<AdModelDto>()
                 for (item in snapshot.children) {
-                    val ad = item.children
-                        .iterator()
-                        .next()
-                        .child(AD_PATH)
-                        .getValue(AdModelDto::class.java)
+
+                    var ad: AdModelDto? = null
+                    item.children.forEach {
+                        if (ad == null) {
+                            ad = it.child(AD_PATH).getValue(AdModelDto::class.java)
+                        }
+                    }
+
+                    val infoItem = item.child(INFO_PATH).getValue(InfoItem::class.java)
+                    ad?.viewsCounter = infoItem?.viewsCounter ?: "0"
+                    ad?.emailsCounter = infoItem?.emailsCounter ?: "0"
+                    ad?.callsCounter = infoItem?.callsCounter ?: "0"
                     ad?.let {
-                        adList.add(ad)
+                        adList.add(ad!!)
                     }
                     readCallback?.readData(adList)
                 }
             }
-
             override fun onCancelled(error: DatabaseError) {}
         })
     }
 
     fun getMyAds(readCallback: ReadDataCallback?) {
-        val query = db.orderByChild(auth.uid + "/ad/uid").equalTo(auth.uid)
+        val query = db.orderByChild(auth.uid + AD_UID_PATH).equalTo(auth.uid)
         readDataFromDb(query, readCallback)
     }
 
     fun getAllAds(readCallback: ReadDataCallback?) {
-        val query = db.orderByChild(auth.uid + "/ad/price")
+        val query = db.orderByChild(auth.uid + AD_PRICE_PATH)
         readDataFromDb(query, readCallback)
     }
 
@@ -79,6 +86,16 @@ class DbManager {
         }
     }
 
+    fun adViewed(adModel: AdModelDto) {
+        var counter = adModel.viewsCounter.toInt()
+        counter++
+        auth.uid?.let {
+            db.child(adModel.key ?: EMPTY).child(INFO_PATH).setValue(
+                InfoItem(counter.toString(), adModel.emailsCounter, adModel.callsCounter)
+            )
+        }
+    }
+
     interface ReadDataCallback {
         fun readData(list: MutableList<AdModelDto>)
     }
@@ -90,6 +107,9 @@ class DbManager {
     companion object {
         private const val MAIN_PATH = "main"
         private const val AD_PATH = "ad"
+        private const val INFO_PATH = "info"
+        private const val AD_UID_PATH = "/ad/uid"
+        private const val AD_PRICE_PATH = "/ad/price"
         private const val EMPTY = "empty"
         private const val TAG = "MyLog"
     }

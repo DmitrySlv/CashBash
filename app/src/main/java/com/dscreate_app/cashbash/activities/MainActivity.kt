@@ -27,7 +27,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity(),
-    OnNavigationItemSelectedListener, AdsAdapter.DeleteItemListener {
+    OnNavigationItemSelectedListener, AdsAdapter.DeleteItemListener, AdsAdapter.AdViewedListener {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val dialogHelper = DialogHelper(this)
@@ -170,6 +170,10 @@ class MainActivity : AppCompatActivity(),
 
     override fun deleteItem(adModel: AdModelDto) {
         firebaseViewModel.deleteItem(adModel, this)
+    }
+
+    override fun adViewed(adModel: AdModelDto) {
+        firebaseViewModel.adViewed(adModel)
     }
 
     companion object {
