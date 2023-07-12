@@ -49,6 +49,14 @@ class AdsAdapter(private val mainAct: MainActivity): RecyclerView.Adapter<AdsAda
             ibDeleteAd.setOnClickListener {
                 mainAct.deleteItem(adModel)
             }
+            if (adModel.isFavourite) {
+                ibFavourite.setImageResource(R.drawable.baseline_favorite_pressed)
+            } else {
+                ibFavourite.setImageResource(R.drawable.baseline_favorite_normal)
+            }
+            ibFavourite.setOnClickListener {
+                mainAct.favouriteClicked(adModel)
+            }
             itemView.setOnClickListener {
                 mainAct.adViewed(adModel)
             }
@@ -90,5 +98,9 @@ class AdsAdapter(private val mainAct: MainActivity): RecyclerView.Adapter<AdsAda
 
     interface AdViewedListener {
         fun adViewed(adModel: AdModelDto)
+    }
+
+    interface FavouriteClicked {
+        fun favouriteClicked(adModel: AdModelDto)
     }
 }

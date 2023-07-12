@@ -22,7 +22,7 @@ class DbManager {
             db.child(adModel.key ?: EMPTY).child(uid).child(AD_PATH).setValue(adModel)
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
-                        finishWorkListener.onFinnish()
+                        finishWorkListener.onFinish()
                     } else {
                         Toast.makeText(
                             context,
@@ -63,6 +63,38 @@ class DbManager {
         })
     }
 
+    fun onFavouriteClick(adModel: AdModelDto, finishWorkListener: FinishWorkListener) {
+        if (adModel.isFavourite) {
+            removeFromFavourites(adModel, finishWorkListener)
+        } else {
+            addToFavourites(adModel, finishWorkListener)
+        }
+    }
+
+   private fun addToFavourites(adModel: AdModelDto, finishWorkListener: FinishWorkListener) {
+        adModel.key?.let { key ->
+            auth.uid?.let { uid ->
+                db.child(key).child(FAVS_PATH).child(uid).setValue(uid).addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        finishWorkListener.onFinish()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun removeFromFavourites(adModel: AdModelDto, finishWorkListener: FinishWorkListener) {
+        adModel.key?.let { key ->
+            auth.uid?.let { uid ->
+                db.child(key).child(FAVS_PATH).child(uid).removeValue().addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        finishWorkListener.onFinish()
+                    }
+                }
+            }
+        }
+    }
+
     fun getMyAds(readCallback: ReadDataCallback?) {
         val query = db.orderByChild(auth.uid + AD_UID_PATH).equalTo(auth.uid)
         readDataFromDb(query, readCallback)
@@ -77,7 +109,7 @@ class DbManager {
         if (adModel.key == null || adModel.uid == null) return
         db.child(adModel.key).child(adModel.uid).removeValue().addOnCompleteListener {
             if (it.isSuccessful) {
-                listener.onFinnish()
+                listener.onFinish()
             } else {
                 Toast.makeText(context,
                     context.getString(R.string.error_delete_from_firebase),
@@ -101,13 +133,14 @@ class DbManager {
     }
 
     interface FinishWorkListener {
-        fun onFinnish()
+        fun onFinish()
     }
 
     companion object {
         private const val MAIN_PATH = "main"
         private const val AD_PATH = "ad"
         private const val INFO_PATH = "info"
+        private const val FAVS_PATH = "favourites"
         private const val AD_UID_PATH = "/ad/uid"
         private const val AD_PRICE_PATH = "/ad/price"
         private const val EMPTY = "empty"

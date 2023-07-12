@@ -34,7 +34,7 @@ class FirebaseViewModel: ViewModel() {
 
     fun deleteItem(adModel: AdModelDto, context: Context) {
         dbManager.deleteAd(adModel, context, object:  DbManager.FinishWorkListener {
-            override fun onFinnish() {
+            override fun onFinish() {
                 val updatedList = _liveAdsData.value
                 updatedList?.remove(adModel)
                 _liveAdsData.postValue(updatedList)
@@ -44,5 +44,22 @@ class FirebaseViewModel: ViewModel() {
 
     fun adViewed(adModel: AdModelDto) {
         dbManager.adViewed(adModel)
+    }
+
+    fun onFavouriteClick(adModel: AdModelDto) {
+        dbManager.onFavouriteClick(adModel, object : DbManager.FinishWorkListener {
+            override fun onFinish() {
+                val updatedList = _liveAdsData.value
+                val position = updatedList?.indexOf(adModel)
+                if (position != -1) {
+                    position?.let {
+                        updatedList[position] = updatedList[position].copy(
+                            isFavourite = !adModel.isFavourite
+                        )
+                    }
+                }
+                _liveAdsData.postValue(updatedList)
+            }
+        })
     }
 }

@@ -16,6 +16,7 @@ data class AdModelDto(
     val title: String? = null,
     val price: String? = null,
     val description: String? = null,
+    val isFavourite: Boolean = false,
 
     // Нужны для передачи данных из класса в класс. Не для записи
     var viewsCounter: String = "0",

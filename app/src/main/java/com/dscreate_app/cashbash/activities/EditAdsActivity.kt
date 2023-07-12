@@ -122,7 +122,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
 
     private fun onPublishFinnish(): DbManager.FinishWorkListener {
         return object : DbManager.FinishWorkListener {
-            override fun onFinnish() {
+            override fun onFinish() {
                 finish()
             }
         }
