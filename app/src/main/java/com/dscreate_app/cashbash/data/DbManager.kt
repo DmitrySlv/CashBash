@@ -1,6 +1,7 @@
 package com.dscreate_app.cashbash.data
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.data.models.AdModelDto
@@ -48,8 +49,14 @@ class DbManager {
                             ad = it.child(AD_PATH).getValue(AdModelDto::class.java)
                         }
                     }
-
                     val infoItem = item.child(INFO_PATH).getValue(InfoItem::class.java)
+                    val favCounter =  item.child(FAVS_PATH).childrenCount
+                    val isFav = auth.uid?.let { uid ->
+                        item.child(FAVS_PATH).child(uid).getValue(String::class.java)
+                    }
+                    ad?.isFavourite = isFav != null
+                    ad?.favCounter = favCounter.toString()
+
                     ad?.viewsCounter = infoItem?.viewsCounter ?: "0"
                     ad?.emailsCounter = infoItem?.emailsCounter ?: "0"
                     ad?.callsCounter = infoItem?.callsCounter ?: "0"

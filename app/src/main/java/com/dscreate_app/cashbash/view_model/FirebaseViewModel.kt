@@ -53,8 +53,14 @@ class FirebaseViewModel: ViewModel() {
                 val position = updatedList?.indexOf(adModel)
                 if (position != -1) {
                     position?.let {
+                        val favCounter = if (adModel.isFavourite) {
+                            adModel.favCounter.toInt() - 1
+                        } else {
+                            adModel.favCounter.toInt() + 1
+                        }
                         updatedList[position] = updatedList[position].copy(
-                            isFavourite = !adModel.isFavourite
+                            isFavourite = !adModel.isFavourite,
+                            favCounter = favCounter.toString()
                         )
                     }
                 }

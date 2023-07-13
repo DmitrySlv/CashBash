@@ -42,6 +42,7 @@ class AdsAdapter(private val mainAct: MainActivity): RecyclerView.Adapter<AdsAda
                 tvPrice.text = price
                 tvTitle.text = title
                 tvViewsCounter.text = viewsCounter
+                tvFavouriteCounter.text = favCounter
             }
             showEditPanel(isOwner(adModel))
 

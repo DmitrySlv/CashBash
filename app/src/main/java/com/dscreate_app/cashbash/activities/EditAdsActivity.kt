@@ -173,7 +173,8 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
                 tvSelectCat.text.toString(),
                 edTitle.text.toString(),
                 edPrice.text.toString(),
-                edDescription.text.toString()
+                edDescription.text.toString(),
+                "0"
             )
         }
         return ad
