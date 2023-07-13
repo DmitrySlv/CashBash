@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -42,10 +43,10 @@ class MainActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         initNavViewAndToolbar()
-        bottomMenuClick()
         initRcView()
         initViewModel()
         firebaseViewModel.loadAllAds()
+        bottomMenuClick()
     }
 
     override fun onStart() {
@@ -102,7 +103,8 @@ class MainActivity : AppCompatActivity(),
                     firebaseViewModel.loadMyAds()
                     mainContent.toolbar.title = getString(R.string.ad_my_ads)
                 }
-                R.id.favourite -> {
+                R.id.favs -> {
+                    firebaseViewModel.loadMyFavourites()
                     mainContent.toolbar.title = getString(R.string.ad_favourite)
                 }
                 R.id.main -> {
@@ -123,6 +125,7 @@ class MainActivity : AppCompatActivity(),
     private fun initViewModel() {
         firebaseViewModel.liveAdsData.observe(this) {
             adsAdapter.updateAdapter(it)
+            binding.mainContent.tvEmpty.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
         }
     }
 
@@ -132,7 +135,6 @@ class MainActivity : AppCompatActivity(),
                 Toast.makeText(this, "Pressed my_ads", Toast.LENGTH_SHORT).show()
             }
             R.id.favourite -> {
-                Toast.makeText(this, "Pressed favourite", Toast.LENGTH_SHORT).show()
             }
             R.id.cars -> {
                 Toast.makeText(this, "Pressed cars", Toast.LENGTH_SHORT).show()

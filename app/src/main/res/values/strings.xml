@@ -108,4 +108,6 @@
     <string name="b_nav_my_ads">Мои объявления</string>
     <string name="b_nav_favs">Избранное</string>
     <string name="b_nav_main">Главная</string>
+    <!-- main_content -->
+    <string name="empty">Пусто</string>
 </resources>

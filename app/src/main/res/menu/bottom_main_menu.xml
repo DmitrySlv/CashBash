@@ -14,7 +14,7 @@
         android:orderInCategory="300"
         />
     <item
-        android:id="@+id/favourite"
+        android:id="@+id/favs"
         android:title="@string/b_nav_favs"
         android:icon="@drawable/baseline_favorite_pressed"
         android:orderInCategory="200"

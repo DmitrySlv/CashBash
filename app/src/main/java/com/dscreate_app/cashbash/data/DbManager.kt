@@ -107,6 +107,11 @@ class DbManager {
         readDataFromDb(query, readCallback)
     }
 
+    fun getMyFavourites(readCallback: ReadDataCallback?) {
+        val query = db.orderByChild( "/favourites/${auth.uid}").equalTo(auth.uid)
+        readDataFromDb(query, readCallback)
+    }
+
     fun getAllAds(readCallback: ReadDataCallback?) {
         val query = db.orderByChild(auth.uid + AD_PRICE_PATH)
         readDataFromDb(query, readCallback)

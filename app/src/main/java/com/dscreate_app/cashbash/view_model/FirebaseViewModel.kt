@@ -16,7 +16,6 @@ class FirebaseViewModel: ViewModel() {
 
     fun loadAllAds() {
         dbManager.getAllAds(object : DbManager.ReadDataCallback {
-
             override fun readData(list: MutableList<AdModelDto>) {
                 _liveAdsData.value = list
             }
@@ -25,7 +24,14 @@ class FirebaseViewModel: ViewModel() {
 
     fun loadMyAds() {
         dbManager.getMyAds(object : DbManager.ReadDataCallback {
+            override fun readData(list: MutableList<AdModelDto>) {
+                _liveAdsData.value = list
+            }
+        })
+    }
 
+    fun loadMyFavourites() {
+        dbManager.getMyFavourites(object : DbManager.ReadDataCallback {
             override fun readData(list: MutableList<AdModelDto>) {
                 _liveAdsData.value = list
             }
