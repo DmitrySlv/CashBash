@@ -35,6 +35,8 @@
     <string name="send_verification_email">На вашу почту была отправлена ссылка для подтверждения
         email! Пожалуйста, подтвердите ваш email адрес.
     </string>
+    <string name="enter_as_anonymous">Вы вошли как Гость. Пожалуйста, зарегистрируйтесь.</string>
+    <string name="error_enter_as_anonymous">Не удалось войти как Гость</string>
     <!-- Edit Activity -->
     <string name="select_country">Выберите страну</string>
     <string name="select_city">Выберите город</string>

@@ -56,7 +56,9 @@ class AdsAdapter(private val mainAct: MainActivity): RecyclerView.Adapter<AdsAda
                 ibFavourite.setImageResource(R.drawable.baseline_favorite_normal)
             }
             ibFavourite.setOnClickListener {
-                mainAct.favouriteClicked(adModel)
+                if (mainAct.mAuth.currentUser?.isAnonymous == false) {
+                    mainAct.favouriteClicked(adModel)
+                }
             }
             itemView.setOnClickListener {
                 mainAct.adViewed(adModel)

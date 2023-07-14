@@ -18,6 +18,7 @@ import com.dscreate_app.cashbash.adapters.AdsAdapter
 import com.dscreate_app.cashbash.data.models.AdModelDto
 import com.dscreate_app.cashbash.databinding.ActivityMainBinding
 import com.dscreate_app.cashbash.utils.dialogs.DialogHelper
+import com.dscreate_app.cashbash.utils.firebase.AccountHelper
 import com.dscreate_app.cashbash.utils.firebase.GoogleAccountConst.GOOGLE_SIGN_IN_REQUEST_CODE
 import com.dscreate_app.cashbash.view_model.FirebaseViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -155,6 +156,10 @@ class MainActivity : AppCompatActivity(),
                 dialogHelper.createSignDialog(DialogHelper.SIGN_IN_STATE)
             }
             R.id.sign_out -> {
+                if (mAuth.currentUser?.isAnonymous == true) {
+                    binding.drawerLayout.closeDrawer(GravityCompat.START)
+                    return true
+                }
                 uiUpdate(null)
                 mAuth.signOut()
                 dialogHelper.accHelper.signOutGoogle()
@@ -165,10 +170,16 @@ class MainActivity : AppCompatActivity(),
     }
 
     fun uiUpdate(user: FirebaseUser?) {
-        tvAccount.text = if (user == null) {
-            getString(R.string.not_reg)
+        if (user == null) {
+            dialogHelper.accHelper.signInAnonymously(object: AccountHelper.CompleteListener {
+                override fun onComplete() {
+                    tvAccount.text = getString(R.string.anonymous)
+                }
+            })
+        } else if (user.isAnonymous){
+            tvAccount.text = getString(R.string.anonymous)
         } else {
-            user.email
+          tvAccount.text = user.email
         }
     }
 

@@ -6,11 +6,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 
 fun AppCompatActivity.showToast(string: String) {
-    Toast.makeText(this, string, Toast.LENGTH_LONG).show()
+    Toast.makeText(this, string, Toast.LENGTH_SHORT).show()
 }
 
 fun Fragment.showToast(string: String) {
-    Toast.makeText(activity, string, Toast.LENGTH_LONG).show()
+    Toast.makeText(activity, string, Toast.LENGTH_SHORT).show()
 }
 
 fun AppCompatActivity.logD(tag: String, msg: String) {

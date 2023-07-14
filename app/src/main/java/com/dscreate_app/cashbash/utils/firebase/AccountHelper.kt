@@ -82,15 +82,19 @@ class AccountHelper(private val mainAct: MainActivity) {
 
     fun signInFirebaseWithGoogle(token: String) {
         val credential = GoogleAuthProvider.getCredential(token, null)
-        mainAct.mAuth.signInWithCredential(credential).addOnCompleteListener {
-                task ->
+        mainAct.mAuth.currentUser?.delete()?.addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                mainAct.showToast(mainAct.getString(R.string.sign_in_successful))
-                mainAct.uiUpdate(task.result?.user)
-            } else {
-                mainAct.showToast(mainAct.getString(R.string.sign_in_firebase_error))
+                mainAct.mAuth.signInWithCredential(credential).addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        mainAct.showToast(mainAct.getString(R.string.sign_in_successful))
+                        mainAct.uiUpdate(it.result?.user)
+                    } else {
+                        mainAct.showToast(mainAct.getString(R.string.sign_in_firebase_error))
+                    }
+                }
             }
         }
+
     }
 
     private fun sendEmailVerification(user: FirebaseUser) {
@@ -133,6 +137,21 @@ class AccountHelper(private val mainAct: MainActivity) {
         } else {
             mainAct.showToast(mainAct.getString(R.string.enter_to_google_acc))
         }
+    }
+
+    fun signInAnonymously(completeListener: CompleteListener) {
+        mainAct.mAuth.signInAnonymously().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                completeListener.onComplete()
+                mainAct.showToast(mainAct.getString(R.string.enter_as_anonymous))
+            } else {
+                mainAct.showToast(mainAct.getString(R.string.error_enter_as_anonymous))
+            }
+        }
+    }
+
+    interface CompleteListener {
+        fun onComplete()
     }
 
     companion object {
