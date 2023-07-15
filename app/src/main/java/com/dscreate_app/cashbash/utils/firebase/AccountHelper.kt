@@ -20,62 +20,77 @@ class AccountHelper(private val mainAct: MainActivity) {
     private lateinit var googleSignInClient: GoogleSignInClient
 
     fun signUpWithEmail(email: String, password: String) {
-        if (email.isNotBlank() && password.isNotEmpty()) {
-            mainAct.mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        task.result.user?.let { sendEmailVerification(it) }
-                        mainAct.uiUpdate(task.result.user)
-                    } else {
-                        //  mainAct.showToast(mainAct.getString(R.string.sign_up_error))
-                       // mainAct.logD("MyLog", "Exception: ${task.exception}")
-                        if (task.exception is FirebaseAuthUserCollisionException) {
-                            val exception = task.exception as FirebaseAuthUserCollisionException
-                            //  mainAct.logD("MyLog", "Exception: ${exception.errorCode}")
-                            if (exception.errorCode == ERROR_EMAIL_ALREADY_IN_USE) {
-                                linkEmailToGoogle(email, password)
+
+        if (email.isNotBlank() && password.isNotBlank()) {
+            mainAct.mAuth.currentUser?.delete()?.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    mainAct.mAuth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener { task2 ->
+                            if (task2.isSuccessful) {
+                                task2.result.user?.let { signUpWithEmailSuccessful(it) }
+                            } else {
+                                task2.exception?.let {
+                                    signUpWithEmailException(it, email, password)
+                                }
                             }
                         }
-                        if (task.exception is FirebaseAuthInvalidCredentialsException) {
-                            val exception =
-                                task.exception as FirebaseAuthInvalidCredentialsException
-                            if (exception.errorCode == ERROR_INVALID_EMAIL) {
-                                mainAct.showToast(ERROR_INVALID_EMAIL)
-                            }
-                        }
-                        if (task.exception is FirebaseAuthWeakPasswordException) {
-                            val exception = task.exception as FirebaseAuthWeakPasswordException
-                            if (exception.errorCode == ERROR_WEAK_PASSWORD)
-                           mainAct.showToast(ERROR_WEAK_PASSWORD)
-                        }
-                    }
                 }
+            }
+        }
+    }
+
+    private fun signUpWithEmailSuccessful(user: FirebaseUser) {
+        sendEmailVerification(user)
+        mainAct.uiUpdate(user)
+    }
+
+    private fun signUpWithEmailException(e: Exception, email: String, password: String) {
+        // mainAct.logD("MyLog", "Exception: ${e}")
+        if (e is FirebaseAuthUserCollisionException) {
+            //  mainAct.logD("MyLog", "Exception: ${e.errorCode}")
+            if (e.errorCode == ERROR_EMAIL_ALREADY_IN_USE) {
+                linkEmailToGoogle(email, password)
+            }
+        }
+        if (e is FirebaseAuthInvalidCredentialsException) {
+            if (e.errorCode == ERROR_INVALID_EMAIL) {
+                mainAct.showToast(ERROR_INVALID_EMAIL)
+            }
+        }
+        if (e is FirebaseAuthWeakPasswordException) {
+            if (e.errorCode == ERROR_WEAK_PASSWORD)
+                mainAct.showToast(ERROR_WEAK_PASSWORD)
         }
     }
 
     fun signInWithEmail(email: String, password: String) {
         if (email.isNotBlank() && password.isNotBlank()) {
-            mainAct.mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
-                    task ->
+            mainAct.mAuth.currentUser?.delete()?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    mainAct.uiUpdate(task.result.user)
-                } else {
-                  //  mainAct.logD(TAG, "Exception 2: ${task.exception} ")
-                    if (task.exception is FirebaseAuthInvalidCredentialsException) {
-                        val exception =
-                            task.exception as FirebaseAuthInvalidCredentialsException
-                      //  mainAct.logD(TAG, "Exception 2: ${exception.errorCode} ")
-                        if (exception.errorCode == ERROR_WRONG_PASSWORD) {
-                            mainAct.showToast(ERROR_WRONG_PASSWORD)
+                    mainAct.mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
+                            task2 ->
+                        if (task2.isSuccessful) {
+                            mainAct.uiUpdate(task2.result.user)
+                        } else {
+                            task2.exception?.let { signInWithEmailException(it, email, password) }
                         }
                     }
-                    if (task.exception is FirebaseAuthInvalidUserException) {
-                        val exception = task.exception as FirebaseAuthInvalidUserException
-                       if (exception.errorCode == ERROR_USER_NOT_FOUND) {
-                           mainAct.showToast(ERROR_USER_NOT_FOUND)
-                       }
-                    }
                 }
+            }
+        }
+    }
+
+    private fun signInWithEmailException(e: Exception, email: String, password: String) {
+        //  mainAct.logD(TAG, "Exception 2: ${e} ")
+        if (e is FirebaseAuthInvalidCredentialsException) {
+            //  mainAct.logD(TAG, "Exception 2: ${e.errorCode} ")
+            if (e.errorCode == ERROR_WRONG_PASSWORD) {
+                mainAct.showToast(ERROR_WRONG_PASSWORD)
+            }
+        }
+        if (e is FirebaseAuthInvalidUserException) {
+            if (e.errorCode == ERROR_USER_NOT_FOUND) {
+                mainAct.showToast(ERROR_USER_NOT_FOUND)
             }
         }
     }
