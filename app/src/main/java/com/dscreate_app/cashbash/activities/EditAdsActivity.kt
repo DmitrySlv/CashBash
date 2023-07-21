@@ -20,7 +20,6 @@ import com.dscreate_app.cashbash.utils.dialogs.DialogSpinnerHelper
 import com.dscreate_app.cashbash.utils.image_picker.ImageConst
 import com.dscreate_app.cashbash.utils.image_picker.PixImagePicker
 import com.dscreate_app.cashbash.utils.showToast
-import com.fxn.utility.PermUtil
 
 class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
 
@@ -45,28 +44,6 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
         openPixImagePicker()
         onClickPublish()
         checkEditState()
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        when (requestCode) {
-            PermUtil.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS -> {
-
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    PixImagePicker.getOptions(
-//                        this,
-//                        ImageConst.MAX_COUNT_IMAGES,
-//                        ImageConst.REQUEST_CODE_GET_IMAGES)
-                } else {
-                    showToast(getString(R.string.approve_permission_for_your_photo))
-                }
-                return
-            }
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun init() = with(binding) {

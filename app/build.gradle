@@ -6,6 +6,12 @@ plugins {
 }
 
 android {
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
     signingConfigs {
         release {
             storeFile file('E:\\Android_keys_apps\\CashBash\\key_jks')
@@ -63,7 +69,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage-ktx'
     implementation 'com.google.android.gms:play-services-auth:20.6.0'
 
-    implementation  'com.fxn769:pix:1.5.6' //Pix Image Picker старая библиотека
+    implementation  'io.ak1.pix:piximagepicker:1.6.3'
     implementation 'com.squareup.picasso:picasso:2.8'
     implementation 'com.google.android.gms:play-services-ads:22.1.0'
 }
