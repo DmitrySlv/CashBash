@@ -1,11 +1,8 @@
 package com.dscreate_app.cashbash.utils.image_picker
 
-import android.content.Intent
 import android.net.Uri
 import android.view.View
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
 import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.activities.EditAdsActivity
 import io.ak1.pix.helpers.PixEventCallback
@@ -28,18 +25,60 @@ object PixImagePicker {
         return options
     }
 
-    fun launcher(
-        edAct: EditAdsActivity, imageCounter: Int
-    ) {
+    fun getMultiImages(edAct: EditAdsActivity, imageCounter: Int) {
         edAct.addPixToActivity(R.id.container, getOptions(imageCounter)) { result ->
             when (result.status) {
                 PixEventCallback.Status.SUCCESS -> {
-                    getMultiSelectImages(edAct, result.data as MutableList<Uri>)
+                    multiSelectImages(edAct, result.data as MutableList<Uri>)
                     closePixFragment(edAct)
                 }
                 else -> {}
             }
         }
+    }
+
+   private fun multiSelectImages(edAct: EditAdsActivity, uris: MutableList<Uri>) {
+       if (uris.size > 1 && edAct.imageListFrag == null) {
+           edAct.openListImageFrag(uris)
+       }
+       if (edAct.imageListFrag != null) {
+           edAct.imageListFrag?.updateAdapter(uris, edAct)
+       }
+       if (uris.size == 1 && edAct.imageListFrag == null) {
+           CoroutineScope(Dispatchers.Main).launch {
+               edAct.binding.pBarLoad.visibility = View.VISIBLE
+               val bitmapList = ImageManager.imageResize(uris, edAct)
+               edAct.binding.pBarLoad.visibility = View.GONE
+               edAct.imageAdapter.updateAdapter(bitmapList)
+           }
+       }
+   }
+
+    fun getSingleImage(edAct: EditAdsActivity) {
+        val oldFrag = edAct.imageListFrag
+        edAct.addPixToActivity(R.id.container, getOptions(ImageConst.SINGLE_IMAGE)) { result ->
+            when (result.status) {
+                PixEventCallback.Status.SUCCESS -> {
+                    edAct.imageListFrag = oldFrag
+                    oldFrag?.let {
+                        openChooseImageFrag(edAct, it)
+                    }
+                    singleImage(edAct, result.data[0])
+                }
+                else -> {}
+            }
+        }
+    }
+
+    private fun openChooseImageFrag(edAct: EditAdsActivity, frag: Fragment) {
+        edAct.supportFragmentManager.beginTransaction()
+            .replace(R.id.container, frag)
+            .commit()
+    }
+
+    private fun singleImage(edAct: EditAdsActivity, uri: Uri) {
+        edAct.imageListFrag?.setSingeImage(uri, edAct.editImagePos)
+
     }
 
     private fun closePixFragment(edAct: EditAdsActivity) {
@@ -52,36 +91,4 @@ object PixImagePicker {
             }
         }
     }
-
-    fun getLauncherForSingleImage(edAct: EditAdsActivity): ActivityResultLauncher<Intent> {
-        return edAct.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                result: ActivityResult ->
-//            if (result.resultCode == AppCompatActivity.RESULT_OK) {
-//
-//                result.data?.let {
-//                    val uris = result.data?.getStringArrayListExtra(Pix.IMAGE_RESULTS)
-//                    uris?.let {
-//                        edAct.imageListFrag?.setSingeImage(uris[0], edAct.editImagePos)
-//                    }
-//                }
-//            }
-        }
-    }
-
-    fun getMultiSelectImages(edAct: EditAdsActivity, uris: MutableList<Uri>) {
-                    if (uris.size > 1 && edAct.imageListFrag == null) {
-                        edAct.openListImageFrag(uris)
-                    }
-                    if (uris.size == 1 && edAct.imageListFrag == null) {
-                        CoroutineScope(Dispatchers.Main).launch {
-                            edAct.binding.pBarLoad.visibility = View.VISIBLE
-                            val bitmapList = ImageManager.imageResize(uris,edAct)
-                            edAct.binding.pBarLoad.visibility = View.GONE
-                            edAct.imageAdapter.updateAdapter(bitmapList)
-                        }
-                    }
-//                    if (edAct.imageListFrag != null) {
-//                        edAct.imageListFrag?.updateAdapter(returnValue)
-//                    }
-                }
 }

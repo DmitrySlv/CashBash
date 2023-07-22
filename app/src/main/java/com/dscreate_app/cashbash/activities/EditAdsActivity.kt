@@ -7,7 +7,6 @@ import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
-import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.adapters.ImageAdapter
@@ -154,7 +153,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
     private fun openPixImagePicker() {
         binding.ibEditImage.setOnClickListener {
             if (imageAdapter.imageList.size == 0) {
-                PixImagePicker.launcher(this@EditAdsActivity, ImageConst.MAX_COUNT_IMAGES)
+                PixImagePicker.getMultiImages(this@EditAdsActivity, ImageConst.MAX_COUNT_IMAGES)
             } else {
                 openListImageFrag(null)
                 imageListFrag?.updateAdapterFromEdit(imageAdapter.imageList)
@@ -163,7 +162,10 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
     }
 
     fun openListImageFrag(newList: MutableList<Uri>?) {
-        imageListFrag = ImageListFragment.newInstance(this, newList)
+        imageListFrag = ImageListFragment.newInstance(this)
+        newList?.let {
+            imageListFrag?.resizeSelectedImages(it,true, this)
+        }
         binding.svMain.visibility = View.GONE
         imageListFrag?.let {
             supportFragmentManager.beginTransaction()

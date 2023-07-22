@@ -27,10 +27,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class ImageListFragment(
-    private val fragClose: FragmentClose,
-    private val newList: MutableList<Uri>?
-    ): BaseAdsFragment(), AdapterCallback {
+class ImageListFragment(private val fragClose: FragmentClose): BaseAdsFragment(),
+    AdapterCallback {
 
     private val adapter = SelectImageAdapter(this)
     private val dragCallback = ItemTouchMoveCallback(adapter)
@@ -56,7 +54,6 @@ class ImageListFragment(
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         init()
-        newList?.let { resizeSelectedImages(newList, true) }
     }
 
     override fun onDestroy() {
@@ -97,7 +94,7 @@ class ImageListFragment(
         }
         addImageItem?.setOnMenuItemClickListener {
             val imageCount = ImageConst.MAX_COUNT_IMAGES - adapter.mainList.size
-            PixImagePicker.launcher(activity as EditAdsActivity, imageCount)
+            PixImagePicker.getMultiImages(activity as EditAdsActivity, imageCount)
             true
         }
     }
@@ -108,8 +105,8 @@ class ImageListFragment(
                 .commit()
     }
 
-    fun updateAdapter(newList: MutableList<Uri>) {
-        resizeSelectedImages(newList, false)
+    fun updateAdapter(newList: MutableList<Uri>, activity: Activity) {
+        resizeSelectedImages(newList, false, activity)
     }
 
     fun updateAdapterFromEdit(bitmapList: MutableList<Bitmap>) {
@@ -129,10 +126,10 @@ class ImageListFragment(
         }
     }
 
-    private fun resizeSelectedImages(newList: MutableList<Uri>, needClear: Boolean) {
+    fun resizeSelectedImages(newList: MutableList<Uri>, needClear: Boolean, activity: Activity) {
         job = CoroutineScope(Dispatchers.Main).launch {
-            val dialog = ProgressDialog.createProgressDialog(activity as Activity)
-            val bitmapList = ImageManager.imageResize(newList, activity as Activity)
+            val dialog = ProgressDialog.createProgressDialog(activity)
+            val bitmapList = ImageManager.imageResize(newList, activity)
             dialog.dismiss()
             adapter.updateAdapter(bitmapList, needClear)
             if (adapter.mainList.size > 2) {
@@ -154,8 +151,7 @@ class ImageListFragment(
         private const val TAG = "MyLog"
 
         @JvmStatic
-        fun newInstance(fragClose: FragmentClose, newList: MutableList<Uri>?) =
-            ImageListFragment(fragClose, newList)
+        fun newInstance(fragClose: FragmentClose) = ImageListFragment(fragClose)
     }
 
 
