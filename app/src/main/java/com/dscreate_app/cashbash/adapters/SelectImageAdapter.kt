@@ -64,11 +64,7 @@ class SelectImageAdapter(
             imContent.setImageBitmap(bitmap)
 
             imEdImage.setOnClickListener {
-                PixImagePicker.launcher(
-                    root.context as EditAdsActivity,
-                    (root.context as EditAdsActivity).launcherSingleSelectImage,
-                    ImageConst.SINGLE_IMAGE
-                )
+                PixImagePicker.launcher(root.context as EditAdsActivity, ImageConst.SINGLE_IMAGE)
                 (root.context as EditAdsActivity).editImagePos = adapterPosition
             }
             imDelImage.setOnClickListener {

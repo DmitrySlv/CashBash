@@ -1,9 +1,12 @@
 package com.dscreate_app.cashbash.utils.image_picker
 
+import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.util.Log
 import android.widget.ImageView
+import androidx.core.net.toUri
 import androidx.exifinterface.media.ExifInterface
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
@@ -11,25 +14,36 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
+import java.io.InputStream
 
 object ImageManager {
 
-   private fun getImageSize(uri: String): List<Int> {
+   private fun getImageSize(uri: Uri, act: Activity): List<Int> {
+        val inStream = act.contentResolver.openInputStream(uri)
+        val fTemp = File(act.cacheDir, PATH_TO_FILE)
+        if (inStream != null) {
+           fTemp.copyInStreamToFile(inStream)
+       }
         val options = BitmapFactory.Options().apply {
             inJustDecodeBounds = true
         }
-        BitmapFactory.decodeFile(uri, options)
+        BitmapFactory.decodeFile(fTemp.path, options)
 
-        return if (imageRotation(uri) == ImageConst.IMAGE_ROTATE_90) {
+        return if (imageRotation(fTemp) == ImageConst.IMAGE_ROTATE_90) {
              listOf(options.outHeight, options.outWidth)
         } else {
             listOf(options.outWidth, options.outHeight)
         }
     }
 
-    private fun imageRotation(uri: String): Int {
+    private fun File.copyInStreamToFile(inStream: InputStream) {
+        this.outputStream().use {
+                out -> inStream.copyTo(out)
+        }
+    }
+
+    private fun imageRotation(imageFile: File): Int {
         val rotation: Int
-        val imageFile = File(uri)
         val exif = ExifInterface(imageFile.absolutePath)
         val orientation = exif.getAttributeInt(
             ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
@@ -50,11 +64,11 @@ object ImageManager {
         }
     }
 
-    suspend fun imageResize(uris: List<String>): MutableList<Bitmap> = withContext(Dispatchers.IO) {
+    suspend fun imageResize(uris: MutableList<Uri>, act: Activity): MutableList<Bitmap> = withContext(Dispatchers.IO) {
         val tempList = mutableListOf<List<Int>>()
         val bitmapList = mutableListOf<Bitmap>()
         for (n in uris.indices) {
-            val size = getImageSize(uris[n])
+            val size = getImageSize(uris[n], act)
             val imageRatio =
                 size[ImageConst.WIDTH].toFloat() / size[ImageConst.HEIGHT].toFloat()
 
@@ -84,7 +98,7 @@ object ImageManager {
             for (i in uris.indices) {
                 val e = kotlin.runCatching {
                     bitmapList.add(
-                        Picasso.get().load(File(uris[i]))
+                        Picasso.get().load(uris[i])
                             .resize(tempList[i][ImageConst.WIDTH], tempList[i][ImageConst.HEIGHT])
                             .get()
                     )
@@ -96,4 +110,5 @@ object ImageManager {
     }
 
     private const val TAG = "MyLog"
+    private const val PATH_TO_FILE = "temp.tmp"
 }

@@ -1,12 +1,11 @@
 package com.dscreate_app.cashbash.utils.image_picker
 
 import android.content.Intent
-import android.util.Log
+import android.net.Uri
 import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.activities.EditAdsActivity
 import io.ak1.pix.helpers.PixEventCallback
@@ -30,26 +29,29 @@ object PixImagePicker {
     }
 
     fun launcher(
-        edAct: EditAdsActivity, launcher: ActivityResultLauncher<Intent>?, imageCounter: Int
+        edAct: EditAdsActivity, imageCounter: Int
     ) {
         edAct.addPixToActivity(R.id.container, getOptions(imageCounter)) { result ->
             when (result.status) {
                 PixEventCallback.Status.SUCCESS -> {
-                    val fList = edAct.supportFragmentManager.fragments
-                    fList.forEach {
-                        if (it.isVisible) {
-                            edAct.supportFragmentManager.beginTransaction()
-                                .remove(it)
-                                .commit()
-                        }
-                    }
+                    getMultiSelectImages(edAct, result.data as MutableList<Uri>)
+                    closePixFragment(edAct)
                 }
                 else -> {}
             }
         }
     }
 
-
+    private fun closePixFragment(edAct: EditAdsActivity) {
+        val fList = edAct.supportFragmentManager.fragments
+        fList.forEach {
+            if (it.isVisible) {
+                edAct.supportFragmentManager.beginTransaction()
+                    .remove(it)
+                    .commit()
+            }
+        }
+    }
 
     fun getLauncherForSingleImage(edAct: EditAdsActivity): ActivityResultLauncher<Intent> {
         return edAct.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -66,30 +68,20 @@ object PixImagePicker {
         }
     }
 
-    fun getLauncherForMultiSelectImages(edAct: EditAdsActivity): ActivityResultLauncher<Intent> {
-        return edAct.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                result: ActivityResult ->
-//            if (result.resultCode == AppCompatActivity.RESULT_OK) {
-//
-//                result.data?.let {
-//                    val returnValue = result.data?.getStringArrayListExtra(Pix.IMAGE_RESULTS)
-//                    if (returnValue?.size!! > 1 && edAct.imageListFrag == null) {
-//                        edAct.openListImageFrag(returnValue)
-//                    }
-//                    if (returnValue.size == 1 && edAct.imageListFrag == null) {
-//                        CoroutineScope(Dispatchers.Main).launch {
-//                            edAct.binding.pBarLoad.visibility = View.VISIBLE
-//                            val bitmapList = ImageManager.imageResize(returnValue)
-//                            edAct.binding.pBarLoad.visibility = View.GONE
-//                            edAct.imageAdapter.updateAdapter(bitmapList)
-//                        }
-//                    }
+    fun getMultiSelectImages(edAct: EditAdsActivity, uris: MutableList<Uri>) {
+                    if (uris.size > 1 && edAct.imageListFrag == null) {
+                        edAct.openListImageFrag(uris)
+                    }
+                    if (uris.size == 1 && edAct.imageListFrag == null) {
+                        CoroutineScope(Dispatchers.Main).launch {
+                            edAct.binding.pBarLoad.visibility = View.VISIBLE
+                            val bitmapList = ImageManager.imageResize(uris,edAct)
+                            edAct.binding.pBarLoad.visibility = View.GONE
+                            edAct.imageAdapter.updateAdapter(bitmapList)
+                        }
+                    }
 //                    if (edAct.imageListFrag != null) {
 //                        edAct.imageListFrag?.updateAdapter(returnValue)
 //                    }
-//                }
-//            }
-        }
-    }
-
+                }
 }

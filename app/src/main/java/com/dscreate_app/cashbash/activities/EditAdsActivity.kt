@@ -1,8 +1,8 @@
 package com.dscreate_app.cashbash.activities
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.os.Parcelable
@@ -28,8 +28,6 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
     lateinit var imageAdapter: ImageAdapter
     var imageListFrag: ImageListFragment? = null
     private val dbManager = DbManager()
-    var launcherMultiSelectImages: ActivityResultLauncher<Intent>? = null
-    var launcherSingleSelectImage: ActivityResultLauncher<Intent>? = null
     var editImagePos = 0
     private var isEditState = false
     private var ad: AdModelDto? = null
@@ -49,10 +47,6 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
     private fun init() = with(binding) {
         imageAdapter = ImageAdapter()
         vpImages.adapter = imageAdapter
-        launcherMultiSelectImages = PixImagePicker.getLauncherForMultiSelectImages(
-            this@EditAdsActivity)
-        launcherSingleSelectImage = PixImagePicker.getLauncherForSingleImage(
-            this@EditAdsActivity)
     }
 
     private fun onClickSelectCountry() = with(binding) {
@@ -160,11 +154,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
     private fun openPixImagePicker() {
         binding.ibEditImage.setOnClickListener {
             if (imageAdapter.imageList.size == 0) {
-                PixImagePicker.launcher(
-                    this@EditAdsActivity,
-                    launcherMultiSelectImages,
-                    ImageConst.MAX_COUNT_IMAGES
-                )
+                PixImagePicker.launcher(this@EditAdsActivity, ImageConst.MAX_COUNT_IMAGES)
             } else {
                 openListImageFrag(null)
                 imageListFrag?.updateAdapterFromEdit(imageAdapter.imageList)
@@ -172,7 +162,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
         }
     }
 
-    fun openListImageFrag(newList: MutableList<String>?) {
+    fun openListImageFrag(newList: MutableList<Uri>?) {
         imageListFrag = ImageListFragment.newInstance(this, newList)
         binding.svMain.visibility = View.GONE
         imageListFrag?.let {

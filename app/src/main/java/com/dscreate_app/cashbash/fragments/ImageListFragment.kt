@@ -1,6 +1,8 @@
 package com.dscreate_app.cashbash.fragments
 
+import android.app.Activity
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -27,7 +29,7 @@ import kotlinx.coroutines.launch
 
 class ImageListFragment(
     private val fragClose: FragmentClose,
-    private val newList: MutableList<String>?
+    private val newList: MutableList<Uri>?
     ): BaseAdsFragment(), AdapterCallback {
 
     private val adapter = SelectImageAdapter(this)
@@ -95,11 +97,7 @@ class ImageListFragment(
         }
         addImageItem?.setOnMenuItemClickListener {
             val imageCount = ImageConst.MAX_COUNT_IMAGES - adapter.mainList.size
-            PixImagePicker.launcher(
-                activity as EditAdsActivity,
-                (activity as EditAdsActivity).launcherMultiSelectImages,
-                imageCount
-            )
+            PixImagePicker.launcher(activity as EditAdsActivity, imageCount)
             true
         }
     }
@@ -110,7 +108,7 @@ class ImageListFragment(
                 .commit()
     }
 
-    fun updateAdapter(newList: MutableList<String>) {
+    fun updateAdapter(newList: MutableList<Uri>) {
         resizeSelectedImages(newList, false)
     }
 
@@ -118,23 +116,23 @@ class ImageListFragment(
         adapter.updateAdapter(bitmapList, true)
     }
 
-    fun setSingeImage(uri: String, position: Int) {
+    fun setSingeImage(uri: Uri, position: Int) {
         val pBar = binding.rcViewSelectImage[position]
             .findViewById<ProgressBar>(R.id.pBar)
 
         job = CoroutineScope(Dispatchers.Main).launch {
             pBar.visibility = View.VISIBLE
-            val bitmapList =  ImageManager.imageResize(listOf(uri))
+            val bitmapList =  ImageManager.imageResize(mutableListOf(uri), activity as Activity)
             pBar.visibility = View.GONE
             adapter.mainList[position] = bitmapList[0]
             adapter.notifyItemChanged(position)
         }
     }
 
-    private fun resizeSelectedImages(newList: MutableList<String>, needClear: Boolean) {
+    private fun resizeSelectedImages(newList: MutableList<Uri>, needClear: Boolean) {
         job = CoroutineScope(Dispatchers.Main).launch {
-            val dialog = ProgressDialog.createProgressDialog(requireContext())
-            val bitmapList = ImageManager.imageResize(newList)
+            val dialog = ProgressDialog.createProgressDialog(activity as Activity)
+            val bitmapList = ImageManager.imageResize(newList, activity as Activity)
             dialog.dismiss()
             adapter.updateAdapter(bitmapList, needClear)
             if (adapter.mainList.size > 2) {
@@ -156,7 +154,7 @@ class ImageListFragment(
         private const val TAG = "MyLog"
 
         @JvmStatic
-        fun newInstance(fragClose: FragmentClose, newList: MutableList<String>?) =
+        fun newInstance(fragClose: FragmentClose, newList: MutableList<Uri>?) =
             ImageListFragment(fragClose, newList)
     }
 
