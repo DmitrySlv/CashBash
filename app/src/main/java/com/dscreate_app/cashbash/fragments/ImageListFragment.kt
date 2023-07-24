@@ -82,6 +82,9 @@ class ImageListFragment(private val fragClose: FragmentClose): BaseAdsFragment()
         toolbar.inflateMenu(R.menu.choose_image__menu)
         val deleteImageItem = toolbar.menu.findItem(R.id.delete_image)
         addImageItem = toolbar.menu.findItem(R.id.add_image)
+        if (adapter.mainList.size > 2) {
+            addImageItem?.isVisible = false
+        }
 
         toolbar.setNavigationOnClickListener {
             showInterAd()
@@ -93,8 +96,11 @@ class ImageListFragment(private val fragClose: FragmentClose): BaseAdsFragment()
             true
         }
         addImageItem?.setOnMenuItemClickListener {
+            if (adapter.mainList.size > 2) {
+                addImageItem?.isVisible = false
+            }
             val imageCount = ImageConst.MAX_COUNT_IMAGES - adapter.mainList.size
-            PixImagePicker.getMultiImages(activity as EditAdsActivity, imageCount)
+            PixImagePicker.addImages(activity as EditAdsActivity, imageCount)
             true
         }
     }

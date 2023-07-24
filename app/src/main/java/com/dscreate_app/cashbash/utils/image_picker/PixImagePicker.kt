@@ -30,7 +30,20 @@ object PixImagePicker {
             when (result.status) {
                 PixEventCallback.Status.SUCCESS -> {
                     multiSelectImages(edAct, result.data as MutableList<Uri>)
-                    closePixFragment(edAct)
+                }
+                else -> {}
+            }
+        }
+    }
+
+    fun addImages(edAct: EditAdsActivity, imageCounter: Int) {
+        val oldFrag = edAct.imageListFrag
+        edAct.addPixToActivity(R.id.container, getOptions(imageCounter)) { result ->
+            when (result.status) {
+                PixEventCallback.Status.SUCCESS -> {
+                    edAct.imageListFrag = oldFrag
+                    oldFrag?.let { openChooseImageFrag(edAct, it) }
+                    edAct.imageListFrag?.updateAdapter(result.data as MutableList<Uri>, edAct)
                 }
                 else -> {}
             }
@@ -41,15 +54,13 @@ object PixImagePicker {
        if (uris.size > 1 && edAct.imageListFrag == null) {
            edAct.openListImageFrag(uris)
        }
-       if (edAct.imageListFrag != null) {
-           edAct.imageListFrag?.updateAdapter(uris, edAct)
-       }
        if (uris.size == 1 && edAct.imageListFrag == null) {
            CoroutineScope(Dispatchers.Main).launch {
                edAct.binding.pBarLoad.visibility = View.VISIBLE
                val bitmapList = ImageManager.imageResize(uris, edAct)
                edAct.binding.pBarLoad.visibility = View.GONE
                edAct.imageAdapter.updateAdapter(bitmapList)
+               closePixFragment(edAct)
            }
        }
    }

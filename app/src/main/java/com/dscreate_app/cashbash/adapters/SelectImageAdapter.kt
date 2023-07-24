@@ -56,10 +56,8 @@ class SelectImageAdapter(
         private val binding = SelectImageItemBinding.bind(view)
 
         fun setData(bitmap: Bitmap) = with(binding) {
-            if (adapterPosition < 3) {
                 tvTitle.text =
                     root.context.resources.getStringArray(R.array.title_array)[adapterPosition]
-            }
             ImageManager.chooseScaleType(imContent, bitmap)
             imContent.setImageBitmap(bitmap)
 
@@ -70,7 +68,7 @@ class SelectImageAdapter(
             imDelImage.setOnClickListener {
                 adapter.mainList.removeAt(adapterPosition)
                 adapter.notifyItemRemoved(adapterPosition)
-                for (n in 0 until adapter.mainList.size) {
+                for (n in 0 until adapter.mainList.size - 1) {
                     adapter.notifyItemChanged(n)
                 }
                 adapter.callback.onItemDelete()
