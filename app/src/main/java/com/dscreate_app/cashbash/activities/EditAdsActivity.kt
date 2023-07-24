@@ -19,6 +19,9 @@ import com.dscreate_app.cashbash.utils.dialogs.DialogSpinnerHelper
 import com.dscreate_app.cashbash.utils.image_picker.ImageConst
 import com.dscreate_app.cashbash.utils.image_picker.PixImagePicker
 import com.dscreate_app.cashbash.utils.showToast
+import com.google.android.gms.tasks.OnCompleteListener
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 
 class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
 
@@ -85,7 +88,8 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
             if (isEditState) {
                 dbManager.publishAd(adTemp.copy(key = ad?.key), onPublishFinnish(), this)
             } else {
-                dbManager.publishAd(adTemp, onPublishFinnish(), this)
+              //  dbManager.publishAd(adTemp, onPublishFinnish(), this)
+                uploadImages(adTemp)
             }
         }
     }
@@ -144,6 +148,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
                 edTitle.text.toString(),
                 edPrice.text.toString(),
                 edDescription.text.toString(),
+                EMPTY,
                 "0"
             )
         }
@@ -174,6 +179,33 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
         }
     }
 
+    private fun uploadImages(adTemp: AdModelDto) {
+       val byteArray = prepareImageByteArray(imageAdapter.imageList[0])
+        uploadImage(byteArray) {
+            dbManager.publishAd(adTemp.copy(
+                mainImage = it.result.toString()
+            ), onPublishFinnish(), this)
+        }
+    }
+
+    private fun prepareImageByteArray(bitmap: Bitmap): ByteArray {
+        val outputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, QUALITY, outputStream)
+        return outputStream.toByteArray()
+    }
+
+    private fun uploadImage(byteArray: ByteArray, listener: OnCompleteListener<Uri>) {
+        val imStorageRef = dbManager.auth.uid?.let {
+            dbManager.dbStorage
+                .child(it)
+                .child("image_${System.currentTimeMillis()}")
+        }
+        val uploadTask = imStorageRef?.putBytes(byteArray)
+        uploadTask?.continueWithTask { task ->
+            imStorageRef.downloadUrl
+        }?.addOnCompleteListener(listener)
+    }
+
     override fun onClose(list: MutableList<Bitmap>) {
         binding.svMain.visibility = View.VISIBLE
         imageAdapter.updateAdapter(list)
@@ -182,5 +214,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
 
     companion object {
         private const val TAG = "MyLog"
+        private const val QUALITY = 20
+        private const val EMPTY = "empty"
     }
 }

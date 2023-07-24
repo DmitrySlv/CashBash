@@ -68,7 +68,7 @@ class SelectImageAdapter(
             imDelImage.setOnClickListener {
                 adapter.mainList.removeAt(adapterPosition)
                 adapter.notifyItemRemoved(adapterPosition)
-                for (n in 0 until adapter.mainList.size - 1) {
+                for (n in 0 until adapter.mainList.size) {
                     adapter.notifyItemChanged(n)
                 }
                 adapter.callback.onItemDelete()

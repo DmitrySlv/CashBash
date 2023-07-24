@@ -16,6 +16,7 @@ data class AdModelDto(
     val title: String? = null,
     val price: String? = null,
     val description: String? = null,
+    val mainImage: String? = null,
     var favCounter: String = "0",
     var isFavourite: Boolean = false,
 

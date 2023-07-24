@@ -56,20 +56,11 @@ class ImageListFragment(private val fragClose: FragmentClose): BaseAdsFragment()
         init()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        fragClose.onClose(adapter.mainList)
-        job?.cancel()
-    }
-
     override fun onCloseInterAd() {
         super.onCloseInterAd()
         closeThisFragment()
+        fragClose.onClose(adapter.mainList)
+        job?.cancel()
     }
 
     private fun init() = with(binding) {
