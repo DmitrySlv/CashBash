@@ -10,6 +10,9 @@
     <string name="im_main_image">Главное фото</string>
     <string name="im_views_counter">Количество просмотров</string>
     <string name="im_favourite_counter">Количество избранного</string>
+    <string name="image_pager">Ваши фотографии</string>
+    <string name="send_to_email">Отправить по email</string>
+    <string name="send_to_phone">Позвонить по телефону владельца объявления</string>
     <!-- Drawer Menu -->
     <string name="ads_cat1">Объявления</string>
     <string name="ad_my_ads">Мои объявления</string>
@@ -112,4 +115,12 @@
     <string name="b_nav_main">Главная</string>
     <!-- main_content -->
     <string name="empty">Пусто</string>
+    <!-- activity_description -->
+    <string name="tv_price">Цена:</string>
+    <string name="tv_phone">Телефон:</string>
+    <string name="tv_email">Email:</string>
+    <string name="tv_country">Страна:</string>
+    <string name="tv_city">Город:</string>
+    <string name="tv_index">Индекс:</string>
+    <string name="tv_with_send">С доставкой?</string>
 </resources>
