@@ -13,6 +13,7 @@ import com.dscreate_app.cashbash.activities.EditAdsActivity
 import com.dscreate_app.cashbash.activities.MainActivity
 import com.dscreate_app.cashbash.data.models.AdModelDto
 import com.dscreate_app.cashbash.databinding.AdListItemBinding
+import com.squareup.picasso.Picasso
 
 
 class AdsAdapter(private val mainAct: MainActivity): RecyclerView.Adapter<AdsAdapter.AdHolder>() {
@@ -43,17 +44,17 @@ class AdsAdapter(private val mainAct: MainActivity): RecyclerView.Adapter<AdsAda
                 tvTitle.text = title
                 tvViewsCounter.text = viewsCounter
                 tvFavouriteCounter.text = favCounter
+                Picasso.get().load(adModel.mainImage).into(imMainImage)
             }
+            isFavourite(adModel)
             showEditPanel(isOwner(adModel))
+            mainOnClicks(adModel)
+        }
 
+        private fun mainOnClicks(adModel: AdModelDto) = with(binding) {
             ibEditAd.setOnClickListener(onClickEditAd(adModel))
             ibDeleteAd.setOnClickListener {
                 mainAct.deleteItem(adModel)
-            }
-            if (adModel.isFavourite) {
-                ibFavourite.setImageResource(R.drawable.baseline_favorite_pressed)
-            } else {
-                ibFavourite.setImageResource(R.drawable.baseline_favorite_normal)
             }
             ibFavourite.setOnClickListener {
                 if (mainAct.mAuth.currentUser?.isAnonymous == false) {
@@ -62,6 +63,14 @@ class AdsAdapter(private val mainAct: MainActivity): RecyclerView.Adapter<AdsAda
             }
             itemView.setOnClickListener {
                 mainAct.adViewed(adModel)
+            }
+        }
+
+        private fun isFavourite(adModel: AdModelDto) {
+            if (adModel.isFavourite) {
+               binding.ibFavourite.setImageResource(R.drawable.baseline_favorite_pressed)
+            } else {
+               binding.ibFavourite.setImageResource(R.drawable.baseline_favorite_normal)
             }
         }
 

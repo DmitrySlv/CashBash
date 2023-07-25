@@ -151,6 +151,8 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
                 edPrice.text.toString(),
                 edDescription.text.toString(),
                 EMPTY,
+                EMPTY,
+                EMPTY,
                 "0"
             )
         }
