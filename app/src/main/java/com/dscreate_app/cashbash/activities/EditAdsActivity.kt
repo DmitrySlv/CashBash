@@ -20,7 +20,6 @@ import com.dscreate_app.cashbash.utils.image_picker.ImageConst
 import com.dscreate_app.cashbash.utils.image_picker.PixImagePicker
 import com.dscreate_app.cashbash.utils.showToast
 import com.google.android.gms.tasks.OnCompleteListener
-import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 
 class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
@@ -31,6 +30,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
     var imageListFrag: ImageListFragment? = null
     private val dbManager = DbManager()
     var editImagePos = 0
+    var imageIndex = 0
     private var isEditState = false
     private var ad: AdModelDto? = null
 
@@ -84,12 +84,14 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
 
     private fun onClickPublish() {
         binding.btPublish.setOnClickListener {
-            val adTemp = fillAdForFirebase()
+            ad = fillAdForFirebase()
             if (isEditState) {
-                dbManager.publishAd(adTemp.copy(key = ad?.key), onPublishFinnish(), this)
+                ad?.copy(key = ad?.key)?.let {
+                        adModel -> dbManager.publishAd(adModel, onPublishFinnish(), this)
+                }
             } else {
               //  dbManager.publishAd(adTemp, onPublishFinnish(), this)
-                uploadImages(adTemp)
+                uploadImages()
             }
         }
     }
@@ -179,12 +181,28 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
         }
     }
 
-    private fun uploadImages(adTemp: AdModelDto) {
-       val byteArray = prepareImageByteArray(imageAdapter.imageList[0])
-        uploadImage(byteArray) {
-            dbManager.publishAd(adTemp.copy(
-                mainImage = it.result.toString()
-            ), onPublishFinnish(), this)
+    private fun uploadImages() {
+        if (imageAdapter.imageList.size == imageIndex) {
+            ad?.let { dbManager.publishAd(it, onPublishFinnish(), this) }
+            return
+        }
+       val byteArray = prepareImageByteArray(imageAdapter.imageList[imageIndex])
+        uploadImage(byteArray) { uri ->
+            nextImage(uri.result.toString())
+        }
+    }
+
+    private fun nextImage(uri: String) {
+        setImageUriToAd(uri)
+        imageIndex++
+        uploadImages()
+    }
+
+    private fun setImageUriToAd(uri: String) {
+        when(imageIndex) {
+            0 -> ad = ad?.copy(mainImage = uri)
+            1 -> ad = ad?.copy(image2 = uri)
+            2 -> ad = ad?.copy(image3 = uri)
         }
     }
 
