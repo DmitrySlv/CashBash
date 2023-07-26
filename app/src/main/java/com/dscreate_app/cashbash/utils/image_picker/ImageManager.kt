@@ -4,17 +4,10 @@ import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.util.Log
 import android.widget.ImageView
-import androidx.core.net.toUri
-import androidx.exifinterface.media.ExifInterface
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import java.io.File
-import java.io.IOException
-import java.io.InputStream
 
 object ImageManager {
 
@@ -67,19 +60,27 @@ object ImageManager {
             }
         }
             for (i in uris.indices) {
-                val e = kotlin.runCatching {
+                kotlin.runCatching {
                     bitmapList.add(
                         Picasso.get().load(uris[i])
                             .resize(tempList[i][ImageConst.WIDTH], tempList[i][ImageConst.HEIGHT])
                             .get()
                     )
                 }
-                Log.d(TAG, "Bitmap load done: ${e.isSuccess}")
+               // Log.d(TAG, "Bitmap load done: ${e.isSuccess}")
         }
 
         return@withContext bitmapList
     }
 
+    suspend fun getBitmapFromUris(uris: MutableList<String?>): List<Bitmap> = withContext(Dispatchers.IO) {
+        val bitmapList = mutableListOf<Bitmap>()
+
+        for (i in uris.indices) {
+            kotlin.runCatching { bitmapList.add(Picasso.get().load(uris[i]).get()) }
+        }
+        return@withContext bitmapList
+    }
+
     private const val TAG = "MyLog"
-    private const val PATH_TO_FILE = "temp.tmp"
 }

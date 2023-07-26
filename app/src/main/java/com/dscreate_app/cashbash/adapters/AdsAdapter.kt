@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.dscreate_app.cashbash.R
+import com.dscreate_app.cashbash.activities.DescriptionActivity
 import com.dscreate_app.cashbash.activities.EditAdsActivity
 import com.dscreate_app.cashbash.activities.MainActivity
 import com.dscreate_app.cashbash.data.models.AdModelDto
@@ -63,6 +64,11 @@ class AdsAdapter(private val mainAct: MainActivity): RecyclerView.Adapter<AdsAda
             }
             itemView.setOnClickListener {
                 mainAct.adViewed(adModel)
+            }
+            itemView.setOnClickListener {
+                val i = Intent(root.context, DescriptionActivity::class.java)
+                i.putExtra(MainActivity.AD_MODEL_DATA, adModel)
+                root.context.startActivity(i)
             }
         }
 
