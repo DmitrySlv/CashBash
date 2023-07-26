@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.appcompat.app.AppCompatActivity
+import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.adapters.ImageAdapter
 import com.dscreate_app.cashbash.data.models.AdModelDto
 import com.dscreate_app.cashbash.databinding.ActivityDeascriptionBinding
@@ -31,9 +32,37 @@ class DescriptionActivity : AppCompatActivity() {
         vp.adapter = imageAdapter
     }
 
+    private fun fillTextViews(adModel: AdModelDto) = with(binding) {
+        adModel.apply {
+            tvTitle.text = title
+            tvDescription.text = description
+            tvPrice.text = price
+            tvPhone.text = phone
+            tvCountry.text = country
+            tvCity.text = city
+            tvIndex.text = index
+            tvWithSend.text = isWithSend(withSend.toBoolean())
+        }
+    }
+
+    private fun isWithSend(witSend: Boolean): String {
+        return if (witSend) {
+            getString(R.string.yes)
+        } else {
+            getString(R.string.no)
+        }
+    }
+
+    private fun updateUi(adModel: AdModelDto) {
+        fillImageArray(adModel)
+        fillTextViews(adModel)
+    }
+
     private fun getIntentFromMainAct() {
         val adModel = intent.parcelable<AdModelDto>(MainActivity.AD_MODEL_DATA)
-        adModel?.let { fillImageArray(it) }
+        if (adModel != null) {
+            updateUi(adModel)
+        }
     }
 
     private inline fun <reified T : Parcelable> Intent.parcelable(key: String): T? = when {
