@@ -2,9 +2,12 @@ package com.dscreate_app.cashbash.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -21,7 +24,6 @@ import com.dscreate_app.cashbash.data.models.AdModelDto
 import com.dscreate_app.cashbash.databinding.ActivityMainBinding
 import com.dscreate_app.cashbash.utils.dialogs.DialogHelper
 import com.dscreate_app.cashbash.utils.firebase.AccountHelper
-import com.dscreate_app.cashbash.utils.firebase.GoogleAccountConst.GOOGLE_SIGN_IN_REQUEST_CODE
 import com.dscreate_app.cashbash.view_model.FirebaseViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
@@ -29,6 +31,7 @@ import com.google.android.material.navigation.NavigationView.OnNavigationItemSel
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
 
 class MainActivity : AppCompatActivity(),
     OnNavigationItemSelectedListener, AdsAdapter.DeleteItemListener, AdsAdapter.AdViewedListener,
@@ -39,6 +42,7 @@ class MainActivity : AppCompatActivity(),
     private val dialogHelper = DialogHelper(this)
     val mAuth = Firebase.auth
     private lateinit var tvAccount: TextView
+    private lateinit var imAccount: ImageView
     lateinit var googleSignInLauncher: ActivityResultLauncher<Intent>
     private val adsAdapter = AdsAdapter(this)
     private val firebaseViewModel: FirebaseViewModel by viewModels()
@@ -96,31 +100,9 @@ class MainActivity : AppCompatActivity(),
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         navView.setNavigationItemSelectedListener(this@MainActivity)
-        tvAccount = navView.getHeaderView(HEADER_INDEX).findViewById(R.id.tvAccEmail)
-    }
-
-    private fun bottomMenuClick() = with(binding) {
-        mainContent.bNavView.setOnItemSelectedListener { item ->
-            when(item.itemId) {
-                R.id.new_ad -> {
-                    val intent = Intent(this@MainActivity, EditAdsActivity::class.java)
-                    startActivity(intent)
-                }
-                R.id.my_ads -> {
-                    firebaseViewModel.loadMyAds()
-                    mainContent.toolbar.title = getString(R.string.ad_my_ads)
-                }
-                R.id.favs -> {
-                    firebaseViewModel.loadMyFavourites()
-                    mainContent.toolbar.title = getString(R.string.ad_favourite)
-                }
-                R.id.main -> {
-                    firebaseViewModel.loadAllAds()
-                    mainContent.toolbar.title = getString(R.string.b_nav_main)
-                }
-            }
-            true
-        }
+        tvAccount = navView.getHeaderView(HEADER_INDEX_POS).findViewById(R.id.tvAccEmail)
+        imAccount = navView.getHeaderView(HEADER_INDEX_POS).findViewById(R.id.imAccImage)
+        navViewSettings()
     }
 
     private fun initRcView() = with(binding) {
@@ -175,17 +157,44 @@ class MainActivity : AppCompatActivity(),
         return true
     }
 
+    private fun bottomMenuClick() = with(binding) {
+        mainContent.bNavView.setOnItemSelectedListener { item ->
+            when(item.itemId) {
+                R.id.new_ad -> {
+                    val intent = Intent(this@MainActivity, EditAdsActivity::class.java)
+                    startActivity(intent)
+                }
+                R.id.my_ads -> {
+                    firebaseViewModel.loadMyAds()
+                    mainContent.toolbar.title = getString(R.string.ad_my_ads)
+                }
+                R.id.favs -> {
+                    firebaseViewModel.loadMyFavourites()
+                    mainContent.toolbar.title = getString(R.string.ad_favourite)
+                }
+                R.id.main -> {
+                    firebaseViewModel.loadAllAds()
+                    mainContent.toolbar.title = getString(R.string.b_nav_main)
+                }
+            }
+            true
+        }
+    }
+
     fun uiUpdate(user: FirebaseUser?) {
         if (user == null) {
             dialogHelper.accHelper.signInAnonymously(object: AccountHelper.CompleteListener {
                 override fun onComplete() {
                     tvAccount.text = getString(R.string.anonymous)
+                    imAccount.setImageResource(R.drawable.baseline_account_def)
                 }
             })
         } else if (user.isAnonymous){
             tvAccount.text = getString(R.string.anonymous)
+            imAccount.setImageResource(R.drawable.baseline_account_def)
         } else {
-          tvAccount.text = user.email
+            tvAccount.text = user.email
+            Picasso.get().load(user.photoUrl).into(imAccount)
         }
     }
 
@@ -205,9 +214,34 @@ class MainActivity : AppCompatActivity(),
         firebaseViewModel.onFavouriteClick(adModel)
     }
 
+    private fun navViewSettings() = with(binding) {
+        val menu = navView.menu
+        val adsCat = menu.findItem(R.id.ads_cat)
+        val spanAdsCat = SpannableString(adsCat.title)
+        adsCat.title?.length?.let {
+            spanAdsCat.setSpan(
+                ForegroundColorSpan(ContextCompat.getColor(this@MainActivity, R.color.red)),
+                SPAN_START, it, SPAN_FLAGS
+            )
+            adsCat.title = spanAdsCat
+        }
+
+        val accCat = menu.findItem(R.id.acc_cat)
+        val spanAccCat = SpannableString(accCat.title)
+        accCat.title?.length?.let {
+            spanAccCat.setSpan(
+                ForegroundColorSpan(ContextCompat.getColor(this@MainActivity, R.color.red)),
+                SPAN_START, it, SPAN_FLAGS
+            )
+            accCat.title = spanAccCat
+        }
+    }
+
     companion object {
-        private const val HEADER_INDEX = 0
+        private const val HEADER_INDEX_POS = 0
         const val EDIT_STATE = "edit_state"
         const val AD_MODEL_DATA = "ad_model_data"
+        private const val SPAN_START = 0
+        private const val SPAN_FLAGS = 0
     }
 }
