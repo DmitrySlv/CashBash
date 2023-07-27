@@ -7,6 +7,8 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -37,6 +39,7 @@ class MainActivity : AppCompatActivity(),
     private val dialogHelper = DialogHelper(this)
     val mAuth = Firebase.auth
     private lateinit var tvAccount: TextView
+    lateinit var googleSignInLauncher: ActivityResultLauncher<Intent>
     private val adsAdapter = AdsAdapter(this)
     private val firebaseViewModel: FirebaseViewModel by viewModels()
 
@@ -46,6 +49,7 @@ class MainActivity : AppCompatActivity(),
         initNavViewAndToolbar()
         initRcView()
         initViewModel()
+        activityResult()
         firebaseViewModel.loadAllAds()
         bottomMenuClick()
     }
@@ -60,21 +64,23 @@ class MainActivity : AppCompatActivity(),
         binding.mainContent.bNavView.selectedItemId = R.id.main
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == GOOGLE_SIGN_IN_REQUEST_CODE) {
-            //Log.d("MyLog", "SignInResult")
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+    private fun activityResult() {
+        googleSignInLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
             try {
                 val account = task.getResult(ApiException::class.java)
                 account?.let {
                     Log.d("MyLog", "Api 0")
-                    dialogHelper.accHelper.signInFirebaseWithGoogle(account.idToken!!)
+                    account.idToken?.let { idToken ->
+                        dialogHelper.accHelper.signInFirebaseWithGoogle(idToken)
+                    }
                 }
             } catch (e: ApiException) {
                 Log.d("MyLog", "Api error: ${e.message}")
             }
         }
-        super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun initNavViewAndToolbar() = with(binding) {
