@@ -189,6 +189,10 @@ class MainActivity : AppCompatActivity(),
 
     override fun adViewed(adModel: AdModelDto) {
         firebaseViewModel.adViewed(adModel)
+
+        val i = Intent(this, DescriptionActivity::class.java)
+        i.putExtra(AD_MODEL_DATA, adModel)
+        startActivity(i)
     }
 
     override fun favouriteClicked(adModel: AdModelDto) {

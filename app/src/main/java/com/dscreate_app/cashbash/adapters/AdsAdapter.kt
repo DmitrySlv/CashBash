@@ -65,11 +65,6 @@ class AdsAdapter(private val mainAct: MainActivity): RecyclerView.Adapter<AdsAda
             itemView.setOnClickListener {
                 mainAct.adViewed(adModel)
             }
-            itemView.setOnClickListener {
-                val i = Intent(root.context, DescriptionActivity::class.java)
-                i.putExtra(MainActivity.AD_MODEL_DATA, adModel)
-                root.context.startActivity(i)
-            }
         }
 
         private fun isFavourite(adModel: AdModelDto) {

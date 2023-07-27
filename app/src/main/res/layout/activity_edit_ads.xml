@@ -178,6 +178,8 @@
                         android:ems="10"
                         android:hint="@string/phone_hint"
                         android:inputType="phone"
+                        android:maxLength="11"
+                        android:maxLines="1"
                         android:padding="10dp"
                         android:textColorHint="@color/grey" />
 
@@ -246,6 +248,8 @@
                         android:ems="10"
                         android:hint="@string/index"
                         android:inputType="number"
+                        android:maxLength="15"
+                        android:maxLines="1"
                         android:padding="10dp"
                         android:textColorHint="@color/grey" />
 
@@ -365,6 +369,8 @@
                         android:ems="10"
                         android:hint="@string/tv_title_hint"
                         android:inputType="text|textPersonName"
+                        android:maxLength="40"
+                        android:maxLines="2"
                         android:padding="10dp"
                         android:textColorHint="@color/grey" />
 
@@ -388,6 +394,8 @@
                         android:ems="10"
                         android:hint="@string/select_price_hint"
                         android:inputType="number"
+                        android:maxLength="11"
+                        android:maxLines="1"
                         android:padding="10dp"
                         android:textColorHint="@color/grey" />
 
@@ -422,6 +430,8 @@
                         android:ems="10"
                         android:hint="@string/description_hint"
                         android:inputType="text|textLongMessage"
+                        android:maxLength="450"
+                        android:maxLines="30"
                         android:padding="10dp"
                         android:textColorHint="@color/grey" />
 

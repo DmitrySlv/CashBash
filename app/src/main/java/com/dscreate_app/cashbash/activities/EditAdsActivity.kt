@@ -17,6 +17,7 @@ import com.dscreate_app.cashbash.fragments.ImageListFragment
 import com.dscreate_app.cashbash.utils.dialogs.CityHelper
 import com.dscreate_app.cashbash.utils.dialogs.DialogSpinnerHelper
 import com.dscreate_app.cashbash.utils.image_picker.ImageConst
+import com.dscreate_app.cashbash.utils.image_picker.ImageManager
 import com.dscreate_app.cashbash.utils.image_picker.PixImagePicker
 import com.dscreate_app.cashbash.utils.showToast
 import com.google.android.gms.tasks.OnCompleteListener
@@ -115,6 +116,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
             edTitle.setText(title)
             edPrice.setText(price)
             edDescription.setText(description)
+            ImageManager.fillImageArray(adModelDto, imageAdapter)
         }
     }
 

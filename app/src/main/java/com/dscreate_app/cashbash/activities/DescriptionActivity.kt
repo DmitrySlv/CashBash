@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
+import androidx.viewpager2.widget.ViewPager2
 import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.adapters.ImageAdapter
 import com.dscreate_app.cashbash.data.models.AdModelDto
@@ -36,6 +37,7 @@ class DescriptionActivity : AppCompatActivity() {
     private fun init() = with(binding) {
         imageAdapter = ImageAdapter()
         vp.adapter = imageAdapter
+        imageChangeCounter()
     }
 
     private fun setOnClicksToFButtons() = with(binding) {
@@ -66,7 +68,7 @@ class DescriptionActivity : AppCompatActivity() {
     }
 
     private fun updateUi(adModel: AdModelDto) {
-        fillImageArray(adModel)
+       ImageManager.fillImageArray(adModel, imageAdapter)
         fillTextViews(adModel)
     }
 
@@ -78,14 +80,6 @@ class DescriptionActivity : AppCompatActivity() {
     private inline fun <reified T : Parcelable> Intent.parcelable(key: String): T? = when {
         Build.VERSION.SDK_INT >= 33 -> getParcelableExtra(key, T::class.java)
         else -> @Suppress("DEPRECATION") getParcelableExtra(key) as? T
-    }
-
-    private fun fillImageArray(adModel: AdModelDto) {
-        val listUris = listOf(adModel.mainImage, adModel.image2, adModel.image3)
-        CoroutineScope(Dispatchers.Main).launch {
-            val bitmapList = ImageManager.getBitmapFromUris(listUris as MutableList<String?>)
-            imageAdapter.updateAdapter(bitmapList as MutableList<Bitmap>)
-        }
     }
 
     private fun call() {
@@ -108,5 +102,15 @@ class DescriptionActivity : AppCompatActivity() {
         } catch (e: ActivityNotFoundException) {
             showToast(getString(R.string.toast_not_found_email_send_app))
         }
+    }
+
+    private fun imageChangeCounter() = with(binding) {
+        vp.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                val imageCounter = "${position + 1}/${vp.adapter?.itemCount}"
+                tvImageCounter.text = imageCounter
+            }
+        })
     }
 }
