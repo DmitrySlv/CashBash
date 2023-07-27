@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager2.widget.ViewPager2
 import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.adapters.ImageAdapter
 import com.dscreate_app.cashbash.data.DbManager
@@ -45,6 +46,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
         openPixImagePicker()
         onClickPublish()
         checkEditState()
+        imageChangeCounter()
     }
 
     private fun init() = with(binding) {
@@ -227,6 +229,16 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
         uploadTask?.continueWithTask { task ->
             imStorageRef.downloadUrl
         }?.addOnCompleteListener(listener)
+    }
+
+    private fun imageChangeCounter() = with(binding) {
+        vpImages.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                val imageCounter = "${position + 1}/${vpImages.adapter?.itemCount}"
+                tvImageCounter.text = imageCounter
+            }
+        })
     }
 
     override fun onClose(list: MutableList<Bitmap>) {

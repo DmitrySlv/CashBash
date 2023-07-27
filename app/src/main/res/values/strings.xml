@@ -123,6 +123,7 @@
     <string name="tv_city">Город:</string>
     <string name="tv_index">Индекс:</string>
     <string name="tv_with_send">С доставкой?</string>
+    <string name="def_image_counter">0/0</string>
     <!-- Description Activity -->
     <string name="yes">Да</string>
     <string name="no">Нет</string>

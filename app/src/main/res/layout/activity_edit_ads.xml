@@ -43,6 +43,17 @@
 
                     </androidx.viewpager2.widget.ViewPager2>
 
+                    <TextView
+                        android:id="@+id/tvImageCounter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/purple"
+                        android:padding="5dp"
+                        android:text="@string/def_image_counter"
+                        android:textColor="@color/white"
+                        app:layout_constraintBottom_toBottomOf="@id/vpImages"
+                        app:layout_constraintEnd_toEndOf="@id/vpImages" />
+
                     <ImageButton
                         android:id="@+id/ibEditImage"
                         android:layout_width="48dp"
@@ -55,7 +66,8 @@
                         android:padding="5dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/vpImages"
-                        app:srcCompat="@drawable/baseline_edit" />
+                        app:srcCompat="@drawable/baseline_edit"
+                        tools:ignore="ImageContrastCheck" />
 
                     <ProgressBar
                         android:id="@+id/pBarLoad"
@@ -181,7 +193,7 @@
                         android:maxLength="11"
                         android:maxLines="1"
                         android:padding="10dp"
-                        android:textColorHint="@color/grey" />
+                        android:textColorHint="#757575" />
 
                     <LinearLayout
                         android:id="@+id/divider3"
@@ -215,7 +227,8 @@
                         android:hint="@string/email_hint"
                         android:inputType="textEmailAddress"
                         android:padding="10dp"
-                        android:textColorHint="@color/grey" />
+                        android:textColorHint="@color/grey"
+                        tools:ignore="TextContrastCheck" />
 
                     <LinearLayout
                         android:id="@+id/divider4"
@@ -251,7 +264,8 @@
                         android:maxLength="15"
                         android:maxLines="1"
                         android:padding="10dp"
-                        android:textColorHint="@color/grey" />
+                        android:textColorHint="@color/grey"
+                        tools:ignore="DuplicateSpeakableTextCheck,TextContrastCheck" />
 
                     <LinearLayout
                         android:id="@+id/divider5"

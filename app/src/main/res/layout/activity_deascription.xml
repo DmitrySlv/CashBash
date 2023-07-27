@@ -57,7 +57,7 @@
                     android:layout_height="wrap_content"
                     android:background="@color/purple"
                     android:padding="5dp"
-                    android:text="@string/item"
+                    android:text="@string/def_image_counter"
                     android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="@+id/vp"
                     app:layout_constraintEnd_toEndOf="@+id/vp" />
