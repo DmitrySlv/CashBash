@@ -18,12 +18,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.adapters.AdsAdapter
 import com.dscreate_app.cashbash.data.models.AdModelDto
 import com.dscreate_app.cashbash.databinding.ActivityMainBinding
 import com.dscreate_app.cashbash.utils.dialogs.DialogHelper
 import com.dscreate_app.cashbash.utils.firebase.AccountHelper
+import com.dscreate_app.cashbash.utils.logD
 import com.dscreate_app.cashbash.view_model.FirebaseViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
@@ -56,6 +58,7 @@ class MainActivity : AppCompatActivity(),
         activityResult()
         firebaseViewModel.loadAllAds()
         bottomMenuClick()
+        scrollListener()
     }
 
     override fun onStart() {
@@ -237,11 +240,27 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
+    private fun scrollListener() = with(binding.mainContent) {
+        rcView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!recyclerView.canScrollVertically(SCROLL_DOWN) &&
+                    newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    logD(TAG, "Невозможно проскролить вниз")
+                }
+            }
+        })
+    }
+
     companion object {
         private const val HEADER_INDEX_POS = 0
         const val EDIT_STATE = "edit_state"
         const val AD_MODEL_DATA = "ad_model_data"
         private const val SPAN_START = 0
         private const val SPAN_FLAGS = 0
+        private const val SCROLL_DOWN = 1
+        private const val SCROLL_UP = -1
+        private const val TAG = "MyLog"
     }
 }
