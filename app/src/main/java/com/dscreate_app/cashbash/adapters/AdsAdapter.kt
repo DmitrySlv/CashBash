@@ -108,6 +108,14 @@ class AdsAdapter(private val mainAct: MainActivity): RecyclerView.Adapter<AdsAda
         adList.addAll(tempList)
     }
 
+    fun updateAdapterWithClear(newList: MutableList<AdModelDto>) {
+
+        val diffResult = DiffUtil.calculateDiff(DiffAdsAdapter(adList, newList))
+        diffResult.dispatchUpdatesTo(this)
+        adList.clear()
+        adList.addAll(newList)
+    }
+
     interface DeleteItemListener {
         fun deleteItem(adModel: AdModelDto)
     }

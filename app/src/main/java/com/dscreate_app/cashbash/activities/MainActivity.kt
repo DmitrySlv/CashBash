@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity(),
     lateinit var googleSignInLauncher: ActivityResultLauncher<Intent>
     private val adsAdapter = AdsAdapter(this)
     private val firebaseViewModel: FirebaseViewModel by viewModels()
+    private var clearUpdate: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -115,12 +116,21 @@ class MainActivity : AppCompatActivity(),
 
     private fun initViewModel() {
         firebaseViewModel.liveAdsData.observe(this) {
-            adsAdapter.updateAdapter(it)
-            binding.mainContent.tvEmpty.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
+            if (!clearUpdate) {
+                adsAdapter.updateAdapter(it)
+            } else {
+                adsAdapter.updateAdapterWithClear(it)
+            }
+            binding.mainContent.tvEmpty.visibility = if (adsAdapter.itemCount == ITEM_COUNT_EMPTY) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
         }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        clearUpdate = true
         when (item.itemId) {
             R.id.my_ads -> {
                 Toast.makeText(this, "Pressed my_ads", Toast.LENGTH_SHORT).show()
@@ -161,6 +171,7 @@ class MainActivity : AppCompatActivity(),
 
     private fun bottomMenuClick() = with(binding) {
         mainContent.bNavView.setOnItemSelectedListener { item ->
+            clearUpdate = true
             when(item.itemId) {
                 R.id.new_ad -> {
                     val intent = Intent(this@MainActivity, EditAdsActivity::class.java)
@@ -246,7 +257,7 @@ class MainActivity : AppCompatActivity(),
                 super.onScrollStateChanged(recyclerView, newState)
                 if (!recyclerView.canScrollVertically(SCROLL_DOWN) &&
                     newState == RecyclerView.SCROLL_STATE_IDLE) {
-                   // logD(TAG, "Невозможно проскролить вниз")
+                    clearUpdate = false
                     val adsList = firebaseViewModel.liveAdsData.value
                     if (adsList?.isNotEmpty() == true) {
                         adsList[adsList.size - 1].let {
@@ -268,6 +279,7 @@ class MainActivity : AppCompatActivity(),
         private const val SPAN_FLAGS = 0
         private const val SCROLL_DOWN = 1
         private const val SCROLL_UP = -1
+        private const val ITEM_COUNT_EMPTY = 0
         private const val LAST_TIME = "0"
         private const val TAG = "MyLog"
     }
