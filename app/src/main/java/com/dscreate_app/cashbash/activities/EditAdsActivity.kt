@@ -145,6 +145,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
             ad = AdModelDto(
                 dbManager.db.push().key,
                 dbManager.auth.uid,
+                System.currentTimeMillis().toString(),
                 tvSelectCountry.text.toString(),
                 tvSelectCity.text.toString(),
                 edPhone.text.toString(),

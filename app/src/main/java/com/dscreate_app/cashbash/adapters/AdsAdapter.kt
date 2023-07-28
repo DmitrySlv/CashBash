@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.dscreate_app.cashbash.R
-import com.dscreate_app.cashbash.activities.DescriptionActivity
 import com.dscreate_app.cashbash.activities.EditAdsActivity
 import com.dscreate_app.cashbash.activities.MainActivity
 import com.dscreate_app.cashbash.data.models.AdModelDto
@@ -99,10 +98,14 @@ class AdsAdapter(private val mainAct: MainActivity): RecyclerView.Adapter<AdsAda
     }
 
     fun updateAdapter(newList: MutableList<AdModelDto>) {
-        val diffResult = DiffUtil.calculateDiff(DiffAdsAdapter(adList, newList))
+        val tempList = mutableListOf<AdModelDto>()
+        tempList.addAll(adList)
+        tempList.addAll(newList)
+
+        val diffResult = DiffUtil.calculateDiff(DiffAdsAdapter(adList, tempList))
         diffResult.dispatchUpdatesTo(this)
         adList.clear()
-        adList.addAll(newList)
+        adList.addAll(tempList)
     }
 
     interface DeleteItemListener {

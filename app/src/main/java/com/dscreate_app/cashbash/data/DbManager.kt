@@ -1,7 +1,6 @@
 package com.dscreate_app.cashbash.data
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.data.models.AdModelDto
@@ -114,8 +113,9 @@ class DbManager {
         readDataFromDb(query, readCallback)
     }
 
-    fun getAllAds(readCallback: ReadDataCallback?) {
-        val query = db.orderByChild(auth.uid + AD_PRICE_PATH)
+    fun getAllAds(lastTime: String, readCallback: ReadDataCallback?) {
+        val query = db.orderByChild(auth.uid + AD_TIME_PATH)
+            .startAfter(lastTime).limitToFirst(ADS_LIMIT)
         readDataFromDb(query, readCallback)
     }
 
@@ -156,7 +156,8 @@ class DbManager {
         private const val INFO_PATH = "info"
         private const val FAVS_PATH = "favourites"
         private const val AD_UID_PATH = "/ad/uid"
-        private const val AD_PRICE_PATH = "/ad/price"
+        private const val AD_TIME_PATH = "/ad/time"
+        private const val ADS_LIMIT = 2
         private const val EMPTY = "empty"
         private const val TAG = "MyLog"
     }

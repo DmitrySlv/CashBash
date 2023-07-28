@@ -7,6 +7,7 @@ import kotlinx.parcelize.Parcelize
 data class AdModelDto(
     val key: String? = null,
     val uid: String? = null,
+    val time: String? = "0",
     val country: String? = null,
     val city: String? = null,
     val phone: String? = null,

@@ -56,7 +56,6 @@ class MainActivity : AppCompatActivity(),
         initRcView()
         initViewModel()
         activityResult()
-        firebaseViewModel.loadAllAds()
         bottomMenuClick()
         scrollListener()
     }
@@ -176,7 +175,7 @@ class MainActivity : AppCompatActivity(),
                     mainContent.toolbar.title = getString(R.string.ad_favourite)
                 }
                 R.id.main -> {
-                    firebaseViewModel.loadAllAds()
+                    firebaseViewModel.loadAllAds(LAST_TIME)
                     mainContent.toolbar.title = getString(R.string.b_nav_main)
                 }
             }
@@ -247,7 +246,15 @@ class MainActivity : AppCompatActivity(),
                 super.onScrollStateChanged(recyclerView, newState)
                 if (!recyclerView.canScrollVertically(SCROLL_DOWN) &&
                     newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    logD(TAG, "Невозможно проскролить вниз")
+                   // logD(TAG, "Невозможно проскролить вниз")
+                    val adsList = firebaseViewModel.liveAdsData.value
+                    if (adsList?.isNotEmpty() == true) {
+                        adsList[adsList.size - 1].let {
+                            it.time?.let { time ->
+                                firebaseViewModel.loadAllAds(time)
+                            }
+                        }
+                    }
                 }
             }
         })
@@ -261,6 +268,7 @@ class MainActivity : AppCompatActivity(),
         private const val SPAN_FLAGS = 0
         private const val SCROLL_DOWN = 1
         private const val SCROLL_UP = -1
+        private const val LAST_TIME = "0"
         private const val TAG = "MyLog"
     }
 }
