@@ -3,6 +3,7 @@ package com.dscreate_app.cashbash.data
 import android.content.Context
 import android.widget.Toast
 import com.dscreate_app.cashbash.R
+import com.dscreate_app.cashbash.data.models.AdFilterDto
 import com.dscreate_app.cashbash.data.models.AdModelDto
 import com.dscreate_app.cashbash.data.models.InfoItem
 import com.google.firebase.auth.ktx.auth
@@ -23,15 +24,22 @@ class DbManager {
         auth.uid?.let { uid ->
             db.child(adModel.key ?: EMPTY).child(uid).child(AD_PATH).setValue(adModel)
                 .addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        finishWorkListener.onFinish()
-                    } else {
-                        Toast.makeText(
-                            context,
-                            context.getString(R.string.error_load_ad_to_firebase_toast),
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
+                    val adFilter = AdFilterDto(
+                        adModel.time,
+                        "${adModel.category}_${adModel.time}"
+                    )
+                    db.child(adModel.key ?: EMPTY).child(AD_FILTER_PATH)
+                        .setValue(adFilter).addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                finishWorkListener.onFinish()
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.error_load_ad_to_firebase_toast),
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        }
                 }
         }
     }
@@ -114,8 +122,14 @@ class DbManager {
     }
 
     fun getAllAds(lastTime: String, readCallback: ReadDataCallback?) {
-        val query = db.orderByChild(auth.uid + AD_TIME_PATH)
+        val query = db.orderByChild(AD_FILTER_TIME_PATH)
             .startAfter(lastTime).limitToFirst(ADS_LIMIT)
+        readDataFromDb(query, readCallback)
+    }
+
+    fun getAllAdsFromCat(lastCatTime: String, readCallback: ReadDataCallback?) {
+        val query = db.orderByChild(AD_FILTER_CAT_TIME_PATH)
+            .startAfter(lastCatTime).limitToFirst(ADS_LIMIT)
         readDataFromDb(query, readCallback)
     }
 
@@ -155,8 +169,11 @@ class DbManager {
         private const val AD_PATH = "ad"
         private const val INFO_PATH = "info"
         private const val FAVS_PATH = "favourites"
+        private const val AD_FILTER_PATH = "adFilter"
         private const val AD_UID_PATH = "/ad/uid"
         private const val AD_TIME_PATH = "/ad/time"
+        private const val AD_FILTER_TIME_PATH = "/adFilter/time"
+        private const val AD_FILTER_CAT_TIME_PATH = "/adFilter/catTime"
         private const val ADS_LIMIT = 2
         private const val EMPTY = "empty"
         private const val TAG = "MyLog"

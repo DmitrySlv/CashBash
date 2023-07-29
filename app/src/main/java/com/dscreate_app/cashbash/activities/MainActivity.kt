@@ -26,6 +26,7 @@ import com.dscreate_app.cashbash.databinding.ActivityMainBinding
 import com.dscreate_app.cashbash.utils.dialogs.DialogHelper
 import com.dscreate_app.cashbash.utils.firebase.AccountHelper
 import com.dscreate_app.cashbash.utils.logD
+import com.dscreate_app.cashbash.utils.showToast
 import com.dscreate_app.cashbash.view_model.FirebaseViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
@@ -132,22 +133,26 @@ class MainActivity : AppCompatActivity(),
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         clearUpdate = true
         when (item.itemId) {
+            R.id.main -> {
+                showToast("Главная")
+            }
             R.id.my_ads -> {
-                Toast.makeText(this, "Pressed my_ads", Toast.LENGTH_SHORT).show()
+                showToast("Мои Объявления")
             }
             R.id.favourite -> {
+                showToast("Избранное")
             }
             R.id.cars -> {
-                Toast.makeText(this, "Pressed cars", Toast.LENGTH_SHORT).show()
+              getAdsFromCat(getString(R.string.ad_cars))
             }
             R.id.pc -> {
-                Toast.makeText(this, "Pressed pc", Toast.LENGTH_SHORT).show()
+                getAdsFromCat(getString(R.string.ad_pc))
             }
             R.id.smart -> {
-                Toast.makeText(this, "Pressed smart", Toast.LENGTH_SHORT).show()
+                getAdsFromCat(getString(R.string.ad_smartphones))
             }
             R.id.dm -> {
-                Toast.makeText(this, "Pressed dm", Toast.LENGTH_SHORT).show()
+                getAdsFromCat(getString(R.string.ad_domestics))
             }
             R.id.sign_up -> {
                 dialogHelper.createSignDialog(DialogHelper.SIGN_UP_STATE)
@@ -167,6 +172,11 @@ class MainActivity : AppCompatActivity(),
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    private fun getAdsFromCat(cat: String) {
+        val catTime = "${cat}_0"
+        firebaseViewModel.loadAllAdsFromCat(catTime)
     }
 
     private fun bottomMenuClick() = with(binding) {
@@ -260,15 +270,22 @@ class MainActivity : AppCompatActivity(),
                     clearUpdate = false
                     val adsList = firebaseViewModel.liveAdsData.value
                     if (adsList?.isNotEmpty() == true) {
-                        adsList[adsList.size - 1].let {
-                            it.time?.let { time ->
-                                firebaseViewModel.loadAllAds(time)
-                            }
-                        }
+                        getAdsFromCat(adsList)
                     }
                 }
             }
         })
+    }
+
+    private fun getAdsFromCat(adsList: MutableList<AdModelDto>) {
+        adsList[adsList.size - 1].let {
+            if (it.category == getString(R.string.b_nav_main)) {
+                it.time?.let { time -> firebaseViewModel.loadAllAds(time) }
+            } else {
+                val catTime = "${it.category}_${it.time}"
+                firebaseViewModel.loadAllAdsFromCat(catTime)
+            }
+        }
     }
 
     companion object {

@@ -6,6 +6,9 @@
     <item android:title="@string/ads_cat1" android:id="@+id/ads_cat">
         <menu>
             <item
+                android:id="@+id/main"
+                android:title="@string/b_nav_main" />
+            <item
                 android:id="@+id/my_ads"
                 android:title="@string/ad_my_ads" />
             <item

@@ -2,7 +2,6 @@ package com.dscreate_app.cashbash.utils.firebase
 
 import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.activities.MainActivity
-import com.dscreate_app.cashbash.utils.firebase.GoogleAccountConst.GOOGLE_SIGN_IN_REQUEST_CODE
 import com.dscreate_app.cashbash.utils.showToast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
