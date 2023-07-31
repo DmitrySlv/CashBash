@@ -121,15 +121,26 @@ class DbManager {
         readDataFromDb(query, readCallback)
     }
 
-    fun getAllAds(lastTime: String, readCallback: ReadDataCallback?) {
-        val query = db.orderByChild(AD_FILTER_TIME_PATH)
-            .startAfter(lastTime).limitToFirst(ADS_LIMIT)
+    fun getAllAdsFirstPage(readCallback: ReadDataCallback?) {
+        val query = db.orderByChild(AD_FILTER_TIME_PATH).limitToLast(ADS_LIMIT)
         readDataFromDb(query, readCallback)
     }
 
-    fun getAllAdsFromCat(lastCatTime: String, readCallback: ReadDataCallback?) {
+    fun getAllAdsNextPage(time: String, readCallback: ReadDataCallback?) {
+        val query = db.orderByChild(AD_FILTER_TIME_PATH)
+            .endBefore(time).limitToLast(ADS_LIMIT)
+        readDataFromDb(query, readCallback)
+    }
+
+    fun getAllAdsFromCatFirstPage(cat: String, readCallback: ReadDataCallback?) {
         val query = db.orderByChild(AD_FILTER_CAT_TIME_PATH)
-            .startAfter(lastCatTime).limitToFirst(ADS_LIMIT)
+            .startAt(cat).endAt(cat + SPECIAL_SYM_FROM_TIME).limitToLast(ADS_LIMIT)
+        readDataFromDb(query, readCallback)
+    }
+
+    fun getAllAdsFromCatNextPage(catTime: String, readCallback: ReadDataCallback?) {
+        val query = db.orderByChild(AD_FILTER_CAT_TIME_PATH)
+            .endBefore(catTime).limitToLast(ADS_LIMIT)
         readDataFromDb(query, readCallback)
     }
 
@@ -172,6 +183,7 @@ class DbManager {
         private const val AD_FILTER_PATH = "adFilter"
         private const val AD_UID_PATH = "/ad/uid"
         private const val AD_TIME_PATH = "/ad/time"
+        private const val SPECIAL_SYM_FROM_TIME = "_\uf8ff" // \uf8ff - подставляет автоматич нужное время
         private const val AD_FILTER_TIME_PATH = "/adFilter/time"
         private const val AD_FILTER_CAT_TIME_PATH = "/adFilter/catTime"
         private const val ADS_LIMIT = 2

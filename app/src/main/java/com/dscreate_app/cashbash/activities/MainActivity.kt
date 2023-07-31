@@ -9,7 +9,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -25,7 +24,6 @@ import com.dscreate_app.cashbash.data.models.AdModelDto
 import com.dscreate_app.cashbash.databinding.ActivityMainBinding
 import com.dscreate_app.cashbash.utils.dialogs.DialogHelper
 import com.dscreate_app.cashbash.utils.firebase.AccountHelper
-import com.dscreate_app.cashbash.utils.logD
 import com.dscreate_app.cashbash.utils.showToast
 import com.dscreate_app.cashbash.view_model.FirebaseViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -50,6 +48,7 @@ class MainActivity : AppCompatActivity(),
     private val adsAdapter = AdsAdapter(this)
     private val firebaseViewModel: FirebaseViewModel by viewModels()
     private var clearUpdate: Boolean = true
+    private var currentCategory: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,6 +91,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     private fun initNavViewAndToolbar() = with(binding) {
+        currentCategory = getString(R.string.b_nav_main)
         setSupportActionBar(mainContent.toolbar)
         mainContent.toolbar.setTitleTextColor(ContextCompat.getColor(
             this@MainActivity, R.color.white))
@@ -117,10 +117,11 @@ class MainActivity : AppCompatActivity(),
 
     private fun initViewModel() {
         firebaseViewModel.liveAdsData.observe(this) {
+            val list = getAdsByCategory(it)
             if (!clearUpdate) {
-                adsAdapter.updateAdapter(it)
+                adsAdapter.updateAdapter(list)
             } else {
-                adsAdapter.updateAdapterWithClear(it)
+                adsAdapter.updateAdapterWithClear(list)
             }
             binding.mainContent.tvEmpty.visibility = if (adsAdapter.itemCount == ITEM_COUNT_EMPTY) {
                 View.VISIBLE
@@ -128,6 +129,21 @@ class MainActivity : AppCompatActivity(),
                 View.GONE
             }
         }
+    }
+
+    private fun getAdsByCategory(list: MutableList<AdModelDto>): MutableList<AdModelDto> {
+        val tempList = mutableListOf<AdModelDto>()
+        tempList.addAll(list)
+        if (currentCategory != getString(R.string.b_nav_main)) {
+            tempList.clear()
+            list.forEach {
+                if (currentCategory == it.category) {
+                    tempList.add(it)
+                }
+            }
+        }
+        tempList.reverse()
+        return tempList
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -143,16 +159,16 @@ class MainActivity : AppCompatActivity(),
                 showToast("Избранное")
             }
             R.id.cars -> {
-              getAdsFromCat(getString(R.string.ad_cars))
+              getAdsCat(getString(R.string.ad_cars))
             }
             R.id.pc -> {
-                getAdsFromCat(getString(R.string.ad_pc))
+                getAdsCat(getString(R.string.ad_pc))
             }
             R.id.smart -> {
-                getAdsFromCat(getString(R.string.ad_smartphones))
+                getAdsCat(getString(R.string.ad_smartphones))
             }
             R.id.dm -> {
-                getAdsFromCat(getString(R.string.ad_domestics))
+                getAdsCat(getString(R.string.ad_domestics))
             }
             R.id.sign_up -> {
                 dialogHelper.createSignDialog(DialogHelper.SIGN_UP_STATE)
@@ -174,9 +190,9 @@ class MainActivity : AppCompatActivity(),
         return true
     }
 
-    private fun getAdsFromCat(cat: String) {
-        val catTime = "${cat}_0"
-        firebaseViewModel.loadAllAdsFromCat(catTime)
+    private fun getAdsCat(cat: String) {
+        currentCategory = cat
+        firebaseViewModel.loadAllAdsFromCat(cat)
     }
 
     private fun bottomMenuClick() = with(binding) {
@@ -196,7 +212,8 @@ class MainActivity : AppCompatActivity(),
                     mainContent.toolbar.title = getString(R.string.ad_favourite)
                 }
                 R.id.main -> {
-                    firebaseViewModel.loadAllAds(LAST_TIME)
+                    currentCategory = getString(R.string.b_nav_main)
+                    firebaseViewModel.loadAllAdsFirstPage()
                     mainContent.toolbar.title = getString(R.string.b_nav_main)
                 }
             }
@@ -278,12 +295,14 @@ class MainActivity : AppCompatActivity(),
     }
 
     private fun getAdsFromCat(adsList: MutableList<AdModelDto>) {
-        adsList[adsList.size - 1].let {
-            if (it.category == getString(R.string.b_nav_main)) {
-                it.time?.let { time -> firebaseViewModel.loadAllAds(time) }
+        adsList[0].let {
+            if (currentCategory == getString(R.string.b_nav_main)) {
+                it.time?.let { time ->
+                    firebaseViewModel.loadAllAdsNextPage(it.time)
+                }
             } else {
                 val catTime = "${it.category}_${it.time}"
-                firebaseViewModel.loadAllAdsFromCat(catTime)
+                firebaseViewModel.loadAllAdsFromCatNextPage(catTime)
             }
         }
     }
