@@ -25,6 +25,7 @@ import com.dscreate_app.cashbash.data.models.AdModelDto
 import com.dscreate_app.cashbash.databinding.ActivityMainBinding
 import com.dscreate_app.cashbash.utils.dialogs.DialogHelper
 import com.dscreate_app.cashbash.utils.firebase.AccountHelper
+import com.dscreate_app.cashbash.utils.logD
 import com.dscreate_app.cashbash.utils.showToast
 import com.dscreate_app.cashbash.view_model.FirebaseViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -46,10 +47,12 @@ class MainActivity : AppCompatActivity(),
     private lateinit var tvAccount: TextView
     private lateinit var imAccount: ImageView
     lateinit var googleSignInLauncher: ActivityResultLauncher<Intent>
+    private lateinit var filterLauncher: ActivityResultLauncher<Intent>
     private val adsAdapter = AdsAdapter(this)
     private val firebaseViewModel: FirebaseViewModel by viewModels()
     private var clearUpdate: Boolean = true
     private var currentCategory: String? = null
+    private var filter: String = EMPTY
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +63,7 @@ class MainActivity : AppCompatActivity(),
         activityResult()
         bottomMenuClick()
         scrollListener()
+        activityResultFilter()
     }
 
     override fun onStart() {
@@ -91,6 +95,17 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
+    private fun activityResultFilter() {
+        filterLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                filter = result.data?.getStringExtra(FilterActivity.FILTER_KEY).toString()
+                logD(TAG, "Filter: $filter")
+            }
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return super.onCreateOptionsMenu(menu)
@@ -98,7 +113,10 @@ class MainActivity : AppCompatActivity(),
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.filter_ad) {
-            startActivity(Intent(this@MainActivity, FilterActivity::class.java))
+            val intent = Intent(this@MainActivity, FilterActivity::class.java).apply {
+                putExtra(FilterActivity.FILTER_KEY, filter)
+            }
+            filterLauncher.launch(intent)
         }
         return super.onOptionsItemSelected(item)
     }
@@ -331,5 +349,6 @@ class MainActivity : AppCompatActivity(),
         private const val ITEM_COUNT_EMPTY = 0
         private const val LAST_TIME = "0"
         private const val TAG = "MyLog"
+        private const val EMPTY = "empty"
     }
 }

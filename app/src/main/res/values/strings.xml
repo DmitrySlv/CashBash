@@ -132,5 +132,5 @@
         Установите его и попробуйте еще раз.</string>
     <!-- activity_filter -->
     <string name="filter_ad">Фильтр объявлений</string>
-    <string name="btn_filter">Отфильтровать</string>
+    <string name="btn_filter">Применить фильтр</string>
 </resources>

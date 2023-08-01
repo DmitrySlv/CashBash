@@ -1,5 +1,6 @@
 package com.dscreate_app.cashbash.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +24,7 @@ class FilterActivity : AppCompatActivity() {
         onClickSelectCountry()
         onClickSelectCity()
         onClickFilterDone()
+        getFilter()
     }
 
     private fun initToolBar() = with(binding) {
@@ -65,7 +67,28 @@ class FilterActivity : AppCompatActivity() {
 
     private fun onClickFilterDone() = with(binding) {
         btFilter.setOnClickListener {
-            logD(TAG, "Filter: ${createFiler()}")
+           val intent = Intent().apply {
+               putExtra(FILTER_KEY, createFiler())
+           }
+            setResult(RESULT_OK, intent)
+            finish()
+        }
+    }
+
+    private fun getFilter() = with(binding){
+        val filter = intent.getStringExtra(FILTER_KEY)
+        if (filter != null && filter != EMPTY) {
+            val filterList = filter.split(DELIMITERS)
+            if (filterList[0] != getString(R.string.select_country)) {
+                tvSelectCountry.text = filterList[0]
+            }
+            if (filterList[1] != getString(R.string.select_city)) {
+                tvSelectCity.text = filterList[1]
+            }
+            if (filterList[2] != EMPTY) {
+                edIndex.setText(filterList[2])
+            }
+            cbWithSend.isChecked = filterList[3].toBoolean()
         }
     }
 
@@ -80,12 +103,12 @@ class FilterActivity : AppCompatActivity() {
         for ((index, string) in listTempFilter.withIndex()) {
             if (string != getString(R.string.select_country) &&
                 string != getString(R.string.select_city) &&
-                string.isNotEmpty()
-                ) {
+                string.isNotEmpty()) {
                 sBuilder.append(string)
-                if (index != listTempFilter.size - 1) {
-                    sBuilder.append("_")
-                }
+                if (index != listTempFilter.size - 1) sBuilder.append("_")
+            } else {
+                sBuilder.append(EMPTY)
+                if (index != listTempFilter.size - 1) sBuilder.append("_")
             }
         }
         return sBuilder.toString()
@@ -93,5 +116,8 @@ class FilterActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "MyLog"
+        private const val EMPTY = "empty"
+        const val FILTER_KEY = "filter_key"
+        const val DELIMITERS = "_"
     }
 }
