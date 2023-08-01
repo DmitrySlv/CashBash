@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:title="@string/new_ad"
-        android:id="@+id/new_ad"
-        android:icon="@drawable/baseline_new_ad"
+    <item android:title="@string/filter_ad"
+        android:id="@+id/filter_ad"
+        android:icon="@drawable/baseline_filter"
         app:showAsAction="ifRoom"
         />
 </menu>

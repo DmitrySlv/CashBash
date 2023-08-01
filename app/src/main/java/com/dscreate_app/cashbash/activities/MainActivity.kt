@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
@@ -88,6 +89,18 @@ class MainActivity : AppCompatActivity(),
                 Log.d("MyLog", "Api error: ${e.message}")
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.filter_ad) {
+            startActivity(Intent(this@MainActivity, FilterActivity::class.java))
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun initNavViewAndToolbar() = with(binding) {

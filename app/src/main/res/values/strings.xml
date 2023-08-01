@@ -130,4 +130,6 @@
     <string name="intent_ad_subject">Объявление</string>
     <string name="toast_not_found_email_send_app">У вас нет приложения для отправки email.
         Установите его и попробуйте еще раз.</string>
+    <!-- activity_filter -->
+    <string name="filter_ad">Фильтр объявлений</string>
 </resources>
