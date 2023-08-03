@@ -40,6 +40,8 @@
     </string>
     <string name="enter_as_anonymous">Вы вошли как Гость. Пожалуйста, зарегистрируйтесь.</string>
     <string name="error_enter_as_anonymous">Не удалось войти как Гость</string>
+    <string name="unknown_error">Произошла ошибка, пожалуйста, попробуйте еще раз немного позже
+    </string>
     <!-- Edit Activity -->
     <string name="select_country">Выберите страну</string>
     <string name="select_city">Выберите город</string>

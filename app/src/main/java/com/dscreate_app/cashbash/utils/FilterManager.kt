@@ -24,4 +24,20 @@ object FilterManager {
             "${ad.withSend}_${ad.time}"
         )
     }
+
+    fun getFilter(filter: String): String {
+        val sBuilder = StringBuilder()
+        val tempList = filter.split("_")
+        if (tempList[0] != EMPTY) sBuilder.append(COUNTRY_)
+        if (tempList[1] != EMPTY) sBuilder.append(CITY_)
+        if (tempList[2] != EMPTY) sBuilder.append(INDEX_)
+        sBuilder.append(WITH_SEND_TIME)
+        return sBuilder.toString()
+    }
+
+    private const val EMPTY = "empty"
+    private const val COUNTRY_ = "country_"
+    private const val CITY_ = "city_"
+    private const val INDEX_ = "index_"
+    private const val WITH_SEND_TIME = "withSend_time"
 }

@@ -23,6 +23,7 @@ import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.adapters.AdsAdapter
 import com.dscreate_app.cashbash.data.models.AdModelDto
 import com.dscreate_app.cashbash.databinding.ActivityMainBinding
+import com.dscreate_app.cashbash.utils.FilterManager
 import com.dscreate_app.cashbash.utils.dialogs.DialogHelper
 import com.dscreate_app.cashbash.utils.firebase.AccountHelper
 import com.dscreate_app.cashbash.utils.logD
@@ -84,13 +85,12 @@ class MainActivity : AppCompatActivity(),
             try {
                 val account = task.getResult(ApiException::class.java)
                 account?.let {
-                    Log.d("MyLog", "Api 0")
                     account.idToken?.let { idToken ->
                         dialogHelper.accHelper.signInFirebaseWithGoogle(idToken)
                     }
                 }
             } catch (e: ApiException) {
-                Log.d("MyLog", "Api error: ${e.message}")
+                showToast(getString(R.string.unknown_error))
             }
         }
     }
@@ -102,6 +102,7 @@ class MainActivity : AppCompatActivity(),
             if (result.resultCode == RESULT_OK) {
                 filter = result.data?.getStringExtra(FilterActivity.FILTER_KEY).toString()
                 logD(TAG, "Filter: $filter")
+                logD(TAG, "getFilter: ${FilterManager.getFilter(filter)}")
             }
         }
     }
