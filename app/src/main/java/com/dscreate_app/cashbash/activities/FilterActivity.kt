@@ -79,10 +79,10 @@ class FilterActivity : AppCompatActivity() {
         val filter = intent.getStringExtra(FILTER_KEY)
         if (filter != null && filter != EMPTY) {
             val filterList = filter.split(DELIMITERS)
-            if (filterList[0] != getString(R.string.select_country)) {
+            if (filterList[0] != EMPTY) {
                 tvSelectCountry.text = filterList[0]
             }
-            if (filterList[1] != getString(R.string.select_city)) {
+            if (filterList[1] != EMPTY) {
                 tvSelectCity.text = filterList[1]
             }
             if (filterList[2] != EMPTY) {

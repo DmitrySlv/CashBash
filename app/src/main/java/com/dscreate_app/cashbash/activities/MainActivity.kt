@@ -144,7 +144,6 @@ class MainActivity : AppCompatActivity(),
     private fun initRcView() = with(binding) {
         mainContent.rcView.layoutManager = LinearLayoutManager(this@MainActivity)
         mainContent.rcView.adapter = adsAdapter
-
     }
 
     private fun initViewModel() {

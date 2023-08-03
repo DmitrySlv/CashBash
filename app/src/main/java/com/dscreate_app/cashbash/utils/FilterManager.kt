@@ -26,13 +26,25 @@ object FilterManager {
     }
 
     fun getFilter(filter: String): String {
-        val sBuilder = StringBuilder()
+        val sBuilderPath = StringBuilder()
+        val sBuilderFilter = StringBuilder()
         val tempList = filter.split("_")
-        if (tempList[0] != EMPTY) sBuilder.append(COUNTRY_)
-        if (tempList[1] != EMPTY) sBuilder.append(CITY_)
-        if (tempList[2] != EMPTY) sBuilder.append(INDEX_)
-        sBuilder.append(WITH_SEND_TIME)
-        return sBuilder.toString()
+        if (tempList[0] != EMPTY) {
+            sBuilderPath.append(COUNTRY_)
+            sBuilderFilter.append("${tempList[0]}_")
+        }
+        if (tempList[1] != EMPTY) {
+            sBuilderPath.append(CITY_)
+            sBuilderFilter.append("${tempList[1]}_")
+        }
+        if (tempList[2] != EMPTY){
+            sBuilderPath.append(INDEX_)
+            sBuilderFilter.append("${tempList[2]}_")
+        }
+        sBuilderFilter.append(tempList[3])
+        sBuilderPath.append(WITH_SEND_TIME)
+
+        return "$sBuilderPath|$sBuilderFilter"
     }
 
     private const val EMPTY = "empty"
