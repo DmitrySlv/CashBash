@@ -6,6 +6,7 @@ import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.data.models.AdFilterDto
 import com.dscreate_app.cashbash.data.models.AdModelDto
 import com.dscreate_app.cashbash.data.models.InfoItem
+import com.dscreate_app.cashbash.utils.FilterManager
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -24,10 +25,7 @@ class DbManager {
         auth.uid?.let { uid ->
             db.child(adModel.key ?: EMPTY).child(uid).child(AD_PATH).setValue(adModel)
                 .addOnCompleteListener {
-                    val adFilter = AdFilterDto(
-                        adModel.time,
-                        "${adModel.category}_${adModel.time}"
-                    )
+                    val adFilter = FilterManager.createFilter(adModel)
                     db.child(adModel.key ?: EMPTY).child(AD_FILTER_PATH)
                         .setValue(adFilter).addOnCompleteListener {
                             if (it.isSuccessful) {
@@ -185,7 +183,7 @@ class DbManager {
         private const val AD_TIME_PATH = "/ad/time"
         private const val SPECIAL_SYM_FROM_TIME = "_\uf8ff" // \uf8ff - подставляет автоматич нужное время
         private const val AD_FILTER_TIME_PATH = "/adFilter/time"
-        private const val AD_FILTER_CAT_TIME_PATH = "/adFilter/catTime"
+        private const val AD_FILTER_CAT_TIME_PATH = "/adFilter/cat_time"
         private const val ADS_LIMIT = 2
         private const val EMPTY = "empty"
         private const val TAG = "MyLog"
