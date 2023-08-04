@@ -140,10 +140,21 @@ class DbManager {
         readDataFromDb(query, readCallback)
     }
 
-    fun getAllAdsFromCatFirstPage(cat: String, readCallback: ReadDataCallback?) {
-        val query = db.orderByChild(AD_FILTER_CAT_TIME_PATH)
-            .startAt(cat).endAt(cat + SPECIAL_SYM_FROM_TIME).limitToLast(ADS_LIMIT)
+    fun getAllAdsFromCatFirstPage(cat: String, filter: String, readCallback: ReadDataCallback?) {
+        val query = if (filter.isEmpty()) {
+            db.orderByChild(AD_FILTER_CAT_TIME_PATH)
+                .startAt(cat).endAt(cat + SPECIAL_SYM_FROM_TIME).limitToLast(ADS_LIMIT)
+        } else {
+            getAllAdsFromCatByFilterFirstPage(cat, filter)
+        }
         readDataFromDb(query, readCallback)
+    }
+
+    private fun getAllAdsFromCatByFilterFirstPage(cat: String, tempFilter: String): Query {
+        val orderBy = CAT_ + tempFilter.split("|")[0]
+        val filter = cat + DELIMITER_ + tempFilter.split("|")[1]
+        return db.orderByChild("/adFilter/${orderBy}")
+            .startAt(filter).endAt(filter + SYM_FROM_TIME_WITHOUT).limitToLast(ADS_LIMIT)
     }
 
     fun getAllAdsFromCatNextPage(catTime: String, readCallback: ReadDataCallback?) {
@@ -197,6 +208,8 @@ class DbManager {
         private const val AD_FILTER_CAT_TIME_PATH = "/adFilter/cat_time"
         private const val ADS_LIMIT = 2
         private const val EMPTY = "empty"
+        private const val CAT_ = "cat_"
+        private const val DELIMITER_ = "_"
         private const val TAG = "MyLog"
     }
 }

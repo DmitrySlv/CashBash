@@ -225,7 +225,7 @@ class MainActivity : AppCompatActivity(),
 
     private fun getAdsCat(cat: String) {
         currentCategory = cat
-        firebaseViewModel.loadAllAdsFromCat(cat)
+        firebaseViewModel.loadAllAdsFromCat(cat, filterDbManager)
     }
 
     private fun bottomMenuClick() = with(binding) {
