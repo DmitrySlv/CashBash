@@ -14,8 +14,8 @@ class FirebaseViewModel: ViewModel() {
     val liveAdsData: LiveData<MutableList<AdModelDto>>
         get() = _liveAdsData
 
-    fun loadAllAdsFirstPage() {
-        dbManager.getAllAdsFirstPage(object : DbManager.ReadDataCallback {
+    fun loadAllAdsFirstPage(filter: String) {
+        dbManager.getAllAdsFirstPage(filter, object : DbManager.ReadDataCallback {
             override fun readData(list: MutableList<AdModelDto>) {
                 _liveAdsData.value = list
             }

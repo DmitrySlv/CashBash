@@ -54,6 +54,7 @@ class MainActivity : AppCompatActivity(),
     private var clearUpdate: Boolean = true
     private var currentCategory: String? = null
     private var filter: String = EMPTY
+    private var filterDbManager: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,8 +102,9 @@ class MainActivity : AppCompatActivity(),
         ) { result ->
             if (result.resultCode == RESULT_OK) {
                 filter = result.data?.getStringExtra(FilterActivity.FILTER_KEY).toString()
-                logD(TAG, "Filter: $filter")
-                logD(TAG, "getFilter: ${FilterManager.getFilter(filter)}")
+               // logD(TAG, "Filter: $filter")
+               // logD(TAG, "getFilter: ${FilterManager.getFilter(filter)}")
+                filterDbManager = FilterManager.getFilter(filter)
             }
         }
     }
@@ -244,7 +246,7 @@ class MainActivity : AppCompatActivity(),
                 }
                 R.id.main -> {
                     currentCategory = getString(R.string.b_nav_main)
-                    firebaseViewModel.loadAllAdsFirstPage()
+                    firebaseViewModel.loadAllAdsFirstPage(filterDbManager)
                     mainContent.toolbar.title = getString(R.string.b_nav_main)
                 }
             }

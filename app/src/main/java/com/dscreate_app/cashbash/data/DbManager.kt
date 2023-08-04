@@ -3,7 +3,6 @@ package com.dscreate_app.cashbash.data
 import android.content.Context
 import android.widget.Toast
 import com.dscreate_app.cashbash.R
-import com.dscreate_app.cashbash.data.models.AdFilterDto
 import com.dscreate_app.cashbash.data.models.AdModelDto
 import com.dscreate_app.cashbash.data.models.InfoItem
 import com.dscreate_app.cashbash.utils.FilterManager
@@ -119,9 +118,20 @@ class DbManager {
         readDataFromDb(query, readCallback)
     }
 
-    fun getAllAdsFirstPage(readCallback: ReadDataCallback?) {
-        val query = db.orderByChild(AD_FILTER_TIME_PATH).limitToLast(ADS_LIMIT)
+    fun getAllAdsFirstPage(filter: String, readCallback: ReadDataCallback?) {
+        val query = if (filter.isEmpty()) {
+            db.orderByChild(AD_FILTER_TIME_PATH).limitToLast(ADS_LIMIT)
+        } else {
+            getAllAdsByFilterFirstPage(filter)
+        }
         readDataFromDb(query, readCallback)
+    }
+
+   private fun getAllAdsByFilterFirstPage(tempFilter: String): Query {
+       val orderBy = tempFilter.split("|")[0]
+       val filter = tempFilter.split("|")[1]
+        return db.orderByChild("/adFilter/${orderBy}")
+            .startAt(filter).endAt(filter + SYM_FROM_TIME_WITHOUT).limitToLast(ADS_LIMIT)
     }
 
     fun getAllAdsNextPage(time: String, readCallback: ReadDataCallback?) {
@@ -182,6 +192,7 @@ class DbManager {
         private const val AD_UID_PATH = "/ad/uid"
         private const val AD_TIME_PATH = "/ad/time"
         private const val SPECIAL_SYM_FROM_TIME = "_\uf8ff" // \uf8ff - подставляет автоматич нужное время
+        private const val SYM_FROM_TIME_WITHOUT = "\uf8ff"
         private const val AD_FILTER_TIME_PATH = "/adFilter/time"
         private const val AD_FILTER_CAT_TIME_PATH = "/adFilter/cat_time"
         private const val ADS_LIMIT = 2
