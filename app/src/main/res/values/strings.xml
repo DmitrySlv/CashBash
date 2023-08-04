@@ -135,4 +135,5 @@
     <!-- activity_filter -->
     <string name="filter_ad">Фильтр объявлений</string>
     <string name="btn_filter">Применить фильтр</string>
+    <string name="btn_filter_clear">Очистить фильтр</string>
 </resources>

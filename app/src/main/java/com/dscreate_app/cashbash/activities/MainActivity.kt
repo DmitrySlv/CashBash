@@ -105,6 +105,9 @@ class MainActivity : AppCompatActivity(),
                // logD(TAG, "Filter: $filter")
                // logD(TAG, "getFilter: ${FilterManager.getFilter(filter)}")
                 filterDbManager = FilterManager.getFilter(filter)
+            } else if (result.resultCode == RESULT_CANCELED) {
+                filterDbManager = ""
+                filter = EMPTY
             }
         }
     }

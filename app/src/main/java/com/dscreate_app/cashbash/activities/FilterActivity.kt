@@ -24,6 +24,7 @@ class FilterActivity : AppCompatActivity() {
         onClickSelectCountry()
         onClickSelectCity()
         onClickFilterDone()
+        onClickFilterClear()
         getFilter()
     }
 
@@ -72,6 +73,16 @@ class FilterActivity : AppCompatActivity() {
            }
             setResult(RESULT_OK, intent)
             finish()
+        }
+    }
+
+    private fun onClickFilterClear() = with(binding) {
+        btFilterClear.setOnClickListener {
+            tvSelectCountry.text = getString(R.string.select_country)
+            tvSelectCity.text = getString(R.string.select_city)
+            edIndex.setText("")
+            cbWithSend.isChecked = false
+            setResult(RESULT_CANCELED)
         }
     }
 
