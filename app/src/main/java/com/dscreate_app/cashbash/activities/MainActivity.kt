@@ -29,6 +29,8 @@ import com.dscreate_app.cashbash.utils.firebase.AccountHelper
 import com.dscreate_app.cashbash.utils.logD
 import com.dscreate_app.cashbash.utils.showToast
 import com.dscreate_app.cashbash.view_model.FirebaseViewModel
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
@@ -59,6 +61,7 @@ class MainActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        initAds()
         initNavViewAndToolbar()
         initRcView()
         initViewModel()
@@ -76,6 +79,23 @@ class MainActivity : AppCompatActivity(),
     override fun onResume() {
         super.onResume()
         binding.mainContent.bNavView.selectedItemId = R.id.main
+        binding.mainContent.adView.resume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.mainContent.adView.pause()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.mainContent.adView.destroy()
+    }
+
+    private fun initAds() {
+        MobileAds.initialize(this)
+        val adRequest = AdRequest.Builder().build()
+        binding.mainContent.adView.loadAd(adRequest)
     }
 
     private fun activityResult() {
