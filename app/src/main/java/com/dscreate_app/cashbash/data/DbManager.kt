@@ -70,8 +70,8 @@ class DbManager {
                     ad?.let {
                         adList.add(ad!!)
                     }
-                    readCallback?.readData(adList)
                 }
+                readCallback?.readData(adList)
             }
             override fun onCancelled(error: DatabaseError) {}
         })
@@ -206,14 +206,28 @@ class DbManager {
     private fun getAllAdsFromCatByFilterFirstPage(cat: String, tempFilter: String): Query {
         val orderBy = CAT_ + tempFilter.split("|")[0]
         val filter = cat + DELIMITER_ + tempFilter.split("|")[1]
-        return db.orderByChild("/adFilter/${orderBy}")
+        return db.orderByChild("/adFilter/$orderBy")
             .startAt(filter).endAt(filter + SYM_FROM_TIME_WITHOUT).limitToLast(ADS_LIMIT)
     }
 
-    fun getAllAdsFromCatNextPage(catTime: String, readCallback: ReadDataCallback?) {
-        val query = db.orderByChild(AD_FILTER_CAT_TIME_PATH)
-            .endBefore(catTime).limitToLast(ADS_LIMIT)
-        readDataFromDb(query, readCallback)
+    fun getAllAdsFromCatNextPage(cat: String, time: String, filter: String, readCallback: ReadDataCallback?) {
+        if (filter.isEmpty()) {
+            val query = db.orderByChild(AD_FILTER_CAT_TIME_PATH)
+                .endBefore(cat + DELIMITER_ + time).limitToLast(ADS_LIMIT)
+            readDataFromDb(query, readCallback)
+        } else {
+            getAllAdsFromCatByFilterNextPage(cat, time, filter, readCallback)
+        }
+    }
+
+    private fun getAllAdsFromCatByFilterNextPage(
+        cat: String, time: String, tempFilter: String, readCallback: ReadDataCallback?
+    ) {
+        val orderBy = CAT_ + tempFilter.split("|")[0]
+        val filter = cat + DELIMITER_ + tempFilter.split("|")[1]
+        val query = db.orderByChild("/adFilter/$orderBy")
+            .endBefore(filter + DELIMITER_ + time).limitToLast(ADS_LIMIT)
+        readNextPageFromDb(query, filter, orderBy, readCallback)
     }
 
     fun deleteAd(adModel: AdModelDto, context: Context, listener: FinishWorkListener) {

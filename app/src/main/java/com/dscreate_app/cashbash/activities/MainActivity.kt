@@ -337,8 +337,10 @@ class MainActivity : AppCompatActivity(),
                     firebaseViewModel.loadAllAdsNextPage(it.time, filterDbManager)
                 }
             } else {
-                val catTime = "${it.category}_${it.time}"
-                firebaseViewModel.loadAllAdsFromCatNextPage(catTime)
+                it.category?.let { cat -> it.time?.let { time ->
+                    firebaseViewModel.loadAllAdsFromCatNextPage(cat,
+                        time, filterDbManager)
+                } }
             }
         }
     }
