@@ -334,7 +334,7 @@ class MainActivity : AppCompatActivity(),
         adsList[0].let {
             if (currentCategory == getString(R.string.b_nav_main)) {
                 it.time?.let { time ->
-                    firebaseViewModel.loadAllAdsNextPage(it.time)
+                    firebaseViewModel.loadAllAdsNextPage(it.time, filterDbManager)
                 }
             } else {
                 val catTime = "${it.category}_${it.time}"

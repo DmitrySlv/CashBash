@@ -1,6 +1,7 @@
 package com.dscreate_app.cashbash.data
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.data.models.AdModelDto
@@ -76,6 +77,43 @@ class DbManager {
         })
     }
 
+    private fun readNextPageFromDb(
+        query: Query, filter: String, orderBy: String, readCallback: ReadDataCallback?
+    ) {
+        //Данные обновляются с этим listener порционально постранично один раз за считывание с БД.
+        query.addListenerForSingleValueEvent(object: ValueEventListener {
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val adList = mutableListOf<AdModelDto>()
+                for (item in snapshot.children) {
+
+                    var ad: AdModelDto? = null
+                    item.children.forEach {
+                        if (ad == null) {
+                            ad = it.child(AD_PATH).getValue(AdModelDto::class.java)
+                        }
+                    }
+                    val infoItem = item.child(INFO_PATH).getValue(InfoItem::class.java)
+                    val filterNodeValue = item.child(AD_FILTER_PATH).child(orderBy).value.toString()
+                    Log.d(TAG, "Filter value: $filterNodeValue")
+                    val favCounter =  item.child(FAVS_PATH).childrenCount
+                    val isFav = auth.uid?.let { uid ->
+                        item.child(FAVS_PATH).child(uid).getValue(String::class.java)
+                    }
+                    ad?.isFavourite = isFav != null
+                    ad?.favCounter = favCounter.toString()
+
+                    ad?.viewsCounter = infoItem?.viewsCounter ?: "0"
+                    ad?.emailsCounter = infoItem?.emailsCounter ?: "0"
+                    ad?.callsCounter = infoItem?.callsCounter ?: "0"
+                    if (ad != null && filterNodeValue.startsWith(filter)) adList.add(ad!!)
+                }
+                readCallback?.readData(adList)
+            }
+            override fun onCancelled(error: DatabaseError) {}
+        })
+    }
+
     fun onFavouriteClick(adModel: AdModelDto, finishWorkListener: FinishWorkListener) {
         if (adModel.isFavourite) {
             removeFromFavourites(adModel, finishWorkListener)
@@ -134,10 +172,25 @@ class DbManager {
             .startAt(filter).endAt(filter + SYM_FROM_TIME_WITHOUT).limitToLast(ADS_LIMIT)
     }
 
-    fun getAllAdsNextPage(time: String, readCallback: ReadDataCallback?) {
-        val query = db.orderByChild(AD_FILTER_TIME_PATH)
-            .endBefore(time).limitToLast(ADS_LIMIT)
-        readDataFromDb(query, readCallback)
+    fun getAllAdsNextPage(time: String, filter: String, readCallback: ReadDataCallback?) {
+       if (filter.isEmpty()) {
+          val query =  db.orderByChild(AD_FILTER_TIME_PATH)
+              .endBefore(time).limitToLast(ADS_LIMIT)
+           readDataFromDb(query, readCallback)
+        } else {
+            getAllAdsByFilterNextPage(filter, time,readCallback)
+        }
+    }
+
+
+    private fun getAllAdsByFilterNextPage(
+        tempFilter: String, time: String, readCallback: ReadDataCallback?
+    ) {
+        val orderBy = tempFilter.split("|")[0]
+        val filter = tempFilter.split("|")[1]
+        val query = db.orderByChild("/adFilter/${orderBy}")
+            .endBefore(filter + "_$time").limitToLast(ADS_LIMIT)
+        readNextPageFromDb(query, filter, orderBy, readCallback)
     }
 
     fun getAllAdsFromCatFirstPage(cat: String, filter: String, readCallback: ReadDataCallback?) {
