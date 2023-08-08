@@ -136,4 +136,6 @@
     <string name="filter_ad">Фильтр объявлений</string>
     <string name="btn_filter">Применить фильтр</string>
     <string name="btn_filter_clear">Очистить фильтр</string>
+    <!-- Ads Adapter -->
+    <string name="publish_time">Опубликовано:</string>
 </resources>

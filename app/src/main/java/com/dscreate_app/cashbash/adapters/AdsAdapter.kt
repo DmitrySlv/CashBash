@@ -14,16 +14,23 @@ import com.dscreate_app.cashbash.activities.MainActivity
 import com.dscreate_app.cashbash.data.models.AdModelDto
 import com.dscreate_app.cashbash.databinding.AdListItemBinding
 import com.squareup.picasso.Picasso
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 
 class AdsAdapter(private val mainAct: MainActivity): RecyclerView.Adapter<AdsAdapter.AdHolder>() {
 
    private val adList = mutableListOf<AdModelDto>()
+    private var timeFormatter: SimpleDateFormat? = null
+    init {
+        timeFormatter = SimpleDateFormat("dd/MM/yyyy - hh:mm", Locale.getDefault())
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.ad_list_item, parent, false)
-        return AdHolder(view, mainAct)
+        return AdHolder(view, mainAct, timeFormatter!!)
     }
 
     override fun onBindViewHolder(holder: AdHolder, position: Int) {
@@ -34,7 +41,9 @@ class AdsAdapter(private val mainAct: MainActivity): RecyclerView.Adapter<AdsAda
        return adList.size
     }
 
-    class AdHolder(view: View, private val mainAct: MainActivity): ViewHolder(view) {
+    class AdHolder(
+        view: View, private val mainAct: MainActivity, private val timeFormatter: SimpleDateFormat
+    ): ViewHolder(view) {
         private val binding = AdListItemBinding.bind(view)
 
         fun setData(adModel: AdModelDto) = with(binding) {
@@ -44,11 +53,20 @@ class AdsAdapter(private val mainAct: MainActivity): RecyclerView.Adapter<AdsAda
                 tvTitle.text = title
                 tvViewsCounter.text = viewsCounter
                 tvFavouriteCounter.text = favCounter
+                val publishTime = (root.context.getString(R.string.publish_time) +
+                        adModel.time?.let { getTimeFromMillis(it) })
+                tvPublishTime.text = publishTime
                 Picasso.get().load(adModel.mainImage).into(imMainImage)
             }
             isFavourite(adModel)
             showEditPanel(isOwner(adModel))
             mainOnClicks(adModel)
+        }
+
+        private fun getTimeFromMillis(timeMillis: String): String {
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = timeMillis.toLong()
+            return timeFormatter.format(calendar.time)
         }
 
         private fun mainOnClicks(adModel: AdModelDto) = with(binding) {
