@@ -73,9 +73,12 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.8'
     implementation 'com.google.android.gms:play-services-ads:22.1.0'
 
-    //Зависимости рекламы
+    //Зависимости рекламы open app ads
     def lifecycle_version = "2.2.0"
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1"
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:2.6.1"
+
+    //Зависимость для встроенных покупок (in app purchase)
+    implementation "com.android.billingclient:billing:6.0.1"
 }
