@@ -23,6 +23,7 @@ import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.adapters.AdsAdapter
 import com.dscreate_app.cashbash.data.models.AdModelDto
 import com.dscreate_app.cashbash.databinding.ActivityMainBinding
+import com.dscreate_app.cashbash.utils.AppMainState
 import com.dscreate_app.cashbash.utils.FilterManager
 import com.dscreate_app.cashbash.utils.dialogs.DialogHelper
 import com.dscreate_app.cashbash.utils.firebase.AccountHelper
@@ -61,6 +62,7 @@ class MainActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        (application as AppMainState).showAdIfAvailable(this) {} //колбэк нужен для диалога, который может запускаться при старте приложения. Для корректной работы с рекламой. Вставить диалог туда, если есть
         initAds()
         initNavViewAndToolbar()
         initRcView()
