@@ -30,6 +30,7 @@
     <string name="open">Открыть</string>
     <string name="close">Закрыть</string>
     <string name="not_reg">Вход или регистрация</string>
+    <string name="remove_ads">Убрать рекламу</string>
     <!-- Main Activity -->
     <string name="sign_up_error">Ошибка регистрации</string>
     <string name="sign_in_error">Ошибка входа в аккаунт</string>

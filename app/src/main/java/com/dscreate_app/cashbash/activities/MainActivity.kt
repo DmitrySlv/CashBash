@@ -62,6 +62,7 @@ class MainActivity : AppCompatActivity(),
     private var filterDbManager: String = ""
     private var pref: SharedPreferences? = null
     private var isPremiumUser = false
+    private var billingManager: BillingManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,6 +97,7 @@ class MainActivity : AppCompatActivity(),
     override fun onDestroy() {
         super.onDestroy()
         binding.mainContent.adView.destroy()
+        billingManager?.closeConnection()
     }
 
     private fun initPreferences() {
@@ -246,6 +248,10 @@ class MainActivity : AppCompatActivity(),
             R.id.dm -> {
                 getAdsCat(getString(R.string.ad_domestics))
             }
+            R.id.remove_ads -> {
+                billingManager = BillingManager(this)
+                billingManager?.startConnection()
+            }
             R.id.sign_up -> {
                 dialogHelper.createSignDialog(DialogHelper.SIGN_UP_STATE)
             }
@@ -350,6 +356,16 @@ class MainActivity : AppCompatActivity(),
                 SPAN_START, it, SPAN_FLAGS
             )
             accCat.title = spanAccCat
+        }
+
+        val removeAds = menu.findItem(R.id.remove_ads)
+        val spanRemoveAds = SpannableString(removeAds.title)
+        removeAds.title?.length?.let {
+            spanRemoveAds.setSpan(
+                ForegroundColorSpan(ContextCompat.getColor(this@MainActivity, R.color.green)),
+                SPAN_START, it, SPAN_FLAGS
+            )
+            removeAds.title = spanRemoveAds
         }
     }
 

@@ -47,6 +47,10 @@ class BillingManager(private val act: AppCompatActivity) {
         })
     }
 
+    fun closeConnection() {
+        billingClient?.endConnection()
+    }
+
     private fun getItem() {
         val skuList = ArrayList<String>()
         skuList.add(REMOVE_ADS)

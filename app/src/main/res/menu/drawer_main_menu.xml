@@ -32,6 +32,9 @@
     <item android:title="@string/ads_cat2" android:id="@+id/acc_cat">
         <menu>
             <item
+                android:id="@+id/remove_ads"
+                android:title="@string/remove_ads" />
+            <item
                 android:id="@+id/sign_up"
                 android:title="@string/ac_sign_up" />
             <item
