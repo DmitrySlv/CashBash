@@ -1,12 +1,17 @@
 package com.dscreate_app.cashbash.utils
 
+import android.content.Context
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.android.billingclient.api.AcknowledgePurchaseParams
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.SkuDetailsParams
+import com.dscreate_app.cashbash.R
 
 class BillingManager(private val act: AppCompatActivity) {
     private var billingClient: BillingClient? = null
@@ -25,7 +30,7 @@ class BillingManager(private val act: AppCompatActivity) {
             result, list ->
             run {
                 if (result.responseCode == BillingClient.BillingResponseCode.OK) {
-                    list?.get(0).let {  }
+                    list?.get(0)?.let { nonConsumableItem(it) }
                 }
             }
         }
@@ -60,7 +65,36 @@ class BillingManager(private val act: AppCompatActivity) {
         }
     }
 
+    private fun nonConsumableItem(purchase: Purchase) {
+        if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
+            if (purchase.isAcknowledged) {
+                val acParams = AcknowledgePurchaseParams.newBuilder()
+                    .setPurchaseToken(purchase.purchaseToken).build()
+                billingClient?.acknowledgePurchase(acParams) { result ->
+                    if (result.responseCode == BillingClient.BillingResponseCode.OK) {
+                        savePurchase(true)
+                        Toast.makeText(act, act.getString(R.string.thanks_for_purchase),
+                            Toast.LENGTH_SHORT).show()
+                    } else {
+                        savePurchase(false)
+                        Toast.makeText(act, act.getString(R.string.not_purchase),
+                            Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun savePurchase(isPurchased: Boolean) {
+        val  pref = act.getSharedPreferences(MAIN_PREF, Context.MODE_PRIVATE)
+        val editor = pref.edit()
+        editor.putBoolean(REMOVE_ADS_PREF, isPurchased)
+        editor.apply()
+    }
+
     companion object {
         private const val REMOVE_ADS = "remove_ads"
+        private const val MAIN_PREF = "main_pref"
+        private const val REMOVE_ADS_PREF = "remove_ads_pref"
     }
 }

@@ -138,4 +138,8 @@
     <string name="btn_filter_clear">Очистить фильтр</string>
     <!-- Ads Adapter -->
     <string name="publish_time">Опубликовано:</string>
+    <!-- Billing Manager -->
+    <string name="thanks_for_purchase">Спасибо за покупку!</string>
+    <string name="not_purchase">Не удалось реализовать покупку.
+        Пожалуйста, попробуйте позже еще раз!</string>
 </resources>
