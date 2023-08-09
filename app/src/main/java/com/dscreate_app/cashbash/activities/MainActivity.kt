@@ -1,6 +1,7 @@
 package com.dscreate_app.cashbash.activities
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
@@ -24,6 +25,7 @@ import com.dscreate_app.cashbash.adapters.AdsAdapter
 import com.dscreate_app.cashbash.data.models.AdModelDto
 import com.dscreate_app.cashbash.databinding.ActivityMainBinding
 import com.dscreate_app.cashbash.utils.AppMainState
+import com.dscreate_app.cashbash.utils.BillingManager
 import com.dscreate_app.cashbash.utils.FilterManager
 import com.dscreate_app.cashbash.utils.dialogs.DialogHelper
 import com.dscreate_app.cashbash.utils.firebase.AccountHelper
@@ -58,12 +60,14 @@ class MainActivity : AppCompatActivity(),
     private var currentCategory: String? = null
     private var filter: String = EMPTY
     private var filterDbManager: String = ""
+    private var pref: SharedPreferences? = null
+    private var isPremiumUser = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        (application as AppMainState).showAdIfAvailable(this) {} //колбэк нужен для диалога, который может запускаться при старте приложения. Для корректной работы с рекламой. Вставить диалог туда, если есть
-        initAds()
+        initPreferences()
+        checkPremiumUser()
         initNavViewAndToolbar()
         initRcView()
         initViewModel()
@@ -92,6 +96,20 @@ class MainActivity : AppCompatActivity(),
     override fun onDestroy() {
         super.onDestroy()
         binding.mainContent.adView.destroy()
+    }
+
+    private fun initPreferences() {
+        pref = getSharedPreferences(BillingManager.MAIN_PREF, MODE_PRIVATE)
+        isPremiumUser = pref?.getBoolean(BillingManager.REMOVE_ADS_PREF, false) == true
+    }
+
+    private fun checkPremiumUser() {
+        if(!isPremiumUser){
+            (application as AppMainState).showAdIfAvailable(this) {} //колбэк нужен для диалога, который может запускаться при старте приложения. Для корректной работы с рекламой. Вставить диалог туда, если есть
+            initAds()
+        } else {
+            binding.mainContent.adView.visibility = View.GONE
+        }
     }
 
     private fun initAds() {
