@@ -88,12 +88,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
     private fun onClickPublish() {
         binding.btPublish.setOnClickListener {
             ad = fillAdForFirebase()
-            if (isEditState) {
-                dbManager.publishAd(ad!!, onPublishFinnish(), this)
-            } else {
-              //  dbManager.publishAd(adTemp, onPublishFinnish(), this)
-                uploadImages()
-            }
+            uploadImages()
         }
     }
 
@@ -188,13 +183,31 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
     }
 
     private fun uploadImages() {
-        if (imageAdapter.imageList.size == imageIndex) {
+        if (imageIndex == 3) {
             ad?.let { dbManager.publishAd(it, onPublishFinnish(), this) }
             return
         }
-       val byteArray = prepareImageByteArray(imageAdapter.imageList[imageIndex])
-        uploadImage(byteArray) { uri ->
-            nextImage(uri.result.toString())
+        val oldUrl = getUrlFromAd()
+        if (imageAdapter.imageList.size > imageIndex) {
+            val byteArray = prepareImageByteArray(imageAdapter.imageList[imageIndex])
+            if (oldUrl.startsWith("http")) {
+                updateImage(byteArray, oldUrl) {
+                    nextImage(it.result.toString())
+                }
+            } else {
+                uploadImage(byteArray) {
+                    nextImage(it.result.toString())
+                }
+            }
+
+        } else {
+            if (oldUrl.startsWith("http")) {
+                deleteImageByUrl(oldUrl) {
+                    nextImage(EMPTY)
+                }
+            } else {
+                nextImage(EMPTY)
+            }
         }
     }
 
@@ -202,6 +215,11 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
         setImageUriToAd(uri)
         imageIndex++
         uploadImages()
+    }
+
+    private fun deleteImageByUrl(oldUrl: String, listener: OnCompleteListener<Void>) {
+        dbManager.dbStorage.storage.getReferenceFromUrl(oldUrl).delete()
+            .addOnCompleteListener(listener)
     }
 
     private fun setImageUriToAd(uri: String) {
@@ -218,6 +236,10 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
         return outputStream.toByteArray()
     }
 
+    private fun getUrlFromAd(): String {
+        return listOf(ad?.mainImage!!, ad?.image2!!, ad?.image3!!)[imageIndex]
+    }
+
     private fun uploadImage(byteArray: ByteArray, listener: OnCompleteListener<Uri>) {
         val imStorageRef = dbManager.auth.uid?.let {
             dbManager.dbStorage
@@ -228,6 +250,14 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
         uploadTask?.continueWithTask { task ->
             imStorageRef.downloadUrl
         }?.addOnCompleteListener(listener)
+    }
+
+    private fun updateImage(byteArray: ByteArray,url: String, listener: OnCompleteListener<Uri>) {
+        val imStorageRef = dbManager.dbStorage.storage.getReferenceFromUrl(url)
+        val uploadTask = imStorageRef.putBytes(byteArray)
+        uploadTask.continueWithTask { task ->
+            imStorageRef.downloadUrl
+        }.addOnCompleteListener(listener)
     }
 
     private fun imageChangeCounter() = with(binding) {
