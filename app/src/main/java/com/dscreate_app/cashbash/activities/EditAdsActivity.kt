@@ -32,7 +32,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
     var imageListFrag: ImageListFragment? = null
     private val dbManager = DbManager()
     var editImagePos = 0
-    var imageIndex = 0
+    private var imageIndex = 0
     private var isEditState = false
     private var ad: AdModelDto? = null
 
@@ -89,9 +89,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
         binding.btPublish.setOnClickListener {
             ad = fillAdForFirebase()
             if (isEditState) {
-                ad?.copy(key = ad?.key)?.let {
-                        adModel -> dbManager.publishAd(adModel, onPublishFinnish(), this)
-                }
+                dbManager.publishAd(ad!!, onPublishFinnish(), this)
             } else {
               //  dbManager.publishAd(adTemp, onPublishFinnish(), this)
                 uploadImages()
@@ -140,12 +138,12 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
     }
 
     private fun fillAdForFirebase(): AdModelDto {
-        val ad: AdModelDto
+        val adTemp: AdModelDto
         binding.apply {
-            ad = AdModelDto(
-                dbManager.db.push().key,
+            adTemp = AdModelDto(
+               ad?.key ?: dbManager.db.push().key,
                 dbManager.auth.uid,
-                System.currentTimeMillis().toString(),
+                ad?.time ?: System.currentTimeMillis().toString(),
                 tvSelectCountry.text.toString(),
                 tvSelectCity.text.toString(),
                 edPhone.text.toString(),
@@ -156,13 +154,13 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
                 edPrice.text.toString(),
                 edDescription.text.toString(),
                 edEmail.text.toString(),
-                EMPTY,
-                EMPTY,
-                EMPTY,
+               ad?.mainImage ?: EMPTY,
+                ad?.image2 ?: EMPTY,
+                ad?.image3 ?: EMPTY,
                 "0"
             )
         }
-        return ad
+        return adTemp
     }
 
     private fun openPixImagePicker() {
