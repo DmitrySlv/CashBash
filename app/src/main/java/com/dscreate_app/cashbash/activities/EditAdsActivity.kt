@@ -112,6 +112,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
             edPrice.setText(price)
             edDescription.setText(description)
             ImageManager.fillImageArray(adModelDto, imageAdapter)
+            updateImageCounter(COUNTER)
         }
     }
 
@@ -190,7 +191,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
         val oldUrl = getUrlFromAd()
         if (imageAdapter.imageList.size > imageIndex) {
             val byteArray = prepareImageByteArray(imageAdapter.imageList[imageIndex])
-            if (oldUrl.startsWith("http")) {
+            if (oldUrl.startsWith(HTTP)) {
                 updateImage(byteArray, oldUrl) {
                     nextImage(it.result.toString())
                 }
@@ -201,7 +202,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
             }
 
         } else {
-            if (oldUrl.startsWith("http")) {
+            if (oldUrl.startsWith(HTTP)) {
                 deleteImageByUrl(oldUrl) {
                     nextImage(EMPTY)
                 }
@@ -260,25 +261,35 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
         }.addOnCompleteListener(listener)
     }
 
-    private fun imageChangeCounter() = with(binding) {
-        vpImages.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+    private fun imageChangeCounter() {
+        binding.vpImages.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                val imageCounter = "${position + 1}/${vpImages.adapter?.itemCount}"
-                tvImageCounter.text = imageCounter
+                updateImageCounter(position)
             }
         })
+    }
+
+    private fun updateImageCounter(counter: Int) = with(binding) {
+        var index = 1
+        val itemCount = vpImages.adapter?.itemCount
+        if (itemCount == 0) index = 0
+        val imageCounter = "${counter + index}/${itemCount}"
+        tvImageCounter.text = imageCounter
     }
 
     override fun onClose(list: MutableList<Bitmap>) {
         binding.svMain.visibility = View.VISIBLE
         imageAdapter.updateAdapter(list)
         imageListFrag = null
+        updateImageCounter(binding.vpImages.currentItem)
     }
 
     companion object {
         private const val TAG = "MyLog"
         private const val QUALITY = 20
         private const val EMPTY = "empty"
+        private const val COUNTER = 0
+        private const val HTTP = "http"
     }
 }
