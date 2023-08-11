@@ -241,11 +241,34 @@ class DbManager {
         )
         db.child(adModel.key).updateChildren(map).addOnCompleteListener {
             if (it.isSuccessful) {
-                listener.onFinish(true)
+               deleteImagesFromStorage(adModel, 0, listener)
             } else {
                 Toast.makeText(context,
                     context.getString(R.string.error_delete_from_firebase),
                     Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun deleteImagesFromStorage(
+        adModel: AdModelDto, index: Int, listener: FinishWorkListener
+    ) {
+        val imageList = listOf(adModel.mainImage, adModel.image2, adModel.image3)
+        if (adModel.mainImage == EMPTY) {
+            listener.onFinish(true)
+            return
+        }
+        dbStorage.storage.getReferenceFromUrl(imageList[index]).delete().addOnCompleteListener {
+            if (it.isSuccessful) {
+                if (imageList.size > index + 1) {
+                    if (imageList[index + 1] != EMPTY) {
+                        deleteImagesFromStorage(adModel, index + 1, listener)
+                    } else {
+                        listener.onFinish(true)
+                    }
+                } else {
+                    listener.onFinish(true)
+                }
             }
         }
     }
