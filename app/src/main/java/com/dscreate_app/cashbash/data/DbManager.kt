@@ -7,6 +7,7 @@ import com.dscreate_app.cashbash.R
 import com.dscreate_app.cashbash.data.models.AdModelDto
 import com.dscreate_app.cashbash.data.models.InfoItem
 import com.dscreate_app.cashbash.utils.FilterManager
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -232,7 +233,13 @@ class DbManager {
 
     fun deleteAd(adModel: AdModelDto, context: Context, listener: FinishWorkListener) {
         if (adModel.key == null || adModel.uid == null) return
-        db.child(adModel.key).child(adModel.uid).removeValue().addOnCompleteListener {
+        val map = mapOf(
+            AD_FILTER_NODE to null,
+            INFO_NODE to null,
+            FAVOURITES_NODE to null,
+            "/${adModel.uid}" to null
+        )
+        db.child(adModel.key).updateChildren(map).addOnCompleteListener {
             if (it.isSuccessful) {
                 listener.onFinish(true)
             } else {
@@ -268,7 +275,9 @@ class DbManager {
         private const val FAVS_PATH = "favourites"
         private const val AD_FILTER_PATH = "adFilter"
         private const val AD_UID_PATH = "/ad/uid"
-        private const val AD_TIME_PATH = "/ad/time"
+        private const val AD_FILTER_NODE = "/adFilter"
+        private const val INFO_NODE = "/info"
+        private const val FAVOURITES_NODE = "/favourites"
         private const val SPECIAL_SYM_FROM_TIME = "_\uf8ff" // \uf8ff - подставляет автоматич нужное время
         private const val SYM_FROM_TIME_WITHOUT = "\uf8ff"
         private const val AD_FILTER_TIME_PATH = "/adFilter/time"

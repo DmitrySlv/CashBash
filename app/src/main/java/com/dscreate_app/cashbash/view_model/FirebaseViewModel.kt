@@ -64,7 +64,7 @@ class FirebaseViewModel: ViewModel() {
 
     fun deleteItem(adModel: AdModelDto, context: Context) {
         dbManager.deleteAd(adModel, context, object:  DbManager.FinishWorkListener {
-            override fun onFinish() {
+            override fun onFinish(isDone: Boolean) {
                 val updatedList = _liveAdsData.value
                 updatedList?.remove(adModel)
                 _liveAdsData.postValue(updatedList)
@@ -78,7 +78,7 @@ class FirebaseViewModel: ViewModel() {
 
     fun onFavouriteClick(adModel: AdModelDto) {
         dbManager.onFavouriteClick(adModel, object : DbManager.FinishWorkListener {
-            override fun onFinish() {
+            override fun onFinish(isDone: Boolean) {
                 val updatedList = _liveAdsData.value
                 val position = updatedList?.indexOf(adModel)
                 if (position != -1) {

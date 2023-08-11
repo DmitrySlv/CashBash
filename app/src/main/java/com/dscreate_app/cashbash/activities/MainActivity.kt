@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -29,7 +28,6 @@ import com.dscreate_app.cashbash.utils.BillingManager
 import com.dscreate_app.cashbash.utils.FilterManager
 import com.dscreate_app.cashbash.utils.dialogs.DialogHelper
 import com.dscreate_app.cashbash.utils.firebase.AccountHelper
-import com.dscreate_app.cashbash.utils.logD
 import com.dscreate_app.cashbash.utils.showToast
 import com.dscreate_app.cashbash.view_model.FirebaseViewModel
 import com.google.android.gms.ads.AdRequest
@@ -280,19 +278,30 @@ class MainActivity : AppCompatActivity(),
     private fun bottomMenuClick() = with(binding) {
         mainContent.bNavView.setOnItemSelectedListener { item ->
             clearUpdate = true
-            when(item.itemId) {
+            when (item.itemId) {
                 R.id.new_ad -> {
-                    val intent = Intent(this@MainActivity, EditAdsActivity::class.java)
-                    startActivity(intent)
+                    if (mAuth.currentUser != null) {
+                        if (!mAuth.currentUser?.isAnonymous!!) {
+                            val intent = Intent(this@MainActivity, EditAdsActivity::class.java)
+                            startActivity(intent)
+                        } else {
+                            showToast(getString(R.string.should_registration))
+                        }
+                    } else {
+                        showToast(getString(R.string.registration_error))
+                    }
                 }
+
                 R.id.my_ads -> {
                     firebaseViewModel.loadMyAds()
                     mainContent.toolbar.title = getString(R.string.ad_my_ads)
                 }
+
                 R.id.favs -> {
                     firebaseViewModel.loadMyFavourites()
                     mainContent.toolbar.title = getString(R.string.ad_favourite)
                 }
+
                 R.id.main -> {
                     currentCategory = getString(R.string.b_nav_main)
                     firebaseViewModel.loadAllAdsFirstPage(filterDbManager)

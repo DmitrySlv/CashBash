@@ -37,4 +37,5 @@
     <style name="Toolbar" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="colorControlNormal">@color/white</item>
     </style>
+
 </resources>

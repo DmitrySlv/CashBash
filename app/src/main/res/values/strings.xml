@@ -43,6 +43,8 @@
     <string name="error_enter_as_anonymous">Не удалось войти как Гость</string>
     <string name="unknown_error">Произошла ошибка, пожалуйста, попробуйте еще раз немного позже
     </string>
+    <string name="should_registration">Необходимо зарегистрироваться!</string>
+    <string name="registration_error">Ошибка регистрации. Пожалуйста, попробуйте позже еще раз.</string>
     <!-- Edit Activity -->
     <string name="select_country">Выберите страну</string>
     <string name="select_city">Выберите город</string>
