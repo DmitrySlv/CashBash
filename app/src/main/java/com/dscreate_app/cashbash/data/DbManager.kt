@@ -29,7 +29,7 @@ class DbManager {
                     db.child(adModel.key ?: EMPTY).child(AD_FILTER_PATH)
                         .setValue(adFilter).addOnCompleteListener {
                             if (it.isSuccessful) {
-                                finishWorkListener.onFinish()
+                                finishWorkListener.onFinish(it.isSuccessful)
                             } else {
                                 Toast.makeText(
                                     context,
@@ -127,7 +127,7 @@ class DbManager {
             auth.uid?.let { uid ->
                 db.child(key).child(FAVS_PATH).child(uid).setValue(uid).addOnCompleteListener {
                     if (it.isSuccessful) {
-                        finishWorkListener.onFinish()
+                        finishWorkListener.onFinish(true)
                     }
                 }
             }
@@ -139,7 +139,7 @@ class DbManager {
             auth.uid?.let { uid ->
                 db.child(key).child(FAVS_PATH).child(uid).removeValue().addOnCompleteListener {
                     if (it.isSuccessful) {
-                        finishWorkListener.onFinish()
+                        finishWorkListener.onFinish(true)
                     }
                 }
             }
@@ -234,7 +234,7 @@ class DbManager {
         if (adModel.key == null || adModel.uid == null) return
         db.child(adModel.key).child(adModel.uid).removeValue().addOnCompleteListener {
             if (it.isSuccessful) {
-                listener.onFinish()
+                listener.onFinish(true)
             } else {
                 Toast.makeText(context,
                     context.getString(R.string.error_delete_from_firebase),
@@ -258,7 +258,7 @@ class DbManager {
     }
 
     interface FinishWorkListener {
-        fun onFinish()
+        fun onFinish(isDone: Boolean)
     }
 
     companion object {

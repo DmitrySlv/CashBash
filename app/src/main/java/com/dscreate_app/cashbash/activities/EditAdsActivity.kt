@@ -87,6 +87,7 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
 
     private fun onClickPublish() {
         binding.btPublish.setOnClickListener {
+            binding.progressLayout.visibility = View.VISIBLE
             ad = fillAdForFirebase()
             uploadImages()
         }
@@ -94,8 +95,9 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
 
     private fun onPublishFinnish(): DbManager.FinishWorkListener {
         return object : DbManager.FinishWorkListener {
-            override fun onFinish() {
-                finish()
+            override fun onFinish(isDone: Boolean) {
+                binding.progressLayout.visibility = View.GONE
+                if (isDone) { finish() }
             }
         }
     }
