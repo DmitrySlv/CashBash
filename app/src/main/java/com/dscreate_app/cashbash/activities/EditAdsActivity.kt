@@ -86,11 +86,15 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
     }
 
     private fun onClickPublish() {
-        binding.btPublish.setOnClickListener {
-            binding.progressLayout.visibility = View.VISIBLE
-            ad = fillAdForFirebase()
-            uploadImages()
-        }
+            binding.btPublish.setOnClickListener {
+                if (isFieldsEmpty()) {
+                    showToast(getString(R.string.check_fields_before_publish))
+                    return@setOnClickListener
+                }
+                binding.progressLayout.visibility = View.VISIBLE
+                ad = fillAdForFirebase()
+                uploadImages()
+            }
     }
 
     private fun onPublishFinnish(): DbManager.FinishWorkListener {
@@ -100,6 +104,14 @@ class EditAdsActivity : AppCompatActivity(), ImageListFragment.FragmentClose {
                 if (isDone) { finish() }
             }
         }
+    }
+
+    private fun isFieldsEmpty(): Boolean = with(binding) {
+        return tvSelectCountry.text.toString() == getString(R.string.select_country) ||
+                tvSelectCity.text.toString() == getString(R.string.select_city) ||
+                tvSelectCat.text.toString() == getString(R.string.select_category) ||
+                edPhone.text.isEmpty() || edIndex.text.isEmpty() || edDescription.text.isEmpty() ||
+                edTitle.text.isEmpty() || edPrice.text.isEmpty()
     }
 
     private fun fillViews(adModelDto: AdModelDto) = with(binding) {

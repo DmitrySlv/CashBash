@@ -62,6 +62,8 @@
     <string name="with_send">С отправкой?</string>
     <string name="with_send_title">Отправка</string>
     <string name="btn_publish">Опубликовать</string>
+    <string name="check_fields_before_publish">Пожалуйста, проверьте и заполните все нужные поля
+    перед публикацией объявления!</string>
 
     <string name="no_select_country">Пожалуйста, выберите страну!</string>
     <string name="approve_permission_for_your_photo">Пожалуйста, для корректной работы приложения
