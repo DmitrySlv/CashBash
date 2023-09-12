@@ -1,15 +1,31 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.gms.google-services'
+    id 'kotlin-parcelize'
 }
 
 android {
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+    signingConfigs {
+        release {
+            storeFile file('E:\\Android_keys_apps\\CashBash\\key_jks')
+            storePassword 'z35D1297'
+            keyAlias 'key_cashbash'
+            keyPassword 'z35D1297'
+        }
+    }
     namespace 'com.dscreate_app.cashbash'
     compileSdk 33
 
     defaultConfig {
         applicationId "com.dscreate_app.cashbash"
-        minSdk 19
+        minSdk 21
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -21,6 +37,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {
@@ -30,15 +47,38 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.activity:activity-ktx:1.7.2'
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    implementation(platform("com.google.firebase:firebase-bom:32.1.1")) //добавляет автоматич версии для firebase
+    implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation 'com.google.firebase:firebase-database-ktx'
+    implementation 'com.google.firebase:firebase-storage-ktx'
+    implementation 'com.google.android.gms:play-services-auth:20.6.0'
+
+    implementation  'io.ak1.pix:piximagepicker:1.6.3'
+    implementation 'com.squareup.picasso:picasso:2.8'
+    implementation 'com.google.android.gms:play-services-ads:22.1.0'
+
+    //Зависимости рекламы open app ads
+    def lifecycle_version = "2.2.0"
+    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1"
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:2.6.1"
+
+    //Зависимость для встроенных покупок (in app purchase)
+    implementation "com.android.billingclient:billing:6.0.1"
 }

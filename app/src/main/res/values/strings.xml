@@ -1,3 +1,150 @@
 <resources>
     <string name="app_name">CashBash</string>
+    <!-- Content Description -->
+    <string name="drawer_menu">Выдвижное меню</string>
+    <string name="im_acc_image">Ваш аватар</string>
+    <string name="ib_edit_image">Кнопка редактирования изображения</string>
+    <string name="ib_delete_image">Кнопка удаления изображения</string>
+    <string name="im_content_desc">Изображение</string>
+    <string name="im_drag_desc">Передвижение изображения вверх/вниз</string>
+    <string name="im_main_image">Главное фото</string>
+    <string name="im_views_counter">Количество просмотров</string>
+    <string name="im_favourite_counter">Количество избранного</string>
+    <string name="image_pager">Ваши фотографии</string>
+    <string name="send_to_email">Отправить по email</string>
+    <string name="send_to_phone">Позвонить по телефону владельца объявления</string>
+    <!-- Drawer Menu -->
+    <string name="ads_cat1">Объявления</string>
+    <string name="ad_my_ads">Мои объявления</string>
+    <string name="ad_favourite">Избранное</string>
+    <string name="ad_cars">Машины</string>
+    <string name="ad_pc">Компьютеры</string>
+    <string name="ad_smartphones">Смартфоны</string>
+    <string name="ad_domestics">Бытовая техника</string>
+
+    <string name="ads_cat2">Аккаунт</string>
+    <string name="ac_sign_up">Регистрация</string>
+    <string name="ac_sign_in">Вход</string>
+    <string name="ac_sign_out">Выход</string>
+
+    <string name="open">Открыть</string>
+    <string name="close">Закрыть</string>
+    <string name="not_reg">Вход или регистрация</string>
+    <string name="remove_ads">Убрать рекламу</string>
+    <!-- Main Activity -->
+    <string name="sign_up_error">Ошибка регистрации</string>
+    <string name="sign_in_error">Ошибка входа в аккаунт</string>
+    <string name="send_verification_email_error">Не удалось отправить ссылку для подтверждения email
+        адреса.Пожалуйста, попробуйте еще раз позже.</string>
+    <string name="send_verification_email">На вашу почту была отправлена ссылка для подтверждения
+        email! Пожалуйста, подтвердите ваш email адрес.
+    </string>
+    <string name="enter_as_anonymous">Вы вошли как Гость. Пожалуйста, зарегистрируйтесь.</string>
+    <string name="error_enter_as_anonymous">Не удалось войти как Гость</string>
+    <string name="unknown_error">Произошла ошибка, пожалуйста, попробуйте еще раз немного позже
+    </string>
+    <string name="should_registration">Необходимо зарегистрироваться!</string>
+    <string name="registration_error">Ошибка регистрации. Пожалуйста, попробуйте позже еще раз.</string>
+    <!-- Edit Activity -->
+    <string name="select_country">Выберите страну</string>
+    <string name="select_city">Выберите город</string>
+    <string name="country">*Страна</string>
+    <string name="city">*Город</string>
+    <string name="index">*Индекс</string>
+    <string name="phone">*Телефон</string>
+    <string name="phone_hint">Номер телефона</string>
+    <string name="category">*Категория</string>
+    <string name="category_title">*Заголовок</string>
+    <string name="tv_title_hint">Укажите заголовок </string>
+    <string name="select_category">Выберите категорию</string>
+    <string name="price">*Цена</string>
+    <string name="select_price_hint">Укажите цену</string>
+    <string name="description">*Описание</string>
+    <string name="description_hint">Укажите описание</string>
+    <string name="with_send">С отправкой?</string>
+    <string name="with_send_title">Отправка</string>
+    <string name="btn_publish">Опубликовать</string>
+    <string name="check_fields_before_publish">Пожалуйста, проверьте и заполните все нужные поля
+    перед публикацией объявления!</string>
+
+    <string name="no_select_country">Пожалуйста, выберите страну!</string>
+    <string name="approve_permission_for_your_photo">Пожалуйста, для корректной работы приложения
+        предоставьте разрешение для доступа к файловому хранилищу вашего устройства!</string>
+    <!-- nav_header_main -->
+    <string name="anonymous">Гость</string>
+    <!-- DbManager -->
+    <string name="error_load_ad_to_firebase_toast">Ошибка загрузки данных на сервер. Пожалуйста,
+        попробуйте еще раз позже</string>
+    <string name="error_delete_from_firebase">Произошла ошибка.
+        Пожалуйста, попробуйте удалить позже еще раз</string>
+    <!-- Dialog Helper -->
+    <string name="sign_in_finish">Вы вошли в аккаунт</string>
+    <string name="reset_email_password">Пароль email адреса был сброшен. Пожалуйста,
+    проверьте вашу электронную почту!</string>
+    <string name="reset_email_password_error">Ошибка сброса пароля от email. Пожалуйста,
+    попробуйте еще раз чуть позже!</string>
+    <!-- sign_in_dialog -->
+    <string name="email_hint">Ваш email</string>
+    <string name="password_hint">Пароль</string>
+    <string name="sign_in_action">Войти</string>
+    <string name="sign_up_action">Зарегистрироваться</string>
+    <string name="forget_password">Забыли пароль?</string>
+    <string name="forget_password_title">Укажите email вашего аккаунта для восстановления пароля
+    </string>
+    <string name="google_sign_in_btn">Войти c Google</string>
+    <!-- Account Helper -->
+    <string name="sign_in_successful">Вы успешно вошли под своим Google аккаунтом!</string>
+    <string name="sign_in_firebase_error">Ошибка входа в аккаунт, пожалуйста попробуйте еще раз
+        позже!</string>
+    <string name="link_done">Ваш email успешно связан с вашим аккаунтом</string>
+    <string name="enter_to_google_acc">У вас уже есть аккаунт с этим email. Пожалуйста, войдите
+    под этим email или зарегистрируйтесь под новым email.</string>
+    <!-- City Helper -->
+    <string name="no_result">Нет результата</string>
+    <!-- main_menu -->
+    <string name="new_ad">Создать объявление</string>
+    <!-- choose_image_menu -->
+    <string name="delete_image">Удалить</string>
+    <string name="add_image">Добавить</string>
+    <!-- sp_list_item -->
+    <string name="item">Item</string>
+    <!-- progress_dialog_layout -->
+    <string name="loading">Загрузка… подождите</string>
+    <!-- fragment_image_list -->
+    <string name="ad_id">ca-app-pub-3940256099942544/6300978111</string>
+    <!-- ad_list_item -->
+    <string name="price_desc">Цена:</string>
+    <string name="currency">руб</string>
+    <!-- bottom_main_menu -->
+    <string name="b_nav_new_ad">Новое объявление</string>
+    <string name="b_nav_my_ads">Мои объявления</string>
+    <string name="b_nav_favs">Избранное</string>
+    <string name="b_nav_main">Главная</string>
+    <!-- main_content -->
+    <string name="empty">Пусто</string>
+    <!-- activity_description -->
+    <string name="tv_price">Цена:</string>
+    <string name="tv_phone">Телефон:</string>
+    <string name="tv_email">Email:</string>
+    <string name="tv_country">Страна:</string>
+    <string name="tv_city">Город:</string>
+    <string name="tv_index">Индекс:</string>
+    <string name="tv_with_send">С доставкой?</string>
+    <string name="def_image_counter">0/0</string>
+    <!-- Description Activity -->
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="intent_ad_subject">Объявление</string>
+    <string name="toast_not_found_email_send_app">У вас нет приложения для отправки email.
+        Установите его и попробуйте еще раз.</string>
+    <!-- activity_filter -->
+    <string name="filter_ad">Фильтр объявлений</string>
+    <string name="btn_filter">Применить фильтр</string>
+    <string name="btn_filter_clear">Очистить фильтр</string>
+    <!-- Ads Adapter -->
+    <string name="publish_time">Опубликовано:</string>
+    <!-- Billing Manager -->
+    <string name="thanks_for_purchase">Спасибо за покупку!</string>
+    <string name="not_purchase">Не удалось реализовать покупку.
+        Пожалуйста, попробуйте позже еще раз!</string>
 </resources>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item android:title="@string/ads_cat1" android:id="@+id/ads_cat">
+        <menu>
+            <item
+                android:id="@+id/main"
+                android:title="@string/b_nav_main" />
+            <item
+                android:id="@+id/my_ads"
+                android:title="@string/ad_my_ads" />
+            <item
+                android:id="@+id/favourite"
+                android:title="@string/ad_favourite" />
+            <item
+                android:id="@+id/cars"
+                android:title="@string/ad_cars" />
+            <item
+                android:id="@+id/pc"
+                android:title="@string/ad_pc" />
+            <item
+                android:id="@+id/smart"
+                android:title="@string/ad_smartphones" />
+            <item
+                android:id="@+id/dm"
+                android:title="@string/ad_domestics" />
+        </menu>
+
+    </item>
+    <item android:title="@string/ads_cat2" android:id="@+id/acc_cat">
+        <menu>
+            <item
+                android:id="@+id/remove_ads"
+                android:title="@string/remove_ads" />
+            <item
+                android:id="@+id/sign_up"
+                android:title="@string/ac_sign_up" />
+            <item
+                android:id="@+id/sign_in"
+                android:title="@string/ac_sign_in" />
+            <item
+                android:id="@+id/sign_out"
+                android:title="@string/ac_sign_out" />
+        </menu>
+    </item>
+</menu>
